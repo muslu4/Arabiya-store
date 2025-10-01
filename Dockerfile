@@ -28,14 +28,11 @@ COPY . /app/
 # RUN git submodule update --init --recursive
 
 
-# Add project root to python path
-ENV PYTHONPATH "${PYTHONPATH}:/app"
-
 # Collect static files
-RUN python manage.py collectstatic --noinput
+RUN PYTHONPATH=/app python manage.py collectstatic --noinput
 
 # Expose port
 EXPOSE 8000
 
 # Run the application
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "ecom_project.wsgi:application"]
+CMD PYTHONPATH=/app gunicorn --bind 0.0.0.0:8000 backend.ecom_project.wsgi:application
