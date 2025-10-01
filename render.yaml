@@ -8,10 +8,10 @@ services:
       pip install -r requirements.txt
       python manage.py collectstatic --noinput
       python manage.py migrate
-    startCommand: gunicorn backend.ecom_project.wsgi:application
+    startCommand: gunicorn ecom_project.wsgi:application
     envVars:
       - key: PYTHONPATH
-        value: .
+        value: backend
       - key: PYTHON_VERSION
         value: 3.11.9
       - key: SECRET_KEY
