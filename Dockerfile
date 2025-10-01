@@ -11,6 +11,7 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        git \
         postgresql-client \
         build-essential \
         libpq-dev \
@@ -22,6 +23,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy project
 COPY . /app/
+
+# Initialize submodules
+RUN git submodule update --init --recursive
 
 # Add project root to python path
 ENV PYTHONPATH "${PYTHONPATH}:/app"
