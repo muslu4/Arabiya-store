@@ -23,6 +23,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project
 COPY . /app/
 
+# Add project root to python path
+ENV PYTHONPATH "${PYTHONPATH}:/app"
+
 # Collect static files
 RUN python manage.py collectstatic --noinput
 
