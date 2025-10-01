@@ -35,5 +35,5 @@ RUN PYTHONPATH=/app python manage.py collectstatic --noinput
 EXPOSE 8000
 
 # Run the application
-WORKDIR /app/backend
-CMD PYTHONPATH=/app/backend gunicorn --bind 0.0.0.0:8000 ecom_project.wsgi:application
+WORKDIR /app
+CMD PYTHONPATH=/app gunicorn --bind 0.0.0.0:8000 backend.ecom_project.wsgi:application
