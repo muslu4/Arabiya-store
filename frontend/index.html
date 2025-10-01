@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIMI STORE - متجر إلكتروني</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-top">
+                <div class="user-actions">
+                    <button class="btn-icon" id="loginBtn">
+                        <i class="fas fa-user"></i>
+                        <span>تسجيل دخول</span>
+                    </button>
+                    <button class="btn-icon" id="cartBtn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </button>
+                    <div class="dropdown">
+                        <button class="btn-icon" id="categoriesBtn">
+                            <i class="fas fa-list"></i>
+                            <span>الأقسام</span>
+                        </button>
+                        <div class="dropdown-content" id="categoriesDropdown">
+                            <!-- سيتم تحميل الأقسام هنا ديناميكيًا -->
+                            <a href="#" data-category-id="all">جميع المنتجات</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="logo">
+                    <h1>MIMI STORE</h1>
+                    <span>منتجات</span>
+                </div>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="ابحث عن المنتجات...">
+                <button class="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=400&fit=crop"
+                    alt="MIMI STORE" class="hero-image">
+                <div class="hero-text">
+                    <h2>MIMI STORE منتجات</h2>
+                    <p>أفضل المنتجات الإلكترونية بأسعار مميزة</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories">
+        <div class="container">
+            <h3>الأقسام</h3>
+            <div class="categories-grid" id="categoriesGrid">
+                <!-- Categories will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Products -->
+    <section class="products">
+        <div class="container">
+            <div class="section-header">
+                <h3>المنتجات المميزة</h3>
+                <button class="view-all-btn" id="viewAllBtn">عرض الكل</button>
+            </div>
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" data-page="home">
+            <i class="fas fa-home"></i>
+            <span>الرئيسية</span>
+        </button>
+        <button class="nav-item" data-page="categories">
+            <i class="fas fa-th-large"></i>
+            <span>الأقسام</span>
+        </button>
+        <button class="nav-item" data-page="cart">
+            <i class="fas fa-shopping-cart"></i>
+            <span>السلة</span>
+        </button>
+        <button class="nav-item" data-page="profile">
+            <i class="fas fa-user"></i>
+            <span>الملف الشخصي</span>
+        </button>
+    </nav>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>تسجيل الدخول</h4>
+                <button class="close-btn" id="closeLoginModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>رقم الهاتف</label>
+                    <input type="text" id="phoneInput" placeholder="أدخل رقم الهاتف" required>
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="passwordInput" placeholder="أدخل كلمة المرور" required>
+                </div>
+                <button type="submit" class="btn-primary">تسجيل الدخول</button>
+            </form>
+            <div class="modal-footer">
+                <p>ليس لديك حساب؟ <a href="#" id="registerLink">إنشاء حساب جديد</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>سلة التسوق</h4>
+                <button class="close-btn" id="closeCartModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="cart-items" id="cartItems">
+                <!-- Cart items will be loaded here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>المجموع: <span id="cartTotal">0</span> ر.س</span>
+                </div>
+                <button class="btn-primary" id="checkoutBtn">إتمام الطلب</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="productModalTitle">تفاصيل المنتج</h4>
+                <button class="close-btn" id="closeProductModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="product-details" id="productDetails">
+                <!-- Product details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p>جاري التحميل...</p>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast" id="toast">
+        <div class="toast-content">
+            <i class="fas fa-check-circle"></i>
+            <span id="toastMessage">تم بنجاح!</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
