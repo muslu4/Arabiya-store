@@ -2,7 +2,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 from .models import Order
-from users.models import User, Notification
+from users.models import User
+from notifications.models import Notification
 
 # Firebase service for push notifications
 try:

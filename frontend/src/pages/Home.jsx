@@ -43,8 +43,10 @@ const Home = ({ user, setUser }) => {
   const fetchProducts = async () => {
     try {
       const response = await api.get('/products/');
+      console.log('API Response:', response);
       const data = response.data;
       const list = Array.isArray(data) ? data : (data?.results || []);
+      console.log('Products list:', list);
       // Normalize to match UI expectations
       const normalized = list.map((p) => ({
         ...p,
@@ -52,6 +54,7 @@ const Home = ({ user, setUser }) => {
         stock: typeof p.stock_quantity === 'number' ? p.stock_quantity : (p.is_in_stock ? 1 : 0),
         discount: typeof p.discount_percentage === 'number' ? p.discount_percentage : 0,
       }));
+      console.log('Normalized products:', normalized);
       setProducts(normalized);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -64,8 +67,10 @@ const Home = ({ user, setUser }) => {
   const fetchCategories = async () => {
     try {
       const response = await api.get('/products/categories/');
+      console.log('Categories API Response:', response);
       const data = response.data;
       const list = Array.isArray(data) ? data : (data?.results || []);
+      console.log('Categories list:', list);
       setCategories(list);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -141,6 +146,7 @@ const Home = ({ user, setUser }) => {
   };
 
   const filteredProducts = products.filter(product => {
+    console.log('Filtering product:', product, 'selectedCategory:', selectedCategory);
     const matchesCategory = !selectedCategory || product.category === selectedCategory;
     const matchesSearch = searchTerm === '' || 
       (product.name && product.name.toLowerCase().includes(searchTerm.toLowerCase())) ||

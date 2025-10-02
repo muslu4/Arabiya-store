@@ -6,6 +6,8 @@ import os
 import sys
 import django
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'backend'))
+
 # Setup Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecom_project.settings')
 django.setup()
@@ -20,11 +22,12 @@ def create_sample_data():
     # Create admin user first
     print("Creating admin user...")
     admin_user, created = User.objects.get_or_create(
-        phone='admin',
+        username='admin',
         defaults={
+            'phone': 'admin',
             'first_name': 'Admin',
             'last_name': 'User',
-            'is_admin': True,
+            'is_staff': True,
             'is_superuser': True,
             'is_active': True,
         }

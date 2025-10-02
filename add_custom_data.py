@@ -9,6 +9,7 @@ import django
 from decimal import Decimal
 
 # إعداد Django
+sys.path.append('./backend')
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecom_project.settings')
 django.setup()
 
@@ -251,10 +252,10 @@ def create_products_for_categories():
                     'price': original_price,
                     'discounted_price': discounted_price if discount > 0 else None,
                     'discount_percentage': discount if discount > 0 else None,
-                    'brand': product_data['brand'],
+                    'brand': product_data.get('brand', ''),
                     'stock_quantity': product_data['stock_quantity'],
                     'is_active': True,
-                    'is_featured': product_data['is_featured']
+                    'is_featured': product_data.get('is_featured', False)
                 }
             )
             
