@@ -34,6 +34,7 @@
     "start": "npx cross-env PORT=3002 react-app-rewired start",
     "build": "react-app-rewired build",
     "build:render": "PUBLIC_URL=. react-app-rewired build",
+    "build:static": "chmod +x build.sh && ./build.sh",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },

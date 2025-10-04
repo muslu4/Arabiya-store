@@ -38,7 +38,7 @@ services:
   - type: web
     name: mimi-store-frontend
     env: static
-    buildCommand: "cd frontend && npm install && npm run build:render"
+    buildCommand: "cd frontend && npm install && npm run build:static"
     publishDir: frontend/build
     routes:
       - type: rewrite
