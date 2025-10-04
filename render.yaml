@@ -7,6 +7,7 @@ services:
       pip install -r requirements.txt
       python manage.py collectstatic --noinput
       python manage.py migrate
+      python manage.py shell < create_sample_data.py
     startCommand: gunicorn ecom_project.wsgi:application
 
     envVars:
@@ -19,13 +20,13 @@ services:
       - key: DEBUG
         value: False
       - key: ALLOWED_HOSTS
-        value: mimi-store-backend.onrender.com,0.0.0.0,localhost
+        value: ecom-parent-project.onrender.com,0.0.0.0,localhost
       - key: DATABASE_URL
         fromDatabase:
           name: mimi-store-db
           property: connectionString
       - key: CORS_ALLOWED_ORIGINS
-        value: https://mimi-store-frontend.netlify.app,http://localhost:3002
+        value: https://ecom-parent-project.onrender.com,http://localhost:3002
       - key: CORS_ALLOW_ALL_ORIGINS # Set to False for production security
         value: False
     
