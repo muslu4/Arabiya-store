@@ -3,7 +3,6 @@ from django.contrib import admin
 from .models import Category, Product, ProductReview, ProductView, Banner
 
 
-@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'parent', 'is_active')
     list_filter = ('is_active', 'parent')
@@ -17,7 +16,6 @@ class CategoryAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'brand', 'price', 'stock_quantity', 'is_active', 'is_featured', 'created_at')
     list_filter = ('category', 'brand', 'is_active', 'is_featured', 'created_at')
@@ -49,7 +47,6 @@ class ProductAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(ProductReview)
 class ProductReviewAdmin(admin.ModelAdmin):
     list_display = ('product', 'user', 'rating', 'created_at')
     list_filter = ('rating', 'created_at')
@@ -57,7 +54,6 @@ class ProductReviewAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at',)
 
 
-@admin.register(ProductView)
 class ProductViewAdmin(admin.ModelAdmin):
     list_display = ('product', 'user', 'ip_address', 'viewed_at')
     list_filter = ('viewed_at',)
@@ -65,7 +61,6 @@ class ProductViewAdmin(admin.ModelAdmin):
     readonly_fields = ('viewed_at',)
 
 
-@admin.register(Banner)
 class BannerAdmin(admin.ModelAdmin):
     list_display = ('title', 'is_active', 'display_order', 'created_at')
     list_filter = ('is_active', 'created_at')
