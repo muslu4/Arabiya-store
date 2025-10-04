@@ -1,0 +1,709 @@
+
+{% extends "admin/change_list.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}{{ block.super }}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Header Styles */
+.breadcrumbs {
+    background: #fff;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05);
+}
+
+.breadcrumbs a {
+    color: #4c6ef5;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.breadcrumbs a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumbs .current {
+    color: #495057;
+    font-weight: 600;
+}
+
+/* Main Content Container */
+.content-main {
+    padding: 0;
+}
+
+/* Toolbar Styles */
+.module {
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05);
+}
+
+.module h2, .module caption {
+    background: linear-gradient(135deg, #4c6ef5 0%, #845ef7 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.module h2 i, .module caption i {
+    margin-right: 0.5rem;
+}
+
+/* Table Styles */
+.result-list {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.result-list thead th {
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    color: #495057;
+    padding: 0.75rem 1rem;
+    text-align: right;
+}
+
+.result-list tbody tr {
+    border-bottom: 1px solid #e9ecef;
+}
+
+.result-list tbody tr:hover {
+    background-color: rgba(76, 110, 245, 0.05);
+}
+
+.result-list tbody td {
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+}
+
+.result-list tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.result-list .field-name {
+    font-weight: 500;
+    color: #495057;
+}
+
+.result-list .field-id {
+    font-weight: 600;
+    color: #4c6ef5;
+}
+
+.result-list .field-customer {
+    display: flex;
+    align-items: center;
+}
+
+.result-list .field-customer i {
+    margin-right: 0.5rem;
+    color: #6c757d;
+}
+
+.result-list .field-amount {
+    font-weight: 600;
+    color: #28a745;
+}
+
+.result-list .field-status {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.result-list .field-status.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.result-list .field-status.processing {
+    background: #cce5ff;
+    color: #004085;
+}
+
+.result-list .field-status.shipped {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.result-list .field-status.delivered {
+    background: #d4edda;
+    color: #155724;
+}
+
+.result-list .field-status.cancelled {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.result-list .field-date {
+    color: #6c757d;
+}
+
+.result-list .field-boolean {
+    text-align: center;
+}
+
+.result-list .field-boolean i {
+    font-size: 1.2rem;
+}
+
+.result-list .field-boolean i.fa-check-circle {
+    color: #28a745;
+}
+
+.result-list .field-boolean i.fa-times-circle {
+    color: #dc3545;
+}
+
+.result-list .actions {
+    white-space: nowrap;
+}
+
+.result-list .actions a {
+    margin-left: 0.5rem;
+    color: #4c6ef5;
+    text-decoration: none;
+    font-size: 1.1rem;
+}
+
+.result-list .actions a:hover {
+    color: #364fc7;
+}
+
+/* Pagination Styles */
+.paginator {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    gap: 0.25rem;
+}
+
+.paginator a, .paginator .this-page {
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.paginator a {
+    color: #4c6ef5;
+    background: #e9ecef;
+}
+
+.paginator a:hover {
+    background: #dee2e6;
+    color: #364fc7;
+}
+
+.paginator .this-page {
+    background: #4c6ef5;
+    color: white;
+}
+
+.paginator .disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Search and Filter Styles */
+#changelist-search {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+#changelist-search .input-group {
+    flex: 1;
+    position: relative;
+}
+
+#changelist-search .input-group input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+#changelist-search .input-group input:focus {
+    border-color: #4c6ef5;
+    box-shadow: 0 0 0 0.2rem rgba(76, 110, 245, 0.25);
+    outline: none;
+}
+
+#changelist-search .input-group i {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+#changelist-search button {
+    padding: 0.75rem 1.5rem;
+    background: #4c6ef5;
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#changelist-search button:hover {
+    background: #364fc7;
+}
+
+/* Filter Styles */
+#changelist-filter {
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+#changelist-filter h2 {
+    background: linear-gradient(135deg, #4c6ef5 0%, #845ef7 100%);
+    color: white;
+    padding: 0.75rem 1rem;
+    margin: -1.5rem -1.5rem 1rem -1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+#changelist-filter h2 i {
+    margin-right: 0.5rem;
+}
+
+#changelist-filter h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #495057;
+    margin: 1.5rem 0 0.75rem 0;
+}
+
+#changelist-filter ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#changelist-filter li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+#changelist-filter li:last-child {
+    border-bottom: none;
+}
+
+#changelist-filter li a {
+    color: #495057;
+    text-decoration: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#changelist-filter li a:hover {
+    color: #4c6ef5;
+}
+
+#changelist-filter li a.active {
+    color: #4c6ef5;
+    font-weight: 500;
+}
+
+#changelist-filter li a i {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+#changelist-filter li a.active i {
+    color: #4c6ef5;
+}
+
+/* Action Buttons */
+.object-tools {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.object-tools a {
+    padding: 0.5rem 1rem;
+    background: #4c6ef5;
+    color: white;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    transition: background 0.3s ease;
+}
+
+.object-tools a:hover {
+    background: #364fc7;
+}
+
+.object-tools a i {
+    margin-right: 0.5rem;
+}
+
+/* Bulk Actions */
+.bulk-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.bulk-actions select {
+    padding: 0.5rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+}
+
+.bulk-actions button {
+    padding: 0.5rem 1rem;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.bulk-actions button:hover {
+    background: #c82333;
+}
+
+/* Order Summary Card */
+.order-summary {
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.order-summary h3 {
+    color: #4c6ef5;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.order-summary .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.order-summary .stat-card {
+    background: #f8f9fa;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+.order-summary .stat-card .stat-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #4c6ef5;
+}
+
+.order-summary .stat-card .stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #changelist-search {
+        flex-direction: column;
+    }
+
+    .bulk-actions {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .bulk-actions select, .bulk-actions button {
+        width: 100%;
+    }
+
+    .result-list {
+        font-size: 0.85rem;
+    }
+
+    .object-tools {
+        flex-wrap: wrap;
+    }
+
+    .order-summary .stats {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content_title %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'الرئيسية' %}</a>
+    &rsaquo;
+    <a href="{% url 'admin:app_list' app_label=cl.opts.app_label %}">{{ cl.opts.app_config.verbose_name }}</a>
+    &rsaquo;
+    <a href="{% url cl.opts|admin_urlname:'changelist' %}">{{ cl.opts.verbose_name_plural }}</a>
+    &rsaquo;
+    <span class="current">{% if not is_popup %}{% trans 'قائمة الطلبات' %}{% endif %}</span>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <!-- Order Summary -->
+    <div class="order-summary">
+        <h3><i class="fas fa-chart-line"></i> ملخص الطلبات</h3>
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value">{{ total_orders }}</div>
+                <div class="stat-label">إجمالي الطلبات</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ pending_orders }}</div>
+                <div class="stat-label">طلبات قيد الانتظار</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ total_revenue }} د.ع</div>
+                <div class="stat-label">إجمالي الإيرادات</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ avg_order_value }} د.ع</div>
+                <div class="stat-label">متوسط قيمة الطلب</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="module">
+        <div id="changelist-search">
+            <div class="input-group">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="ابحث عن طلب..." value="{{ search_query|default:'' }}">
+            </div>
+            <button type="button" onclick="performSearch()">
+                <i class="fas fa-search"></i> بحث
+            </button>
+        </div>
+
+        <div class="bulk-actions">
+            <div>
+                <select id="action-select">
+                    <option value="">----</option>
+                    <option value="process">معالجة</option>
+                    <option value="ship">شحن</option>
+                    <option value="deliver">تسليم</option>
+                    <option value="cancel">إلغاء</option>
+                    <option value="export">تصدير</option>
+                </select>
+                <button type="button" onclick="performBulkAction()">تنفيذ</button>
+            </div>
+            <div>
+                <span>النتائج: {{ cl.result_count }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order List -->
+    <div class="module">
+        <table id="result_list" class="result-list">
+            <thead>
+                <tr>
+                    <th scope="col" class="action-checkbox-column">
+                        <div class="text">
+                            <input type="checkbox" id="toggle" onchange="toggleAll(this)">
+                        </div>
+                    </th>
+                    {% for header in cl.result_headers %}
+                    <th scope="col">
+                        <div class="text">{{ header.text|truncatewords:1 }}</div>
+                    </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in cl.result_list %}
+                <tr>
+                    <td class="action-checkbox">
+                        <input type="checkbox" name="_selected_action" value="{{ result.pk|default:'' }}">
+                    </td>
+                    {% for field in result %}
+                    <td class="field-{{ field.name }}">
+                        {% if field.name == 'id' %}
+                            <span class="field-id">#{{ result.id }}</span>
+                        {% elif field.name == 'customer' %}
+                            <div class="field-customer">
+                                <i class="fas fa-user"></i>
+                                <span>{{ result.customer_name }}</span>
+                            </div>
+                        {% elif field.name == 'amount' %}
+                            <span class="field-amount">{{ result.total_amount }} د.ع</span>
+                        {% elif field.name == 'status' %}
+                            <span class="field-status {{ result.status }}">
+                                {% if result.status == 'pending' %}
+                                    <i class="fas fa-clock"></i> قيد الانتظار
+                                {% elif result.status == 'processing' %}
+                                    <i class="fas fa-cog fa-spin"></i> قيد المعالجة
+                                {% elif result.status == 'shipped' %}
+                                    <i class="fas fa-shipping-fast"></i> تم الشحن
+                                {% elif result.status == 'delivered' %}
+                                    <i class="fas fa-check-circle"></i> تم التسليم
+                                {% elif result.status == 'cancelled' %}
+                                    <i class="fas fa-times-circle"></i> ملغى
+                                {% endif %}
+                            </span>
+                        {% elif field.name == 'date' %}
+                            <span class="field-date">{{ result.created_at|date:"d/m/Y H:i" }}</span>
+                        {% elif field.name == 'boolean' %}
+                            {% if result.boolean_value %}
+                                <i class="fas fa-check-circle"></i>
+                            {% else %}
+                                <i class="fas fa-times-circle"></i>
+                            {% endif %}
+                        {% else %}
+                            {{ field.value }}
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                    <td class="actions">
+                        <a href="{% url cl.opts|admin_urlname:'change' result.pk|default:'' %}" title="تعديل">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url cl.opts|admin_urlname:'detail' result.pk|default:'' %}" title="عرض التفاصيل">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        {% if result.status == 'pending' %}
+                        <a href="{% url 'admin:orders_order_process' result.pk %}" title="معالجة">
+                            <i class="fas fa-cog"></i>
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        {% if cl.result_count %}
+        <div class="paginator">
+            {% for page in cl.paginator.page_range %}
+                {% if page == cl.paginator.number %}
+                    <span class="this-page">{{ page }}</span>
+                {% else %}
+                    <a href="?p={{ page }}">{{ page }}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function toggleAll(source) {
+    const checkboxes = document.querySelectorAll('input[name="_selected_action"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = source.checked;
+    });
+}
+
+function performSearch() {
+    const searchQuery = document.querySelector('#changelist-search input').value;
+    const currentUrl = new URL(window.location.href);
+
+    if (searchQuery) {
+        currentUrl.searchParams.set('q', searchQuery);
+    } else {
+        currentUrl.searchParams.delete('q');
+    }
+
+    currentUrl.searchParams.set('p', 1); // Reset to first page
+
+    window.location.href = currentUrl.toString();
+}
+
+function performBulkAction() {
+    const selectedAction = document.getElementById('action-select').value;
+    if (!selectedAction) return;
+
+    const selectedItems = Array.from(document.querySelectorAll('input[name="_selected_action"]:checked'))
+        .map(checkbox => checkbox.value);
+
+    if (selectedItems.length === 0) {
+        alert('الرجاء اختيار طلبات واحدة على الأقل');
+        return;
+    }
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = window.location.pathname;
+
+    // Add CSRF token
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'csrfmiddlewaretoken';
+    csrfInput.value = csrfToken;
+    form.appendChild(csrfInput);
+
+    // Add action and selected items
+    const actionInput = document.createElement('input');
+    actionInput.type = 'hidden';
+    actionInput.name = 'action';
+    actionInput.value = selectedAction;
+    form.appendChild(actionInput);
+
+    selectedItems.forEach(item => {
+        const itemInput = document.createElement('input');
+        itemInput.type = 'hidden';
+        itemInput.name = '_selected_action';
+        itemInput.value = item;
+        form.appendChild(itemInput);
+    });
+
+    document.body.appendChild(form);
+    form.submit();
+}
+</script>
+{% endblock %}

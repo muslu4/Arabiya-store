@@ -1,0 +1,730 @@
+
+{% extends "admin/change_list.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}{{ block.super }}
+<script src="{% static 'js/product_list.js' %}"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Header Styles */
+.breadcrumbs {
+    background: #fff;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05);
+}
+
+.breadcrumbs a {
+    color: #4c6ef5;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.breadcrumbs a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumbs .current {
+    color: #495057;
+    font-weight: 600;
+}
+
+/* Main Content Container */
+.content-main {
+    padding: 0;
+}
+
+/* Toolbar Styles */
+.module {
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05);
+}
+
+.module h2, .module caption {
+    background: linear-gradient(135deg, #4c6ef5 0%, #845ef7 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.module h2 i, .module caption i {
+    margin-right: 0.5rem;
+}
+
+/* Table Styles */
+.result-list {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.result-list thead th {
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    color: #495057;
+    padding: 0.75rem 1rem;
+    text-align: right;
+}
+
+.result-list tbody tr {
+    border-bottom: 1px solid #e9ecef;
+}
+
+.result-list tbody tr:hover {
+    background-color: rgba(76, 110, 245, 0.05);
+}
+
+.result-list tbody td {
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+}
+
+.result-list tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.result-list .field-name {
+    font-weight: 500;
+    color: #495057;
+}
+
+.result-list .field-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 0.25rem;
+    object-fit: cover;
+}
+
+.result-list .field-price {
+    font-weight: 600;
+    color: #28a745;
+}
+
+.result-list .field-discount {
+    color: #dc3545;
+    font-weight: 500;
+}
+
+.result-list .field-stock {
+    font-weight: 500;
+}
+
+.result-list .field-stock.in-stock {
+    color: #28a745;
+}
+
+.result-list .field-stock.low-stock {
+    color: #ffc107;
+}
+
+.result-list .field-stock.out-of-stock {
+    color: #dc3545;
+}
+
+.result-list .field-boolean {
+    text-align: center;
+}
+
+.result-list .field-boolean i {
+    font-size: 1.2rem;
+}
+
+.result-list .field-boolean i.fa-check-circle {
+    color: #28a745;
+}
+
+.result-list .field-boolean i.fa-times-circle {
+    color: #dc3545;
+}
+
+.result-list .field-choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.result-list .field-choices span {
+    background: #e9ecef;
+    color: #495057;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.85rem;
+}
+
+.result-list .actions {
+    white-space: nowrap;
+}
+
+.result-list .actions a {
+    margin-left: 0.5rem;
+    color: #4c6ef5;
+    text-decoration: none;
+    font-size: 1.1rem;
+}
+
+.result-list .actions a:hover {
+    color: #364fc7;
+}
+
+/* Pagination Styles */
+.paginator {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    gap: 0.25rem;
+}
+
+.paginator a, .paginator .this-page {
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.paginator a {
+    color: #4c6ef5;
+    background: #e9ecef;
+}
+
+.paginator a:hover {
+    background: #dee2e6;
+    color: #364fc7;
+}
+
+.paginator .this-page {
+    background: #4c6ef5;
+    color: white;
+}
+
+.paginator .disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Search and Filter Styles */
+#changelist-search {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+#changelist-search .input-group {
+    flex: 1;
+    position: relative;
+}
+
+#changelist-search .input-group input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+#changelist-search .input-group input:focus {
+    border-color: #4c6ef5;
+    box-shadow: 0 0 0 0.2rem rgba(76, 110, 245, 0.25);
+    outline: none;
+}
+
+#changelist-search .input-group i {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+#changelist-search button {
+    padding: 0.75rem 1.5rem;
+    background: #4c6ef5;
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#changelist-search button:hover {
+    background: #364fc7;
+}
+
+/* Filter Styles */
+#changelist-filter {
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+#changelist-filter h2 {
+    background: linear-gradient(135deg, #4c6ef5 0%, #845ef7 100%);
+    color: white;
+    padding: 0.75rem 1rem;
+    margin: -1.5rem -1.5rem 1rem -1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+#changelist-filter h2 i {
+    margin-right: 0.5rem;
+}
+
+#changelist-filter h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #495057;
+    margin: 1.5rem 0 0.75rem 0;
+}
+
+#changelist-filter ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#changelist-filter li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+#changelist-filter li:last-child {
+    border-bottom: none;
+}
+
+#changelist-filter li a {
+    color: #495057;
+    text-decoration: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#changelist-filter li a:hover {
+    color: #4c6ef5;
+}
+
+#changelist-filter li a.active {
+    color: #4c6ef5;
+    font-weight: 500;
+}
+
+#changelist-filter li a i {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+#changelist-filter li a.active i {
+    color: #4c6ef5;
+}
+
+/* Action Buttons */
+.object-tools {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.object-tools a {
+    padding: 0.5rem 1rem;
+    background: #4c6ef5;
+    color: white;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    transition: background 0.3s ease;
+}
+
+.object-tools a:hover {
+    background: #364fc7;
+}
+
+.object-tools a i {
+    margin-right: 0.5rem;
+}
+
+/* Bulk Actions */
+.bulk-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.bulk-actions select {
+    padding: 0.5rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+}
+
+.bulk-actions button {
+    padding: 0.5rem 1rem;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.bulk-actions button:hover {
+    background: #c82333;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #changelist-search {
+        flex-direction: column;
+    }
+
+    .bulk-actions {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .bulk-actions select, .bulk-actions button {
+        width: 100%;
+    }
+
+    .result-list {
+        font-size: 0.85rem;
+    }
+
+    .result-list .field-image {
+        width: 40px;
+        height: 40px;
+    }
+
+    .object-tools {
+        flex-wrap: wrap;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content_title %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'الرئيسية' %}</a>
+    &rsaquo;
+    <a href="{% url 'admin:app_list' app_label=cl.opts.app_label %}">{{ cl.opts.app_config.verbose_name }}</a>
+    &rsaquo;
+    <a href="{% url cl.opts|admin_urlname:'changelist' %}">{{ cl.opts.verbose_name_plural }}</a>
+    &rsaquo;
+    <span class="current">{% if not is_popup %}{% trans 'قائمة المنتجات' %}{% endif %}</span>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <!-- Search and Filter Section -->
+    <div class="module">
+        <div id="changelist-search">
+            <div class="input-group">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="ابحث عن منتج..." value="{{ search_query|default:'' }}">
+            </div>
+            <button type="button" onclick="performSearch()">
+                <i class="fas fa-search"></i> بحث
+            </button>
+        </div>
+
+        <div class="bulk-actions">
+            <div>
+                <select id="action-select">
+                    <option value="">----</option>
+                    <option value="activate">تفعيل</option>
+                    <option value="deactivate">تعطيل</option>
+                    <option value="delete">حذف</option>
+                    <option value="featured">إضافة إلى المميزة</option>
+                    <option value="unfeatured">إزالة من المميزة</option>
+                </select>
+                <button type="button" onclick="performBulkAction()">تنفيذ</button>
+            </div>
+            <div>
+                <span>النتائج: {{ cl.result_count }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product List -->
+    <div class="module">
+        <table id="result_list" class="result-list">
+            <thead>
+                <tr>
+                    <th scope="col" class="action-checkbox-column">
+                        <div class="text">
+                            <input type="checkbox" id="toggle" onchange="toggleAll(this)">
+                        </div>
+                    </th>
+                    {% for header in cl.result_headers %}
+                    <th scope="col">
+                        <div class="text">{{ header.text|truncatewords:1 }}</div>
+                    </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in cl.result_list %}
+                <tr>
+                    <td class="action-checkbox">
+                        <input type="checkbox" name="_selected_action" value="{{ result.pk|default:'' }}">
+                    </td>
+                    {% for field in result %}
+                    <td class="field-{{ field.name }}">
+                        {% if field.name == 'image' %}
+                            <img src="{{ result.image.url|default:'/placeholder-product.png' }}" alt="{{ result.name }}" class="field-image">
+                        {% elif field.name == 'price' %}
+                            <span class="field-price">{{ result.price }} د.ع</span>
+                        {% elif field.name == 'discount' %}
+                            {% if result.discount > 0 %}
+                                <span class="field-discount">{{ result.discount }}%</span>
+                            {% else %}
+                                -
+                            {% endif %}
+                        {% elif field.name == 'stock' %}
+                            {% if result.stock > 10 %}
+                                <span class="field-stock in-stock">متوفر</span>
+                            {% elif result.stock > 0 %}
+                                <span class="field-stock low-stock">قليل</span>
+                            {% else %}
+                                <span class="field-stock out-of-stock">نفد</span>
+                            {% endif %}
+                        {% elif field.name == 'status' %}
+                            {% if result.status %}
+                                <i class="fas fa-check-circle field-boolean"></i>
+                            {% else %}
+                                <i class="fas fa-times-circle field-boolean"></i>
+                            {% endif %}
+                        {% elif field.name == 'featured' %}
+                            {% if result.featured %}
+                                <i class="fas fa-star field-boolean"></i>
+                            {% else %}
+                                <i class="far fa-star field-boolean"></i>
+                            {% endif %}
+                        {% elif field.name == 'category' %}
+                            <span class="field-name">{{ result.category.name }}</span>
+                        {% else %}
+                            {{ field.value|default:'-' }}
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                    <td class="actions">
+                        <a href="{% url cl.opts|admin_urlname:'change' result.pk|default:'' %}" title="تعديل">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url cl.opts|admin_urlname:'delete' result.pk|default:'' %}" title="حذف">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if cl.has_pagination %}
+    <div class="paginator">
+        {% for i in page_range %}
+            {% if i == cl.page_num %}
+                <span class="this-page">{{ i }}</span>
+            {% elif i == '...' %}
+                <span class="ellipsis">...</span>
+            {% else %}
+                <a href="?page={{ i }}{% if search_query %}&q={{ search_query }}{% endif %}">{{ i }}</a>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Add Button -->
+    <div class="object-tools">
+        <a href="{% url cl.opts|admin_urlname:'add' %}" class="addlink">
+            <i class="fas fa-plus"></i> إضافة منتج
+        </a>
+    </div>
+
+    <!-- Filters -->
+    <div id="changelist-filter">
+        <h2><i class="fas fa-filter"></i> تصفية النتائج</h2>
+
+        <div id="changelist-filter-sidebar">
+            <!-- Status Filter -->
+            <h3>الحالة</h3>
+            <ul>
+                <li>
+                    <a href="{% if search_query %}?q={{ search_query }}{% endif %}" class="{% if not status_filter %}active{% endif %}">
+                        الكل
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% if search_query %}?q={{ search_query }}&status=active{% endif %}" class="{% if status_filter == 'active' %}active{% endif %}">
+                        نشط
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% if search_query %}?q={{ search_query }}&status=inactive{% endif %}" class="{% if status_filter == 'inactive' %}active{% endif %}">
+                        غير نشط
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Category Filter -->
+            <h3>التصنيفات</h3>
+            <ul>
+                <li>
+                    <a href="{% if search_query %}?q={{ search_query }}{% endif %}" class="{% if not category_filter %}active{% endif %}">
+                        الكل
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                {% for category in categories %}
+                <li>
+                    <a href="{% if search_query %}?q={{ search_query }}&category={{ category.id }}{% endif %}" class="{% if category_filter == category.id|slugify %}active{% endif %}">
+                        {{ category.name }}
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+
+            <!-- Featured Filter -->
+            <h3>المميزة</h3>
+            <ul>
+                <li>
+                    <a href="{% if search_query %}?q={{ search_query }}{% endif %}" class="{% if not featured_filter %}active{% endif %}">
+                        الكل
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% if search_query %}?q={{ search_query }}&featured=1{% endif %}" class="{% if featured_filter == '1' %}active{% endif %}">
+                        نعم
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% if search_query %}?q={{ search_query }}&featured=0{% endif %}" class="{% if featured_filter == '0' %}active{% endif %}">
+                        لا
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Stock Filter -->
+            <h3>المخزون</h3>
+            <ul>
+                <li>
+                    <a href="{% if search_query %}?q={{ search_query }}{% endif %}" class="{% if not stock_filter %}active{% endif %}">
+                        الكل
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% if search_query %}?q={{ search_query }}&stock=in{% endif %}" class="{% if stock_filter == 'in' %}active{% endif %}">
+                        متوفر
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% if search_query %}?q={{ search_query }}&stock=low{% endif %}" class="{% if stock_filter == 'low' %}active{% endif %}">
+                        قليل
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% if search_query %}?q={{ search_query }}&stock=out{% endif %}" class="{% if stock_filter == 'out' %}active{% endif %}">
+                        نفد
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+// Search functionality
+function performSearch() {
+    const searchInput = document.querySelector('#changelist-search input');
+    const query = searchInput.value.trim();
+
+    if (query) {
+        window.location.href = '?q=' + encodeURIComponent(query);
+    } else {
+        window.location.href = '{% url cl.opts|admin_urlname:'changelist' %}';
+    }
+}
+
+// Bulk actions
+function performBulkAction() {
+    const action = document.getElementById('action-select').value;
+    const checkboxes = document.querySelectorAll('input[name="_selected_action"]:checked');
+
+    if (!action) {
+        alert('يرجى اختيار إجراء');
+        return;
+    }
+
+    if (checkboxes.length === 0) {
+        alert('يرجى اختيار منتجات على الأقل');
+        return;
+    }
+
+    if (action === 'delete') {
+        if (!confirm('هل أنت متأكد من حذف المنتجات المحددة؟ هذه العملة لا يمكن التراجع عنها.')) {
+            return;
+        }
+    }
+
+    // In a real implementation, you would submit a form here
+    // For demonstration, we'll just show a message
+    const selectedIds = Array.from(checkboxes).map(cb => cb.value).join(', ');
+    alert(`سيتم تنفيذ الإجراء "${action}" على المنتجات التالية: ${selectedIds}`);
+}
+
+// Toggle all checkboxes
+function toggleAll(source) {
+    const checkboxes = document.querySelectorAll('input[name="_selected_action"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = source.checked;
+    });
+}
+
+// Handle Enter key in search input
+document.querySelector('#changelist-search input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        performSearch();
+    }
+});
+</script>
+{% endblock %}
