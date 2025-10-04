@@ -1,0 +1,2 @@
+web: cd frontend && npm install && npm run build:render && serve -s build -l 3000
+release: cd frontend && npm install && npm run build:render
