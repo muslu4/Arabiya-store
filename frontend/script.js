@@ -328,6 +328,7 @@ async function showProductDetails(productId) {
         showModal('productModal');
     } catch (error) {
         console.error('Error loading product details:', error);
+        showToast('المنتج غير موجود', 'error');
     } finally {
         hideLoading();
     }

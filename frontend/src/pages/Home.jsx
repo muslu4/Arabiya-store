@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import * as axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import BottomNav from '../components/BottomNav';
@@ -26,6 +27,11 @@ const Home = ({ user, setUser }) => {
     loadCart();
   }, []);
 
+  const refreshData = () => {
+    fetchProducts();
+    fetchCategories();
+  };
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -42,7 +48,7 @@ const Home = ({ user, setUser }) => {
 
   const fetchProducts = async () => {
     try {
-      const response = await api.get('/products/');
+      const response = await axios.default.get('http://127.0.0.1:8000/api/products/');
       console.log('API Response:', response);
       const data = response.data;
       const list = Array.isArray(data) ? data : (data?.results || []);
@@ -50,7 +56,7 @@ const Home = ({ user, setUser }) => {
       // Normalize to match UI expectations
       const normalized = list.map((p) => ({
         ...p,
-        image: p.main_image_url || p.main_image || null,
+        image: p.image || p.main_image_url || p.main_image || null,
         stock: typeof p.stock_quantity === 'number' ? p.stock_quantity : (p.is_in_stock ? 1 : 0),
         discount: typeof p.discount_percentage === 'number' ? p.discount_percentage : 0,
       }));
@@ -66,7 +72,7 @@ const Home = ({ user, setUser }) => {
 
   const fetchCategories = async () => {
     try {
-      const response = await api.get('/products/categories/');
+      const response = await axios.default.get('http://127.0.0.1:8000/api/products/categories/');
       console.log('Categories API Response:', response);
       const data = response.data;
       const list = Array.isArray(data) ? data : (data?.results || []);
@@ -213,6 +219,16 @@ const Home = ({ user, setUser }) => {
                   )}
                 </button>
               </div>
+              {/* Refresh */}
+              <button
+                onClick={refreshData}
+                className="p-2 text-gray-600 hover:text-indigo-600 transition-colors rounded-lg hover:bg-indigo-50"
+                title="تحديث البيانات"
+              >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              </button>
               {/* Menu */}
               <div className="relative">
                 <button 

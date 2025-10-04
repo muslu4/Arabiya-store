@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { api } from '../api';
+import * as axios from 'axios';
 import { formatCurrency } from '../utils/currency';
 import Footer from '../components/Footer';
 
@@ -17,6 +17,13 @@ const Categories = ({ user }) => {
     loadCart();
   }, []);
 
+  const refreshData = () => {
+    fetchCategories();
+    if (selectedCategory) {
+      fetchProductsByCategory(selectedCategory);
+    }
+  };
+
   useEffect(() => {
     if (selectedCategory) {
       fetchProductsByCategory(selectedCategory);
@@ -25,7 +32,7 @@ const Categories = ({ user }) => {
 
   const fetchCategories = async () => {
     try {
-      const response = await api.get('/products/categories/');
+      const response = await axios.default.get('http://127.0.0.1:8000/api/products/categories/');
       const data = response.data;
       const list = Array.isArray(data) ? data : (data?.results || []);
       setCategories(list);
@@ -40,7 +47,7 @@ const Categories = ({ user }) => {
   const fetchProductsByCategory = async (categoryId) => {
     try {
       setLoading(true);
-      const response = await api.get(`/products/?category=${categoryId}`);
+      const response = await axios.default.get(`http://127.0.0.1:8000/api/products/?category=${categoryId}`);
       const data = response.data;
       const list = Array.isArray(data) ? data : (data?.results || []);
 
@@ -152,6 +159,16 @@ const Categories = ({ user }) => {
                   )}
                 </Link>
               </div>
+              {/* Refresh */}
+              <button
+                onClick={refreshData}
+                className="p-2 text-gray-600 hover:text-primary-600 transition-colors"
+                title="تحديث البيانات"
+              >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              </button>
               {user && (
                 <span className="text-gray-700">مرحباً، {user.phone}</span>
               )}

@@ -7,6 +7,9 @@ export const api = axios.default.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  params: {
+    _: new Date().getTime(),
+  },
 });
 
 // Request interceptor to add auth token
@@ -48,6 +51,7 @@ export const endpoints = {
   // Products
   products: '/products/',
   categories: '/products/categories/',
+  banners: '/products/banners/', 
   
   // Orders
   orders: '/orders/',

@@ -4,7 +4,7 @@ echo 🎨 تشغيل واجهة MIMI STORE...
 
 REM Check if backend is running
 echo 🔍 فحص حالة Backend...
-curl -s http://localhost:8000/api/ >nul 2>&1
+curl -s http://localhost:8080/api/ >nul 2>&1
 if %errorlevel% neq 0 (
     echo ❌ Backend غير متصل!
     echo 🚀 يرجى تشغيل Backend أولاً باستخدام:
@@ -55,8 +55,8 @@ echo ✅ تم فتح واجهة MIMI STORE!
 echo.
 echo 🔗 الروابط:
 echo    الواجهة الأمامية: file:///%HTML_PATH%
-echo    Backend API: http://localhost:8000/api
-echo    Django Admin: http://localhost:8000/admin
+echo    Backend API: http://localhost:8080/api
+echo    Django Admin: http://localhost:8080/admin
 echo.
 echo 👤 بيانات المشرف:
 echo    الهاتف: admin
