@@ -6,6 +6,28 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = '__all__'
 
+class ProductListSerializer(serializers.ModelSerializer):
+    """A simplified serializer for product lists"""
+    category_name = serializers.CharField(source='category.name', read_only=True)
+    main_image_url = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'price', 'discount_percentage', 'category_name', 'main_image_url', 'image', 'is_featured', 'is_in_stock']
+
+    def get_main_image_url(self, obj):
+        if obj.main_image:
+            return obj.main_image
+        return None
+
+    def get_image(self, obj):
+        # Return the first available image
+        for img_field in [obj.main_image, obj.image_2, obj.image_3, obj.image_4]:
+            if img_field:
+                return img_field
+        return None
+
 class ProductSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source='category.name', read_only=True)
     main_image_url = serializers.SerializerMethodField()
