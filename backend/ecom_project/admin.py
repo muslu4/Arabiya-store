@@ -38,7 +38,7 @@ class MIMIAdminSite(AdminSite):
         extra_context['total_revenue'] = Order.objects.filter(
             status__in=['delivered']
         ).aggregate(
-            total=Sum('total_amount')
+            total=Sum('subtotal')
         )['total'] or Decimal('0')
         
         # Recent activity
