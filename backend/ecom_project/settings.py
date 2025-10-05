@@ -117,11 +117,93 @@ CURRENCY_CODE = 'IQD'
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# In production, static files will be collected to this directory
+if not DEBUG:
+    STATIC_ROOT = BASE_DIR / 'staticfiles'
+    
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
     BASE_DIR.parent / 'static',
 ]
+
+# Additional static files for Jazzmin
+JAZZMIN_STATIC = {
+    'vendor': {
+        'css': {
+            'all.min.css': 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css',
+            'adminlte.min.css': 'https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css',
+            'bootstrap.min.css': 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css',
+        },
+        'js': {
+            'jquery.min.js': 'https://code.jquery.com/jquery-3.6.0.min.js',
+            'bootstrap.min.js': 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js',
+            'adminlte.min.js': 'https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js',
+        }
+    }
+}
+
+# Static files finders
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
+# Static files storage
+if not DEBUG:
+    # In production, we need to set STATIC_ROOT and run collectstatic
+    # Use ManifestStaticFilesStorage for better caching
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+else:
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
+# Make sure static files are served properly
+STATIC_URL = '/static/'
+
+# Ensure static files are served in production
+if not DEBUG:
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+    # Make sure all static files are collected
+    STATIC_ROOT = BASE_DIR / 'staticfiles'
+    # Ensure static files are properly served
+    STATIC_URL = '/static/'
+    # Make sure static files are collected during deployment
+    STATICFILES_DIRS = [
+        BASE_DIR / 'static',
+        BASE_DIR.parent / 'static',
+    ]
+    # Ensure static files are served correctly in production
+    STATICFILES_FINDERS = [
+        'django.contrib.staticfiles.finders.FileSystemFinder',
+        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    ]
+    # Use external CDN for static files in production
+    JAZZMIN_SETTINGS = {
+        **JAZZMIN_SETTINGS,
+        'use_external_cdn': True,
+        'external_cdn': {
+            'fontawesome': 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css',
+            'adminlte': {
+                'css': 'https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css',
+                'js': 'https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js',
+            },
+            'bootstrap': {
+                'css': 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css',
+                'js': 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js',
+            },
+            'jquery': 'https://code.jquery.com/jquery-3.6.0.min.js',
+        },
+    }
+    # Make sure static files are collected during deployment
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+    # Ensure static files are collected during deployment
+    STATIC_ROOT = BASE_DIR / 'staticfiles'
+    # Ensure static files are served correctly in production
+    STATIC_URL = '/static/'
+    # Make sure static files are collected during deployment
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+    # Ensure static files are collected during deployment
+    STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Media files
 MEDIA_URL = '/media/'
