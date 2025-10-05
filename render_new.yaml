@@ -10,7 +10,7 @@ services:
       touch db.sqlite3
       python manage.py makemigrations --noinput
       python manage.py migrate --noinput
-      python manage.py collectstatic --noinput
+      python collect_static.py
       python manage.py shell < create_sample_data.py
     startCommand: gunicorn ecom_project.wsgi:application --chdir backend
 
