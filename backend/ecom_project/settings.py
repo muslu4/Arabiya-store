@@ -32,6 +32,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'whitenoise',
 ]
 
 LOCAL_APPS = [
@@ -45,9 +46,9 @@ LOCAL_APPS = [
 INSTALLED_APPS = ['jazzmin'] + DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -121,6 +122,14 @@ STATIC_URL = '/static/'
 # In production, static files will be collected to this directory
 if not DEBUG:
     STATIC_ROOT = BASE_DIR / 'staticfiles'
+    # Use WhiteNoise for serving static files in production
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    # WhiteNoise settings
+    WHITENOISE_USE_FINDERS = True
+    WHITENOISE_COMPRESSION_ENABLED = True
+    WHITENOISE_SKIP_COMPRESS_EXTENSIONS = [
+        '.jpg', '.jpeg', '.png', '.gif', '.webp', '.zip', '.gz', '.tgz', '.bz2', '.xz',
+    ]
     
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
