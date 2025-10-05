@@ -213,7 +213,7 @@ dist
 
 # Gatsby files
 .cache/
-public
+# public  # Commented out to allow React public folder
 
 # Storybook build outputs
 .out
@@ -249,7 +249,8 @@ media/
 staticfiles/
 
 # Local database
-*.sqlite3
+# *.sqlite3
+
 
 # Backup files
 *.bak
