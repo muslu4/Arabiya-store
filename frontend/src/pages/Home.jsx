@@ -183,7 +183,7 @@ const Home = ({ user, setUser }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo and Title */}
-            <div className="flex items-center space-x-4 space-x-reverse">
+            <div className="flex items-center space-x-2 md:space-x-4 space-x-reverse">
               <div className="relative">
                 <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg shadow-md flex items-center justify-center">
                   <svg className="w-6 h-6 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -192,9 +192,9 @@ const Home = ({ user, setUser }) => {
                 </div>
                 <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
               </div>
-              <div>
-                <h1 className="text-2xl font-bold gradient-text">MIMI STORE</h1>
-                <span className="text-xs text-gray-500 block">متجر إلكتروني عراقي</span>
+              <div className="flex flex-col md:flex-row md:items-center md:space-x-2 md:space-x-reverse">
+                <h1 className="text-xl md:text-2xl font-bold gradient-text">MIMI STORE</h1>
+                <span className="text-xs md:text-sm text-gray-500 md:mt-0 mt-1">متجر إلكتروني عراقي</span>
               </div>
             </div>
 
