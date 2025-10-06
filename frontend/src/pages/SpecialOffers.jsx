@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import * as axios from 'axios';
+import { api, endpoints } from '../api';
 import { formatCurrency } from '../utils/currency';
 import Footer from '../components/Footer';
 
@@ -17,7 +17,7 @@ const SpecialOffers = ({ user }) => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.default.get('http://127.0.0.1:8000/api/products/');
+      const response = await api.get(endpoints.products);
       const data = response.data;
       const list = Array.isArray(data) ? data : (data?.results || []);
 
