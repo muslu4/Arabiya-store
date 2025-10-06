@@ -16,7 +16,7 @@ const TopBar = () => {
             <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
                 <div className="h-8 flex items-center justify-between">
                     {/* Left side quick links (in RTL this visually sits on the right) */}
-                    <nav className="flex items-center gap-2 sm:gap-3">
+                    <nav className="flex items-center gap-2 sm:gap-3 justify-end">
                         <a href="/" className="flex items-center gap-1 hover:text-primary-600">
                             <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3l9-8z" />

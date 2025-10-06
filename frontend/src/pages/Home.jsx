@@ -418,8 +418,7 @@ const Home = ({ user, setUser }) => {
                       className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                     />
                     {product.discount > 0 && (
-                      <div className="absolute top-3 right-3 bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg flex items-center">
-                        <span className="mr-1">خصم</span>
+                      <div className="absolute top-3 left-3 bg-gradient-to-r from-red-500 to-red-600 text-white w-10 h-10 rounded-full text-xs font-bold shadow-lg flex items-center justify-center">
                         <span>{product.discount}%</span>
                       </div>
                     )}
@@ -486,7 +485,7 @@ const Home = ({ user, setUser }) => {
                           addToCart(product);
                         }}
                         disabled={product.stock === 0}
-                        className={`flex-1 py-2 px-3 rounded-lg font-medium transition-all text-sm ${product.stock === 0
+                        className={`flex-1 py-2 px-2 rounded-lg font-medium transition-all text-xs ${product.stock === 0
                           ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
                           : 'btn-primary shadow-md hover:shadow-lg'
                           }`}
@@ -500,10 +499,10 @@ const Home = ({ user, setUser }) => {
                           </span>
                         ) : (
                           <span className="flex items-center justify-center">
-                            <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0h8" />
                             </svg>
-                            أضف للسلة
+                            <span className="hidden sm:inline">أضف للسلة</span><span className="sm:hidden">سلة</span>
                           </span>
                         )}
                       </button>
@@ -512,13 +511,13 @@ const Home = ({ user, setUser }) => {
                           e.stopPropagation();
                           navigate(`/product/${product.id}`);
                         }}
-                        className="px-4 py-2.5 border border-indigo-500 text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors flex items-center"
+                        className="px-2 py-2 border border-indigo-500 text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors flex items-center text-xs"
                       >
-                        <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
-                        تفاصيل
+                        <span className="hidden sm:inline">تفاصيل</span><span className="sm:hidden">عرض</span>
                       </button>
                     </div>
                   </div>
