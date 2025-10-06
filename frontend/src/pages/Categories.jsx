@@ -32,7 +32,7 @@ const Categories = ({ user }) => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.default.get('http://127.0.0.1:8000/api/products/categories/');
+      const response = await api.get(endpoints.categories);
       const data = response.data;
       const list = Array.isArray(data) ? data : (data?.results || []);
       setCategories(list);
@@ -47,7 +47,7 @@ const Categories = ({ user }) => {
   const fetchProductsByCategory = async (categoryId) => {
     try {
       setLoading(true);
-      const response = await axios.default.get(`http://127.0.0.1:8000/api/products/?category=${categoryId}`);
+      const response = await api.get(`${endpoints.products}?category=${categoryId}`);
       const data = response.data;
       const list = Array.isArray(data) ? data : (data?.results || []);
 
