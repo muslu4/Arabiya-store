@@ -411,7 +411,7 @@ const Home = ({ user, setUser }) => {
                   onClick={() => navigate(`/product/${product.id}`)}
                 >
                   {/* Product Image */}
-                  <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 h-64">
+                  <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 h-40 md:h-48">
                     <img
                       src={product.image || '/placeholder-product.png'}
                       alt={product.name}
@@ -442,51 +442,51 @@ const Home = ({ user, setUser }) => {
                   </div>
 
                   {/* Product Info */}
-                  <div className="p-5 bg-gradient-to-b from-white to-gray-50 border-t border-gray-100">
-                    <div className="flex justify-between items-start mb-3">
-                      <h4 className="font-bold text-lg text-gray-800 line-clamp-2 flex-1 pr-3">
+                  <div className="p-3 md:p-4 bg-gradient-to-b from-white to-gray-50 border-t border-gray-100">
+                    <div className="flex justify-between items-start mb-2">
+                      <h4 className="font-bold text-sm md:text-base text-gray-800 line-clamp-1 flex-1 pr-2">
                         {product.name}
                       </h4>
-                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full whitespace-nowrap">
+                      <span className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full whitespace-nowrap">
                         {product.brand || 'علامة تجارية'}
                       </span>
                     </div>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2 pr-2">
+                    <p className="text-gray-600 text-xs mb-3 line-clamp-1 pr-2 hidden md:block">
                       {product.description || 'لا يوجد وصف متاح للمنتج'}
                     </p>
 
                     {/* Price */}
-                    <div className="flex items-center justify-between mb-5 pb-3 border-b border-gray-100">
-                      <div className="flex items-center space-x-2 space-x-reverse">
+                    <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
+                      <div className="flex items-center space-x-1 md:space-x-2 space-x-reverse">
                         {product.discount > 0 ? (
                           <>
-                            <span className="text-xl font-bold text-indigo-600 flex items-center">
+                            <span className="text-base md:text-lg font-bold text-indigo-600 flex items-center">
                               {formatCurrency(product.price * (1 - product.discount / 100))}
-                              <span className="text-xs text-gray-500 mr-2">د.ع</span>
+                              <span className="text-xs text-gray-500 mr-1">د.ع</span>
                             </span>
-                            <span className="text-sm text-gray-500 line-through flex items-center">
+                            <span className="text-xs md:text-sm text-gray-500 line-through flex items-center hidden sm:inline">
                               {formatCurrency(product.price)}
                               <span className="text-xs text-gray-500 mr-1">د.ع</span>
                             </span>
                           </>
                         ) : (
-                          <span className="text-xl font-bold text-indigo-600 flex items-center">
+                          <span className="text-base md:text-lg font-bold text-indigo-600 flex items-center">
                             {formatCurrency(product.price)}
-                            <span className="text-xs text-gray-500 mr-2">د.ع</span>
+                            <span className="text-xs text-gray-500 mr-1">د.ع</span>
                           </span>
                         )}
                       </div>
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex space-x-2 space-x-reverse">
+                    <div className="flex space-x-1 space-x-reverse">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           addToCart(product);
                         }}
                         disabled={product.stock === 0}
-                        className={`flex-1 py-2.5 px-4 rounded-lg font-medium transition-all ${product.stock === 0
+                        className={`flex-1 py-2 px-3 rounded-lg font-medium transition-all text-sm ${product.stock === 0
                           ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
                           : 'btn-primary shadow-md hover:shadow-lg'
                           }`}
