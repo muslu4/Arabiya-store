@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import * as axios from 'axios';
+import { api, endpoints } from '../api';
 import { formatCurrency, getFreeShippingThreshold } from '../utils/currency';
 import Cart from '../components/CartNew';
 import CheckoutNew from '../components/CheckoutNew';
@@ -23,7 +23,7 @@ const ProductDetail = ({ user }) => {
 
   const fetchProduct = async () => {
     try {
-      const response = await axios.default.get(`http://127.0.0.1:8000/api/products/${id}/`);
+      const response = await api.get(`${endpoints.products}${id}/`);
       setProduct(response.data);
     } catch (error) {
       console.error('Error fetching product:', error);
