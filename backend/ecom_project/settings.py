@@ -256,13 +256,17 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8080',  # Alternative port
 ]
 
-# Render frontend URL (will be replaced during deployment)
-RENDER_FRONTEND_URL = config('RENDER_FRONTEND_URL', default='')
+# Render frontend URL
+RENDER_FRONTEND_URL = config('RENDER_FRONTEND_URL', default='https://ecom-parent-project-1.onrender.com')
 if RENDER_FRONTEND_URL:
     CORS_ALLOWED_ORIGINS.append(RENDER_FRONTEND_URL)
 
 # Allow file:// protocol for local HTML files
-CORS_ALLOW_ALL_ORIGINS = True  # For development only
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True  # For development only
+else:
+    # In production, only allow specific origins
+    CORS_ALLOWED_ORIGINS.append('https://ecom-parent-project-1.onrender.com')
 CORS_ALLOW_CREDENTIALS = True
 
 # Additional CORS headers

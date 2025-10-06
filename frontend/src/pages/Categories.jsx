@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import * as axios from 'axios';
+import { api, endpoints } from '../api';
 import { formatCurrency } from '../utils/currency';
 import Footer from '../components/Footer';
 

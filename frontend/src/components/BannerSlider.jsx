@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import * as axios from 'axios';
+import { api, endpoints } from '../api';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const BannerSlider = () => {
@@ -12,7 +12,7 @@ const BannerSlider = () => {
     const fetchBanners = async () => {
       try {
         setLoading(true);
-        const response = await axios.default.get('http://127.0.0.1:8000/api/products/banners/');
+        const response = await api.get(endpoints.banners);
         setBanners(response.data);
         setError(null);
       } catch (err) {

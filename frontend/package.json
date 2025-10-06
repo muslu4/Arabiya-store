@@ -63,5 +63,5 @@
     "cross-env": "^10.0.0",
     "postcss": "^8.5.6"
   },
-  "proxy": "https://your-backend-url.onrender.com"
+  "proxy": "https://ecom-parent-project.onrender.com"
 }
