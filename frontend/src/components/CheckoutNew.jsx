@@ -24,10 +24,8 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
   const [formData, setFormData] = useState({
     customerName: '',
     customerPhone: '',
-    customerEmail: '',
     customerAddress: '',
     governorate: '',
-    additionalInfo: '',
     paymentMethod: 'cash',
   });
 
@@ -37,10 +35,8 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
       setFormData({
         customerName: user.name || '',
         customerPhone: user.phone || '',
-        customerEmail: user.email || '',
         customerAddress: user.address || '',
         governorate: user.governorate || '',
-        additionalInfo: '',
         paymentMethod: 'cash',
       });
     }
@@ -190,8 +186,9 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
                         name="customerName"
                         value={formData.customerName}
                         onChange={handleInputChange}
-                        className="input-field"
+                        className="input-field bg-gray-100"
                         required
+                        readOnly
                       />
                     </div>
                     <div>
@@ -201,20 +198,12 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
                         name="customerPhone"
                         value={formData.customerPhone}
                         onChange={handleInputChange}
-                        className="input-field"
+                        className="input-field bg-gray-100"
                         required
+                        readOnly
                       />
                     </div>
-                    <div>
-                      <label className="block text-gray-700 mb-2">البريد الإلكتروني</label>
-                      <input
-                        type="email"
-                        name="customerEmail"
-                        value={formData.customerEmail}
-                        onChange={handleInputChange}
-                        className="input-field"
-                      />
-                    </div>
+
                   </div>
                 </div>
 
@@ -249,10 +238,7 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
                         <option value="ذي قار">ذي قار</option>
                         <option value="القادسية">القادسية</option>
                         <option value="مثنى">مثنى</option>
-                        <option value="القادسية">القادسية</option>
                         <option value="كركوك">كركوك</option>
-                        <option value="صلاح الدين">صلاح الدين</option>
-                        <option value="صلاح الدين">صلاح الدين</option>
                         <option value="السماوة">السماوة</option>
                         <option value="العمارة">العمارة</option>
                         <option value="الرمادي">الرمادي</option>
@@ -275,10 +261,23 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
                         <option value="الشطرة">الشطرة</option>
                         <option value="الديوانية">الديوانية</option>
                         <option value="عفك">عفك</option>
-                        <option value="السماوة">السماوة</option>
                         <option value="الرميثة">الرميثة</option>
                         <option value="الشامية">الشامية</option>
                         <option value="الغرفي">الغرفي</option>
+                        <option value="تكريت">تكريت</option>
+                        <option value="سامراء">سامراء</option>
+                        <option value="الفلوجة">الفلوجة</option>
+                        <option value="حديثة">حديثة</option>
+                        <option value="عانة">عانة</option>
+                        <option value="رطبة">رطبة</option>
+                        <option value="القائم">القائم</option>
+                        <option value="بعقوبة">بعقوبة</option>
+                        <option value="مندلي">مندلي</option>
+                        <option value="خالص">خالص</option>
+                        <option value="جصان">جصان</option>
+                        <option value="الكوت">الكوت</option>
+                        <option value="الزبير">الزبير</option>
+                        <option value="الناصرية">الناصرية</option>
                       </select>
                     </div>
                     <div className="md:col-span-2">
