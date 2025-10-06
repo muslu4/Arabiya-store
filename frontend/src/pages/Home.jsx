@@ -192,9 +192,8 @@ const Home = ({ user, setUser }) => {
                 </div>
                 <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
               </div>
-              <div className="flex flex-col md:flex-row md:items-center md:space-x-2 md:space-x-reverse">
-                <h1 className="text-xl md:text-2xl font-bold gradient-text">MIMI STORE</h1>
-                <span className="text-xs md:text-sm text-gray-500 md:mt-0 mt-1">متجر إلكتروني عراقي</span>
+              <div>
+                <h1 className="text-lg md:text-2xl font-bold gradient-text">MIMI STORE</h1>
               </div>
             </div>
 
