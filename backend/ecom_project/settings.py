@@ -289,7 +289,7 @@ FIREBASE_CREDENTIALS_PATH = config('FIREBASE_CREDENTIALS_PATH', default='')
 FIREBASE_PROJECT_ID = config('FIREBASE_PROJECT_ID', default='')
 
 # ImgBB Configuration
-IMGBB_API_KEY = config('IMGBB_API_KEY', default='')
+IMGBB_API_KEY = config('IMGBB_API_KEY', default='a2cebbc3daff0b042082a5d5d7a3b80d')
 
 # Security Settings
 if not DEBUG:
