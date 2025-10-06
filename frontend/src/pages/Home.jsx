@@ -178,10 +178,6 @@ const Home = ({ user, setUser }) => {
       {isCheckoutOpen && <Checkout cart={cart} onCheckout={handleCheckoutComplete} onClose={() => setIsCheckoutOpen(false)} />}
       {/* Top bar */}
       <TopBar />
-      {/* Banner Slider */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <BannerSlider />
-      </div>
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-40 backdrop-blur-sm bg-opacity-95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -318,6 +314,10 @@ const Home = ({ user, setUser }) => {
           </div>
         </div>
       </header>
+      {/* Banner Slider */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <BannerSlider />
+      </div>
 
       {/* Banner Section */}
       <div className="relative w-full h-64 overflow-hidden rounded-xl mx-4 mt-6 shadow-xl bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center">
