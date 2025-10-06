@@ -255,16 +255,6 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
                     </div>
                   </div>
                   </div>
-                  <div className="mt-4">
-                    <label className="block text-gray-700 mb-2">ملاحظات إضافية</label>
-                    <textarea
-                      name="additionalInfo"
-                      value={formData.additionalInfo}
-                      onChange={handleInputChange}
-                      className="input-field"
-                      rows={2}
-                    ></textarea>
-                  </div>
 
                 <div className="mb-6">
                   <h3 className="text-lg font-semibold mb-4 text-gray-700">طريقة الدفع</h3>

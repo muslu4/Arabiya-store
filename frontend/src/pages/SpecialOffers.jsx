@@ -166,7 +166,7 @@ const SpecialOffers = ({ user }) => {
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
               {products.map((product, index) => (
                 <div
                   key={product.id}
@@ -175,14 +175,13 @@ const SpecialOffers = ({ user }) => {
                   onClick={() => navigate(`/product/${product.id}`)}
                 >
                   {/* Product Image */}
-                  <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 h-64">
+                  <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 h-40 md:h-48">
                     <img
                       src={product.image || '/placeholder-product.png'}
                       alt={product.name}
                       className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                     />
-                    <div className="absolute top-3 right-3 bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg flex items-center">
-                      <span className="mr-1">خصم</span>
+                    <div className="absolute top-3 left-3 bg-gradient-to-r from-red-500 to-red-600 text-white w-10 h-10 rounded-full text-xs font-bold shadow-lg flex items-center justify-center">
                       <span>{product.discount}%</span>
                     </div>
                     {product.stock <= 5 && product.stock > 0 && (
@@ -204,28 +203,28 @@ const SpecialOffers = ({ user }) => {
                   </div>
 
                   {/* Product Info */}
-                  <div className="p-5 bg-gradient-to-b from-white to-gray-50 border-t border-gray-100">
-                    <div className="flex justify-between items-start mb-3">
-                      <h4 className="font-bold text-lg text-gray-800 line-clamp-2 flex-1 pr-3">
+                  <div className="p-3 md:p-4 bg-gradient-to-b from-white to-gray-50 border-t border-gray-100">
+                    <div className="flex justify-between items-start mb-2">
+                      <h4 className="font-bold text-sm md:text-base text-gray-800 line-clamp-1 flex-1 pr-2">
                         {product.name}
                       </h4>
-                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full whitespace-nowrap">
+                      <span className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full whitespace-nowrap">
                         {product.brand || 'علامة تجارية'}
                       </span>
                     </div>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2 pr-2">
+                    <p className="text-gray-600 text-xs mb-3 line-clamp-1 pr-2 hidden md:block">
                       {product.description || 'لا يوجد وصف متاح للمنتج'}
                     </p>
 
                     {/* Price */}
-                    <div className="flex items-center justify-between mb-5 pb-3 border-b border-gray-100">
+                    <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
                       <div className="flex items-center space-x-2 space-x-reverse">
                         <>
-                          <span className="text-xl font-bold text-indigo-600 flex items-center">
+                          <span className="text-base md:text-lg font-bold text-indigo-600 flex items-center">
                             {formatCurrency(product.price * (1 - product.discount / 100))}
-                            <span className="text-xs text-gray-500 mr-2">د.ع</span>
+                            <span className="text-xs text-gray-500 mr-1">د.ع</span>
                           </span>
-                          <span className="text-sm text-gray-500 line-through flex items-center">
+                          <span className="text-xs md:text-sm text-gray-500 line-through flex items-center hidden sm:inline">
                             {formatCurrency(product.price)}
                             <span className="text-xs text-gray-500 mr-1">د.ع</span>
                           </span>
@@ -234,14 +233,14 @@ const SpecialOffers = ({ user }) => {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex space-x-2 space-x-reverse">
+                    <div className="flex space-x-1 space-x-reverse">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           addToCart(product);
                         }}
                         disabled={product.stock === 0}
-                        className={`flex-1 py-2.5 px-4 rounded-lg font-medium transition-all ${product.stock === 0
+                        className={`flex-1 py-2 px-2 rounded-lg font-medium transition-all text-xs ${product.stock === 0
                           ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
                           : 'btn-primary shadow-md hover:shadow-lg'
                           }`}
@@ -255,10 +254,10 @@ const SpecialOffers = ({ user }) => {
                           </span>
                         ) : (
                           <span className="flex items-center justify-center">
-                            <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0h8" />
                             </svg>
-                            أضف للسلة
+                            <span className="hidden sm:inline">أضف للسلة</span><span className="sm:hidden">سلة</span>
                           </span>
                         )}
                       </button>
@@ -267,13 +266,13 @@ const SpecialOffers = ({ user }) => {
                           e.stopPropagation();
                           navigate(`/product/${product.id}`);
                         }}
-                        className="px-4 py-2.5 border border-indigo-500 text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors flex items-center"
+                        className="px-2 py-2 border border-indigo-500 text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors flex items-center text-xs"
                       >
-                        <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
-                        تفاصيل
+                        <span className="hidden sm:inline">تفاصيل</span><span className="sm:hidden">عرض</span>
                       </button>
                     </div>
                   </div>
