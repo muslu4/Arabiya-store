@@ -28,24 +28,32 @@ const Login = ({ setUser }) => {
   };
 
   const validateForm = () => {
-    if (!formData.phone || !formData.password || (!isLogin && !formData.name)) {
+    // تحقق من الحقول الأساسية
+    if (!formData.phone || !formData.password) {
       setError('يرجى ملء جميع الحقول المطلوبة');
       return false;
     }
 
+    // تحقق من رقم الهاتف
     if (formData.phone.length < 10) {
       setError('رقم الهاتف يجب أن يكون 10 أرقام على الأقل');
       return false;
     }
 
+    // تحقق من كلمة المرور
     if (formData.password.length < 6) {
       setError('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
       return false;
     }
 
+    // تحقق إضافي لحقول تسجيل المستخدم الجديد
     if (!isLogin) {
       if (!formData.name || formData.name.trim().length < 2) {
         setError('يرجى إدخال الاسم الكامل');
+        return false;
+      }
+      if (!formData.confirmPassword) {
+        setError('يرجى تأكيد كلمة المرور');
         return false;
       }
       if (formData.password !== formData.confirmPassword) {
