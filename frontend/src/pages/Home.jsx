@@ -298,15 +298,17 @@ const Home = ({ user, setUser }) => {
 
               {/* User */}
               {user ? (
-                <div className="hidden md:flex items-center space-x-4 space-x-reverse">
-                  <span className="text-gray-700">مرحباً، {user.phone}</span>
+                <div className="flex flex-col md:flex-row md:items-center md:space-x-4 md:space-x-reverse">
+                  <span className="text-gray-700 text-sm mb-2 md:mb-0">مرحباً، {user.phone}</span>
                   {user.is_admin && (
-                    <Link to="/admin" className="btn-secondary py-2 px-3">لوحة الإدارة</Link>
+                    <Link to="/admin" className="btn-secondary py-2 px-3 text-sm mb-2 md:mb-0">لوحة الإدارة</Link>
                   )}
-                  <button onClick={logout} className="text-red-600 hover:text-red-700">تسجيل خروج</button>
+                  <button onClick={logout} className="text-red-600 hover:text-red-700 text-sm">تسجيل خروج</button>
                 </div>
               ) : (
-                <Link to="/login" className="hidden md:inline-block btn-primary py-2 px-4">تسجيل دخول</Link>
+                <div className="flex flex-col md:flex-row">
+                  <Link to="/login" className="btn-primary py-2 px-4 text-sm">تسجيل دخول</Link>
+                </div>
               )}
             </div>
           </div>
@@ -400,7 +402,7 @@ const Home = ({ user, setUser }) => {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
               {filteredProducts.map((product, index) => (
                 <div 
                   key={product.id} 
