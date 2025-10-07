@@ -16,7 +16,11 @@ from rest_framework.permissions import AllowAny
 class LoginView(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
-        return UserViewSet().login(request)
+        viewset = UserViewSet()
+        viewset.action = 'login'
+        viewset.request = request
+        viewset.format_kwarg = None
+        return viewset.login(request)
 
 urlpatterns = [
     path('', include(router.urls)),
