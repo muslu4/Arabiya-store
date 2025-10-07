@@ -186,9 +186,8 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
                         name="customerName"
                         value={formData.customerName}
                         onChange={handleInputChange}
-                        className="input-field bg-gray-100"
+                        className="input-field"
                         required
-                        readOnly
                       />
                     </div>
                     <div>
@@ -198,9 +197,8 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
                         name="customerPhone"
                         value={formData.customerPhone}
                         onChange={handleInputChange}
-                        className="input-field bg-gray-100"
+                        className="input-field"
                         required
-                        readOnly
                       />
                     </div>
 
