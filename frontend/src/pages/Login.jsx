@@ -92,7 +92,7 @@ const Login = ({ setUser }) => {
         });
       } else {
         // Register
-        response = await api.post('/users/register/', {
+        response = await api.post('/users/users/', {
           phone: formData.phone,
           password: formData.password,
           password_confirm: formData.confirmPassword,
