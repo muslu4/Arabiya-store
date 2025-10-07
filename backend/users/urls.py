@@ -23,5 +23,5 @@ urlpatterns = [
     # Authentication URLs
     path('auth/', include('rest_framework.urls')),
     # Direct login path
-    path('login/', LoginView.as_view({'post': 'login'})),
+    path('login/', LoginView.as_view()),
 ]
