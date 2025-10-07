@@ -90,7 +90,7 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
         customer: {
           name: formData.customerName,
           phone: formData.customerPhone,
-          email: formData.customerEmail || '',
+
           address: formData.customerAddress,
           governorate: formData.governorate,
         },
@@ -201,6 +201,7 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
                         required
                       />
                     </div>
+
 
                   </div>
                 </div>
