@@ -86,7 +86,7 @@ const Login = ({ setUser }) => {
 
       if (isLogin) {
         // Login
-        response = await api.post('/users/login/', {
+        response = await api.post('/users/users/login/', {
           phone: formData.phone,
           password: formData.password
         });
