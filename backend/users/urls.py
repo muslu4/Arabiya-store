@@ -10,4 +10,6 @@ urlpatterns = [
     path('', include(router.urls)),
     # Authentication URLs
     path('auth/', include('rest_framework.urls')),
+    # Direct login path
+    path('login/', UserViewSet.as_view({'post': 'login'})),
 ]
