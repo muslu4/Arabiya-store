@@ -23,7 +23,7 @@ class UserViewSet(viewsets.ModelViewSet):
             return [permissions.AllowAny()]
         return [permissions.IsAuthenticated()]
 
-    @action(detail=False, methods=['post'], permission_classes=[permissions.AllowAny])
+    @action(detail=False, methods=['post'], permission_classes=[permissions.AllowAny()])
     def login(self, request):
         """تسجيل الدخول"""
         phone = request.data.get('phone')
@@ -50,7 +50,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 'error': 'رقم الهاتف وكلمة المرور مطلوبان'
             }, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=False, methods=['post'], permission_classes=[permissions.AllowAny])
+    @action(detail=False, methods=['post'], permission_classes=[permissions.AllowAny()])
     def logout(self, request):
         """تسجيل الخروج"""
         try:
