@@ -88,7 +88,7 @@ class LoginView(views.APIView):
         password = request.data.get('password')
 
         if phone and password:
-            user = authenticate(request, username=phone, password=password)
+            user = authenticate(request, phone=phone, password=password)
 
             if user:
                 refresh = RefreshToken.for_user(user)
