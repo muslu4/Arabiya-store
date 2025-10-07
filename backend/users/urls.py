@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework import permissions
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from .views import UserViewSet
+from .views import UserViewSet, LoginView
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -12,20 +12,12 @@ router.register(r'users', UserViewSet)
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 
-@method_decorator(csrf_exempt, name='dispatch')
-class LoginView(APIView):
-    permission_classes = [AllowAny]
-    def post(self, request):
-        viewset = UserViewSet()
-        viewset.action = 'login'
-        viewset.request = request
-        viewset.format_kwarg = None
-        return viewset.login(request)
+
 
 urlpatterns = [
     path('', include(router.urls)),
     # Authentication URLs
     path('auth/', include('rest_framework.urls')),
     # Direct login path
-    path('login/', LoginView.as_view()),
+    path('login/', csrf_exempt(LoginView.as_view())),
 ]

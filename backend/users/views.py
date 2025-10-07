@@ -1,5 +1,5 @@
 
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, views
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -77,3 +77,33 @@ class UserViewSet(viewsets.ModelViewSet):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginView(views.APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        """تسجيل الدخول"""
+        phone = request.data.get('phone')
+        password = request.data.get('password')
+
+        if phone and password:
+            user = authenticate(request, username=phone, password=password)
+
+            if user:
+                refresh = RefreshToken.for_user(user)
+                return Response({
+                    'tokens': {
+                        'refresh': str(refresh),
+                        'access': str(refresh.access_token),
+                    },
+                    'user': UserSerializer(user).data
+                })
+            else:
+                return Response({
+                    'error': 'بيانات الدخول غير صحيحة'
+                }, status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            return Response({
+                'error': 'رقم الهاتف وكلمة المرور مطلوبان'
+            }, status=status.HTTP_400_BAD_REQUEST)
