@@ -218,11 +218,12 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 20,
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
     ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
 }
 
 # JWT Configuration
@@ -257,20 +258,23 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8000',  # Backend API port
     'http://localhost:8080',  # Alternative port
     'http://127.0.0.1:8080',  # Alternative port
+    'https://ecom-parent-project-1.onrender.com',  # Production frontend
 ]
 
 # Render frontend URL
 RENDER_FRONTEND_URL = config('RENDER_FRONTEND_URL', default='https://ecom-parent-project-1.onrender.com')
-if RENDER_FRONTEND_URL:
+if RENDER_FRONTEND_URL and RENDER_FRONTEND_URL not in CORS_ALLOWED_ORIGINS:
     CORS_ALLOWED_ORIGINS.append(RENDER_FRONTEND_URL)
 
 # Allow file:// protocol for local HTML files
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True  # For development only
 else:
-    # In production, only allow specific origins
-    CORS_ALLOWED_ORIGINS.append('https://ecom-parent-project-1.onrender.com')
+    # In production, allow specific origins
+    CORS_ALLOWED_ORIGINS = list(set(CORS_ALLOWED_ORIGINS))  # Remove duplicates
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_HEADERS = True
+CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 
 # Additional CORS headers
 CORS_ALLOW_HEADERS = [
