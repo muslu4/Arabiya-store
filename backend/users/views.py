@@ -20,8 +20,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action == 'create':
-            return [permissions.AllowAny]
-        return [permissions.IsAuthenticated]
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated()]
 
     @action(detail=False, methods=['post'], permission_classes=[permissions.AllowAny])
     def login(self, request):
