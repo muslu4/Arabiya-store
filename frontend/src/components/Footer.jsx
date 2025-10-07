@@ -34,7 +34,7 @@ const Footer = () => {
             <h4 className="font-semibold mb-4">تواصل معنا</h4>
             <div className="space-y-2 text-gray-300">
               <a href="tel:+9647712345679" className="hover:text-white transition-colors block">📞 +964 771 234 5679</a>
-              <a href="https://wa.me/9647712345679" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors block">💬 واتساب</a>
+              <a href="https://wa.me/9647737698219" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors block">💬 واتساب</a>
               <a href="https://t.me/mimistore" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors block">📱 تيليجرام</a>
               <p>📍 بغداد، العراق</p>
             </div>
