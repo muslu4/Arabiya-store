@@ -46,7 +46,7 @@ api.interceptors.response.use(
 export const endpoints = {
   // Auth
   login: '/users/login/',
-  register: '/users/register/',
+  register: '/users/users/',
   
   // Products
   products: '/products/',
