@@ -11,5 +11,12 @@ urlpatterns = [
     # Authentication URLs
     path('auth/', include('rest_framework.urls')),
     # Direct login path
-    path('login/', UserViewSet.as_view({'post': 'login'})),
+    from django.views.decorators.csrf import csrf_exempt
+    from django.utils.decorators import method_decorator
+    @method_decorator(csrf_exempt, name='dispatch')
+    class LoginView(UserViewSet):
+        permission_classes = [permissions.AllowAny]
+        def post(self, request):
+            return self.login(request)
+    path('login/', LoginView.as_view()),
 ]
