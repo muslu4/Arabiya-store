@@ -272,6 +272,7 @@ if DEBUG:
 else:
     # In production, allow specific origins
     CORS_ALLOWED_ORIGINS = list(set(CORS_ALLOWED_ORIGINS))  # Remove duplicates
+    CORS_ALLOW_ALL_ORIGINS = True  # Temporary fix for production
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_HEADERS = True
 CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
