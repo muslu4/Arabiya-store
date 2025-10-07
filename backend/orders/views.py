@@ -1,7 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Order, OrderItem
 from .serializers import OrderSerializer, CreateOrderSerializer
 from notifications.firebase_service import send_notification_to_topic, subscribe_to_topic
@@ -12,7 +12,7 @@ from django.contrib.auth import get_user_model
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get_serializer_class(self):
         if self.action == 'create':
