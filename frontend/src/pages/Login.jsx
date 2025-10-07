@@ -110,6 +110,9 @@ const Login = ({ setUser }) => {
       if (response.data.user) {
         localStorage.setItem('user', JSON.stringify(response.data.user));
         setUser(response.data.user);
+        // Save welcome message
+        const welcomeMessage = `مرحباً ${response.data.user.name || response.data.user.phone}!`;
+        localStorage.setItem('welcome_message', welcomeMessage);
       }
       navigate('/');
     } catch (error) {

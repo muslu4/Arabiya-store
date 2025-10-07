@@ -25,6 +25,12 @@ const Home = ({ user, setUser }) => {
     fetchProducts();
     fetchCategories();
     loadCart();
+    // Show welcome message if exists
+    const welcomeMessage = localStorage.getItem('welcome_message');
+    if (welcomeMessage) {
+      showNotification(welcomeMessage);
+      localStorage.removeItem('welcome_message');
+    }
   }, []);
 
   const refreshData = () => {

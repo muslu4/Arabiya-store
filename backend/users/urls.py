@@ -9,11 +9,14 @@ from .views import UserViewSet
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
 
+from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
+
 @method_decorator(csrf_exempt, name='dispatch')
-class LoginView(UserViewSet):
-    permission_classes = [permissions.AllowAny]
+class LoginView(APIView):
+    permission_classes = [AllowAny]
     def post(self, request):
-        return self.login(request)
+        return UserViewSet().login(request)
 
 urlpatterns = [
     path('', include(router.urls)),
