@@ -55,7 +55,7 @@ export const endpoints = {
   
   // Orders
   orders: '/orders/',
-  createOrder: '/create_order/',
+  createOrder: '/orders/',
   
   // Admin
   adminProducts: '/admin/products/',

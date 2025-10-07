@@ -105,7 +105,7 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
       console.log('Sending order data:', orderData); // Log the data being sent
 
       // Send order to backend
-      const response = await api.post(endpoints.createOrder, orderData);
+      const response = await api.post(endpoints.orders, orderData);
 
       // Clear cart and show success message
       localStorage.removeItem('cart');
