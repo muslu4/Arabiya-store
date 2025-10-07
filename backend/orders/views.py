@@ -19,11 +19,12 @@ class OrderViewSet(viewsets.ModelViewSet):
             return CreateOrderSerializer
         return OrderSerializer
 
-    def create(self, request, *args, **kwargs):
+    @action(detail=False, methods=['post'], permission_classes=[AllowAny])
+    def create_order(self, request):
         """
         Creates an order, its items, and sends a notification to admins.
         """
-        serializer = self.get_serializer(data=request.data, context={'request': request})
+        serializer = CreateOrderSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         
         # The serializer's .create() method now handles creating the order and its items.
