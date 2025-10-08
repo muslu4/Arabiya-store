@@ -66,7 +66,10 @@ class BannerSerializer(serializers.ModelSerializer):
         if image_url and image_url != "#":
             request = self.context.get('request')
             if request and not image_url.startswith('http'):
-                return request.build_absolute_uri(image_url)
+                # Build absolute URI with proper domain
+                absolute_uri = request.build_absolute_uri(image_url)
+                print(f"Absolute URI: {absolute_uri}")
+                return absolute_uri
             return image_url
         return None
         

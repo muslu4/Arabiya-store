@@ -282,5 +282,7 @@ class Banner(models.Model):
     def get_image_url(self):
         """Get the image URL for the banner"""
         if self.image:
+            print(f"Banner image field: {self.image}")
+            print(f"Banner image URL: {self.image.url}")
             return self.image.url
         return self.image_url or "#"
