@@ -53,6 +53,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class BannerSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     link = serializers.SerializerMethodField()
+    product_id = serializers.SerializerMethodField()
     
     class Meta:
         model = Banner
@@ -65,9 +66,17 @@ class BannerSerializer(serializers.ModelSerializer):
             if request:
                 return request.build_absolute_uri(obj.image.url)
             return obj.image.url
-        return obj.image_url or None
+        elif obj.image_url:
+            return obj.image_url
+        return None
         
     def get_link(self, obj):
         # Return the link using the get_link method from the model
         return obj.get_link()
+        
+    def get_product_id(self, obj):
+        # Return the product ID if exists
+        if obj.product:
+            return obj.product.id
+        return None
 
