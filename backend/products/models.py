@@ -276,7 +276,7 @@ class Banner(models.Model):
     def get_link(self):
         """Get the link URL for the banner"""
         if self.product:
-            return f"/product/{self.product.slug}/"
+            return f"/product/{self.product.id}/"
         return self.link_url or "#"
 
     def get_image_url(self):

@@ -60,14 +60,13 @@ class BannerSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
     def get_image(self, obj):
-        # Return the image URL or image_url field
-        if obj.image:
+        # Use the get_image_url method from the model
+        image_url = obj.get_image_url()
+        if image_url and image_url != "#":
             request = self.context.get('request')
-            if request:
-                return request.build_absolute_uri(obj.image.url)
-            return obj.image.url
-        elif obj.image_url:
-            return obj.image_url
+            if request and not image_url.startswith('http'):
+                return request.build_absolute_uri(image_url)
+            return image_url
         return None
         
     def get_link(self, obj):

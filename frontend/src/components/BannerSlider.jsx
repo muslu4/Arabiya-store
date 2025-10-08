@@ -100,6 +100,10 @@ const BannerSlider = () => {
                 src={banner.image}
                 alt={banner.title}
                 className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://via.placeholder.com/800x400/f3f4f6/9ca3af?text=Banner+Image';
+                }}
               />
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
                 <h2 className="text-white text-xl font-bold">{banner.title}</h2>
