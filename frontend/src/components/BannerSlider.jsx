@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { api, endpoints } from '../api';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const BannerSlider = () => {
   const [banners, setBanners] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBanners = async () => {
@@ -79,7 +81,21 @@ const BannerSlider = () => {
               index === currentIndex ? 'opacity-100' : 'opacity-0'
             }`}
           >
-            <a href={banner.link} className="block w-full h-full">
+            <div 
+              className="block w-full h-full cursor-pointer"
+              onClick={() => {
+                // Check if the banner has a product ID
+                if (banner.product_id) {
+                  navigate(`/product/${banner.product_id}`);
+                } else if (banner.link && banner.link.startsWith('http')) {
+                  // External link - open in new tab
+                  window.open(banner.link, '_blank');
+                } else if (banner.link) {
+                  // Internal link - navigate
+                  navigate(banner.link);
+                }
+              }}
+            >
               <img
                 src={banner.image}
                 alt={banner.title}
@@ -89,7 +105,7 @@ const BannerSlider = () => {
                 <h2 className="text-white text-xl font-bold">{banner.title}</h2>
                 <p className="text-white text-sm">{banner.description}</p>
               </div>
-            </a>
+            </div>
           </div>
         ))}
       </div>

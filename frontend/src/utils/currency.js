@@ -13,7 +13,7 @@ const FREE_SHIPPING_THRESHOLD = Number(
 // Simple formatter: IQD has no minor units typically, but keep 2 decimals if needed
 export function formatCurrency(value, { withCode = false } = {}) {
     const num = Number(value || 0);
-    const formatted = num.toLocaleString('ar-IQ', {
+    const formatted = num.toLocaleString('en-US', {
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
     });
@@ -22,7 +22,7 @@ export function formatCurrency(value, { withCode = false } = {}) {
 
 export function formatCurrencyWithDecimals(value, { withCode = false } = {}) {
     const num = Number(value || 0);
-    const formatted = num.toLocaleString('ar-IQ', {
+    const formatted = num.toLocaleString('en-US', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
     });
