@@ -7,7 +7,7 @@ from django.conf import settings
 import requests
 
 @api_view(['POST'])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def upload_image_to_imgbb(request):
     if 'image' not in request.FILES:
         return Response({'error': 'No image file provided'}, status=400)
