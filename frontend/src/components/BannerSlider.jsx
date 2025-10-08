@@ -86,18 +86,17 @@ const BannerSlider = () => {
               className="block w-full h-full cursor-pointer"
               onClick={() => {
                 console.log('Banner clicked:', banner);
-                // Check if the banner has a product ID
-                if (banner.product_id) {
-                  console.log('Navigating to product:', banner.product_id);
-                  navigate(`/product/${banner.product_id}`);
-                } else if (banner.link && banner.link.startsWith('http')) {
-                  // External link - open in new tab
-                  console.log('Opening external link:', banner.link);
-                  window.open(banner.link, '_blank');
-                } else if (banner.link) {
-                  // Internal link - navigate
-                  console.log('Navigating to internal link:', banner.link);
+                console.log('Banner link:', banner.link);
+                console.log('Banner product_id:', banner.product_id);
+                
+                // First try to use the link field which should contain the proper URL
+                if (banner.link && banner.link !== '#') {
+                  console.log('Navigating to link:', banner.link);
                   navigate(banner.link);
+                } else if (banner.product_id) {
+                  // Fallback to product_id if link is not available
+                  console.log('Navigating to product by ID:', banner.product_id);
+                  navigate(`/product/${banner.product_id}`);
                 } else {
                   console.log('No valid link found for banner');
                 }
