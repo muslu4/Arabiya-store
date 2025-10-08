@@ -99,6 +99,10 @@ def banner_list(request):
     قائمة جميع البانرات
     """
     banners = Banner.objects.filter(is_active=True)
-    serializer = BannerSerializer(banners, many=True)
+    print(f"Found {banners.count()} active banners")
+    for banner in banners:
+        print(f"Banner: {banner.title}, Product: {banner.product}, Image URL: {banner.get_image_url()}")
+    serializer = BannerSerializer(banners, many=True, context={'request': request})
+    print(f"Serialized banners data: {serializer.data}")
     return Response(serializer.data)
 

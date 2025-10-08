@@ -15,6 +15,7 @@ const BannerSlider = () => {
       try {
         setLoading(true);
         const response = await api.get(endpoints.banners);
+        console.log('Banners data:', response.data);
         setBanners(response.data);
         setError(null);
       } catch (err) {
@@ -84,26 +85,34 @@ const BannerSlider = () => {
             <div 
               className="block w-full h-full cursor-pointer"
               onClick={() => {
+                console.log('Banner clicked:', banner);
                 // Check if the banner has a product ID
                 if (banner.product_id) {
+                  console.log('Navigating to product:', banner.product_id);
                   navigate(`/product/${banner.product_id}`);
                 } else if (banner.link && banner.link.startsWith('http')) {
                   // External link - open in new tab
+                  console.log('Opening external link:', banner.link);
                   window.open(banner.link, '_blank');
                 } else if (banner.link) {
                   // Internal link - navigate
+                  console.log('Navigating to internal link:', banner.link);
                   navigate(banner.link);
+                } else {
+                  console.log('No valid link found for banner');
                 }
               }}
             >
               <img
                 src={banner.image}
-                alt={banner.title}
-                className="w-full h-full object-cover"
+                onLoad={() => console.log('Banner image loaded successfully')}
                 onError={(e) => {
+                  console.error('Error loading banner image:', e, banner.image);
                   e.target.onerror = null;
                   e.target.src = 'https://via.placeholder.com/800x400/f3f4f6/9ca3af?text=Banner+Image';
                 }}
+                alt={banner.title}
+                className="w-full h-full object-cover"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
                 <h2 className="text-white text-xl font-bold">{banner.title}</h2>

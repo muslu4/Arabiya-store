@@ -62,6 +62,7 @@ class BannerSerializer(serializers.ModelSerializer):
     def get_image(self, obj):
         # Use the get_image_url method from the model
         image_url = obj.get_image_url()
+        print(f"Banner image URL for {obj.title}: {image_url}")
         if image_url and image_url != "#":
             request = self.context.get('request')
             if request and not image_url.startswith('http'):
@@ -76,6 +77,8 @@ class BannerSerializer(serializers.ModelSerializer):
     def get_product_id(self, obj):
         # Return the product ID if exists
         if obj.product:
+            print(f"Banner {obj.title} is linked to product ID: {obj.product.id}")
             return obj.product.id
+        print(f"Banner {obj.title} is not linked to any product")
         return None
 
