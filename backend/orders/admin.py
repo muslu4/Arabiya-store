@@ -7,7 +7,7 @@ class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
     readonly_fields = ('total_price',)
-    fields = ('product', 'name', 'price', 'quantity', 'total_price')
+    fields = ('product', 'product_name', 'price', 'quantity', 'total_price')
 
 
 @admin.register(Order)
@@ -44,14 +44,14 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
-    list_display = ('order', 'product', 'name', 'price', 'quantity', 'total_price')
+    list_display = ('order', 'product', 'product_name', 'price', 'quantity', 'total_price')
     list_filter = ('order__status', 'order__created_at')
-    search_fields = ('name', 'product__name', 'order__customer_name')
+    search_fields = ('product_name', 'product__name', 'order__customer_name')
     readonly_fields = ('total_price',)
 
     fieldsets = (
         (None, {
-            'fields': ('order', 'product', 'name', 'price', 'quantity', 'total_price')
+            'fields': ('order', 'product', 'product_name', 'price', 'quantity', 'total_price')
         }),
     )
 
