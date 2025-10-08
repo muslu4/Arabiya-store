@@ -39,13 +39,13 @@ class Order(models.Model):
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE, verbose_name="الطلب")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="المنتج")
-    name = models.CharField(max_length=100, verbose_name="اسم المنتج")
+    product_name = models.CharField(max_length=100, verbose_name="اسم المنتج")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="السعر")
     quantity = models.IntegerField(verbose_name="الكمية")
     total_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="السعر الإجمالي")
 
     def __str__(self):
-        return f"{self.quantity} × {self.name}"
+        return f"{self.quantity} × {self.product_name}"
 
     class Meta:
         verbose_name = "عنصر في الطلب"
