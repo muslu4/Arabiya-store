@@ -19,23 +19,54 @@ def upload_image_to_imgbb(request):
         return Response({'error': 'ImgBB API key is not configured'}, status=500)
 
     try:
+        # Use base64 encoding for the image
+        import base64
+        import io
+        
+        # Read image file and encode to base64
+        image_data = image_file.read()
+        encoded_image = base64.b64encode(image_data).decode('utf-8')
+        
+        # Prepare payload
+        payload = {
+            'key': api_key,
+            'image': encoded_image,
+            'name': image_file.name,
+            'expiration': 3600  # 1 hour
+        }
+        
+        # Make request
         response = requests.post(
             'https://api.imgbb.com/1/upload',
-            params={'key': api_key},
-            files={'image': image_file}
+            data=payload
         )
+        
+        # Check response
+        print(f"ImgBB response status: {response.status_code}")
+        print(f"ImgBB response: {response.text}")
+        
         response.raise_for_status()
         result = response.json()
 
         if result.get('data') and result['data'].get('url'):
-            return Response({'url': result['data']['url']})
+            return Response({
+                'url': result['data']['url'],
+                'thumb_url': result['data'].get('thumb', {}).get('url'),
+                'delete_url': result['data'].get('delete_url')
+            })
         else:
             error_message = result.get('error', {}).get('message', 'Unknown error from ImgBB')
             return Response({'error': error_message}, status=500)
 
+    except requests.exceptions.HTTPError as e:
+        print(f"HTTP Error: {e}")
+        print(f"Response body: {e.response.text if e.response else 'No response'}")
+        return Response({'error': f'HTTP error from ImgBB: {e}'}, status=e.response.status_code if e.response else 500)
     except requests.exceptions.RequestException as e:
+        print(f"Request Error: {e}")
         return Response({'error': f'Failed to connect to ImgBB: {e}'}, status=500)
     except Exception as e:
+        print(f"Unexpected Error: {e}")
         return Response({'error': f'An unexpected error occurred: {e}'}, status=500)
 
 @api_view(['GET'])
