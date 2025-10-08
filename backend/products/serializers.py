@@ -75,7 +75,9 @@ class BannerSerializer(serializers.ModelSerializer):
         
     def get_link(self, obj):
         # Return the link using the get_link method from the model
-        return obj.get_link()
+        link = obj.get_link()
+        print(f"Banner link for {obj.title}: {link}")
+        return link
         
     def get_product_id(self, obj):
         # Return the product ID if exists
