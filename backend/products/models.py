@@ -2,6 +2,9 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
 
+# استيراد نماذج الكوبونات
+from .models_coupons import Coupon, CouponUsage
+
 
 class Category(models.Model):
     """Product category model"""

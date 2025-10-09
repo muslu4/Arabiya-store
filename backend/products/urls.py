@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import views_coupons
 
 urlpatterns = [
     # Products
@@ -16,5 +17,14 @@ urlpatterns = [
     
     # Banners
     path('banners/', views.banner_list, name='banner_list'),
+
+    # Coupons
+    path('coupons/', views_coupons.user_coupons, name='user_coupons'),
+    path('coupons/apply/', views_coupons.apply_coupon, name='apply_coupon'),
+    path('admin/coupons/', views_coupons.admin_coupons, name='admin_coupons'),
+    path('admin/coupons/create/', views_coupons.create_coupon, name='create_coupon'),
+    path('admin/coupons/<uuid:pk>/', views_coupons.admin_coupon_detail, name='admin_coupon_detail'),
+    path('admin/coupons/<uuid:pk>/stats/', views_coupons.coupon_usage_stats, name='coupon_usage_stats'),
+    path('admin/coupons/usages/', views_coupons.all_coupon_usages, name='all_coupon_usages'),
 ]
 

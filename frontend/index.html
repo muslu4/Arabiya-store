@@ -148,6 +148,18 @@
             <div class="cart-items" id="cartItems">
                 <!-- Cart items will be loaded here -->
             </div>
+            
+            <!-- Coupon Section -->
+            <div class="coupon-section" id="couponSection">
+                <div class="coupon-input-container">
+                    <input type="text" id="couponInput" placeholder="أدخل كود الخصم" class="coupon-input">
+                    <button id="applyCouponBtn" class="btn-primary coupon-btn">تطبيق</button>
+                </div>
+                <div id="couponMessage" class="coupon-message" style="display: none;"></div>
+                <div id="couponDiscount" class="coupon-discount" style="display: none;"></div>
+                <button id="removeCouponBtn" class="btn-secondary remove-coupon-btn" style="display: none;">إزالة الكوبون</button>
+            </div>
+            
             <div class="cart-footer">
                 <div class="cart-total">
                     <span>المجموع: <span id="cartTotal">0</span> ر.س</span>
@@ -188,6 +200,7 @@
 
     <script src="script.js"></script>
     <script src="cache-buster.js"></script>
+    <script src="coupons.js"></script>
 </body>
 
 </html>

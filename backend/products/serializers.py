@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import Product, Category, Banner
+from .models_coupons import Coupon, CouponUsage
+from .serializers_coupons import CouponSerializer, CouponUsageSerializer
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:

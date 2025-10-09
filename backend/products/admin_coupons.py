@@ -1,84 +1,8 @@
 
 from django.contrib import admin
-from .models import Category, Product, ProductReview, ProductView, Banner
 from .models_coupons import Coupon, CouponUsage
 
 
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'parent', 'is_active')
-    list_filter = ('is_active', 'parent')
-    search_fields = ('name', 'description', 'parent__name')
-    prepopulated_fields = {}  # يمكن إضافة حقول يتم ملؤها تلقائيًا إذا لزم الأمر
-
-    fieldsets = (
-        (None, {
-            'fields': ('name', 'parent', 'description', 'image', 'image_url', 'is_active')
-        }),
-    )
-
-
-class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'brand', 'price', 'stock_quantity', 'is_active', 'is_featured', 'created_at')
-    list_filter = ('category', 'brand', 'is_active', 'is_featured', 'created_at')
-    search_fields = ('name', 'description', 'brand', 'model')
-    list_editable = ('price', 'stock_quantity', 'is_active', 'is_featured')
-
-    fieldsets = (
-        ('📦 معلومات أساسية', {
-            'fields': ('name', 'description', 'category', 'brand', 'model')
-        }),
-        ('💰 التسعير والخصومات', {
-            'fields': ('price', 'discount_percentage')
-        }),
-        ('📊 إدارة المخزون', {
-            'fields': ('stock_quantity', 'low_stock_threshold')
-        }),
-        ('🖼️ معرض الصور', {
-            'fields': ('main_image', 'image_2', 'image_3', 'image_4')
-        }),
-        ('🏷️ تفاصيل المنتج', {
-            'fields': ('color', 'size', 'weight')
-        }),
-        ('🔍 SEO والبيانات الوصفية', {
-            'fields': ('slug', 'meta_description', 'tags')
-        }),
-        ('⚡ الحالة والمميزات', {
-            'fields': ('is_active', 'is_featured')
-        }),
-    )
-
-
-class ProductReviewAdmin(admin.ModelAdmin):
-    list_display = ('product', 'user', 'rating', 'created_at')
-    list_filter = ('rating', 'created_at')
-    search_fields = ('product__name', 'user__username', 'comment')
-    readonly_fields = ('created_at',)
-
-
-class ProductViewAdmin(admin.ModelAdmin):
-    list_display = ('product', 'user', 'ip_address', 'viewed_at')
-    list_filter = ('viewed_at',)
-    search_fields = ('product__name', 'user__username', 'ip_address')
-    readonly_fields = ('viewed_at',)
-
-
-class BannerAdmin(admin.ModelAdmin):
-    list_display = ('title', 'is_active', 'display_order', 'created_at')
-    list_filter = ('is_active', 'created_at')
-    search_fields = ('title', 'description')
-    list_editable = ('is_active', 'display_order')
-
-    fieldsets = (
-        (None, {
-            'fields': ('title', 'description', 'image', 'image_url', 'product', 'link_url')
-        }),
-        ('إعدادات العرض', {
-            'fields': ('is_active', 'display_order')
-        }),
-    )
-
-
-# تسجيل نماذج الكوبونات
 @admin.register(Coupon)
 class CouponAdmin(admin.ModelAdmin):
     """إعدادات عرض الكوبونات في لوحة الإدارة"""
@@ -102,7 +26,7 @@ class CouponAdmin(admin.ModelAdmin):
     ]
     search_fields = ['code', 'description']
     readonly_fields = ['id', 'used_count', 'created_at', 'updated_at']
-    
+
     fieldsets = (
         ('معلومات الكوبون', {
             'fields': (
@@ -144,7 +68,7 @@ class CouponAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         })
     )
-    
+
     def get_readonly_fields(self, request, obj=None):
         """جعل حقل used_count للقراءة فقط دائمًا"""
         if obj:  # إذا كان الكائن موجودًا بالفعل
@@ -174,16 +98,16 @@ class CouponUsageAdmin(admin.ModelAdmin):
         'order__id'
     ]
     readonly_fields = ['id', 'used_at']
-    
+
     def coupon_code(self, obj):
         """عرض كود الكوبون"""
         return obj.coupon.code
     coupon_code.short_description = 'كود الكوبون'
-    
+
     def has_add_permission(self, request):
         """منع إضافة استخدامات كوبونات يدويًا"""
         return False
-    
+
     def has_change_permission(self, request, obj=None):
         """منع تعديل استخدامات الكوبونات"""
         return False

@@ -365,7 +365,13 @@ function addToCart(productId) {
 
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
-    showToast('تم إضافة المنتج للسلة');
+    
+    // استدعاء دالة إضافة المنتج مع الكوبون إذا كانت موجودة
+    if (typeof addToCartWithCoupon === 'function') {
+        addToCartWithCoupon(productId);
+    } else {
+        showToast('تم إضافة المنتج للسلة');
+    }
 }
 
 // Update Cart Count
@@ -498,6 +504,12 @@ function handleNavigation(e) {
 function displayCart() {
     const cartItems = document.getElementById('cartItems');
     const cartTotal = document.getElementById('cartTotal');
+    
+    // استدعاء دالة عرض الكوبونات إذا كانت موجودة
+    if (typeof displayCartWithCoupons === 'function') {
+        displayCartWithCoupons();
+        return;
+    }
 
     if (cart.length === 0) {
         cartItems.innerHTML = `
