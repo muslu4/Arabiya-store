@@ -148,7 +148,9 @@ async function apiRequest(endpoint, options = {}) {
 async function loadCategories() {
     try {
         showLoading();
-        const data = await apiRequest('/products/categories/');
+        // Add cache busting parameter to prevent caching
+        const timestamp = new Date().getTime();
+        const data = await apiRequest(`/products/categories/?_t=${timestamp}`);
         displayCategories(data.results || data);
     } catch (error) {
         console.error('Error loading categories:', error);
@@ -212,7 +214,9 @@ function displayCategories(categories) {
 async function loadFeaturedProducts() {
     try {
         showLoading();
-        const data = await apiRequest('/products/featured/');
+        // Add cache busting parameter to prevent caching
+        const timestamp = new Date().getTime();
+        const data = await apiRequest(`/products/featured/?_t=${timestamp}`);
         displayProducts(data.results || data);
     } catch (error) {
         console.error('Error loading products:', error);
@@ -225,7 +229,9 @@ async function loadFeaturedProducts() {
 async function loadAllProducts() {
     try {
         showLoading();
-        const data = await apiRequest('/products/');
+        // Add cache busting parameter to prevent caching
+        const timestamp = new Date().getTime();
+        const data = await apiRequest(`/products/?_t=${timestamp}`);
         displayProducts(data.results || data);
     } catch (error) {
         console.error('Error loading products:', error);
@@ -238,7 +244,9 @@ async function loadAllProducts() {
 async function loadCategoryProducts(categoryId) {
     try {
         showLoading();
-        const data = await apiRequest(`/products/?category=${categoryId}`);
+        // Add cache busting parameter to prevent caching
+        const timestamp = new Date().getTime();
+        const data = await apiRequest(`/products/?category=${categoryId}&_t=${timestamp}`);
         displayProducts(data.results || data);
         showToast(`تم تحميل منتجات القسم`);
     } catch (error) {
@@ -295,7 +303,9 @@ function displayProducts(products) {
 async function showProductDetails(productId) {
     try {
         showLoading();
-        const product = await apiRequest(`/products/${productId}/`);
+        // Add cache busting parameter to prevent caching
+        const timestamp = new Date().getTime();
+        const product = await apiRequest(`/products/${productId}/?_t=${timestamp}`);
 
         document.getElementById('productModalTitle').textContent = product.name;
         document.getElementById('productDetails').innerHTML = `

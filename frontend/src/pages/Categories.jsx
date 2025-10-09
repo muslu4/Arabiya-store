@@ -13,15 +13,38 @@ const Categories = ({ user }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log('Component mounted, fetching initial data');
     fetchCategories();
     loadCart();
   }, []);
+  
+  // Add a manual refresh button in the UI
+  const ManualRefreshButton = () => (
+    <button
+      onClick={refreshData}
+      className="p-2 text-gray-600 hover:text-primary-600 transition-colors"
+      title="تحديث البيانات"
+    >
+      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      </svg>
+    </button>
+  );
 
   const refreshData = () => {
-    fetchCategories();
-    if (selectedCategory) {
-      fetchProductsByCategory(selectedCategory);
-    }
+    console.log('Refreshing data...');
+    // Reset selected category to force refresh
+    setSelectedCategory(null);
+    setCategories([]);
+    setProducts([]);
+    
+    // Fetch fresh data
+    setTimeout(() => {
+      fetchCategories();
+      if (selectedCategory) {
+        fetchProductsByCategory(selectedCategory);
+      }
+    }, 100);
   };
 
   useEffect(() => {
@@ -32,9 +55,11 @@ const Categories = ({ user }) => {
 
   const fetchCategories = async () => {
     try {
+      setLoading(true);
       const response = await api.get(endpoints.categories);
       const data = response.data;
       const list = Array.isArray(data) ? data : (data?.results || []);
+      console.log('Fetched categories:', list);
       setCategories(list);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -47,9 +72,14 @@ const Categories = ({ user }) => {
   const fetchProductsByCategory = async (categoryId) => {
     try {
       setLoading(true);
-      const response = await api.get(`${endpoints.products}?category=${categoryId}`);
+      console.log(`Fetching products for category ID: ${categoryId}`);
+      
+      // Try using the new endpoint first
+      const response = await api.get(`${endpoints.productsByCategory}${categoryId}/products/`);
       const data = response.data;
       const list = Array.isArray(data) ? data : (data?.results || []);
+      
+      console.log(`Found ${list.length} products for category ${categoryId}`);
 
       // Normalize to match UI expectations
       const normalized = list.map((p) => ({
@@ -60,6 +90,7 @@ const Categories = ({ user }) => {
       }));
 
       setProducts(normalized);
+      console.log('Normalized products:', normalized);
     } catch (error) {
       console.error('Error fetching products:', error);
       setProducts([]);
@@ -160,15 +191,7 @@ const Categories = ({ user }) => {
                 </Link>
               </div>
               {/* Refresh */}
-              <button
-                onClick={refreshData}
-                className="p-2 text-gray-600 hover:text-primary-600 transition-colors"
-                title="تحديث البيانات"
-              >
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-              </button>
+              <ManualRefreshButton />
               {user && (
                 <span className="text-gray-700">مرحباً، {user.phone}</span>
               )}

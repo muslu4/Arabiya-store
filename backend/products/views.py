@@ -98,9 +98,39 @@ def category_list(request):
     """
     قائمة جميع الفئات
     """
+    # Return all categories regardless of active status
     categories = Category.objects.all()
+    print(f"Found {categories.count()} total categories")
+    
+    # Log categories for debugging
+    for category in categories:
+        print(f"Category: {category.name}, ID: {category.id}, Active: {category.is_active}")
+        
     serializer = CategorySerializer(categories, many=True)
+    print(f"Returning {len(serializer.data)} categories")
     return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def products_by_category(request, category_id):
+    """
+    قائمة المنتجات حسب الفئة
+    """
+    try:
+        category = Category.objects.get(id=category_id)
+        products = Product.objects.filter(category=category)
+        print(f"Found {products.count()} products in category {category.name}")
+        
+        # Log products for debugging
+        for product in products:
+            print(f"Product: {product.name}, ID: {product.id}, Active: {product.is_active}")
+            
+        serializer = ProductSerializer(products, many=True)
+        print(f"Returning {len(serializer.data)} products")
+        return Response(serializer.data)
+    except Category.DoesNotExist:
+        print(f"Category with ID {category_id} not found or not active")
+        return Response({'error': 'الفئة غير موجودة أو غير نشطة'}, status=404)
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
