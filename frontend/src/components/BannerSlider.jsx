@@ -25,17 +25,14 @@ const BannerSlider = () => {
         setLoading(false);
       }
     };
-
     fetchBanners();
   }, []);
 
   useEffect(() => {
     if (banners.length <= 1) return;
-
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % banners.length);
     }, 5000); // Auto slide every 5 seconds
-
     return () => clearInterval(interval);
   }, [banners.length]);
 
@@ -45,6 +42,36 @@ const BannerSlider = () => {
 
   const goToNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % banners.length);
+  };
+
+  const handleBannerClick = (banner) => {
+    console.log('Banner clicked:', banner);
+    console.log('Banner link:', banner.link);
+    console.log('Banner product_id:', banner.product_id);
+    console.log('Banner category_id:', banner.category_id);
+
+    // Try different ways to navigate
+    if (banner.link && banner.link !== '#') {
+      // Check if it's a full URL or relative path
+      if (banner.link.startsWith('http')) {
+        // If it's an external URL, open in a new tab
+        window.open(banner.link, '_blank');
+      } else {
+        // If it's a relative path, navigate within the app
+        console.log('Navigating to link:', banner.link);
+        navigate(banner.link);
+      }
+    } else if (banner.product_id) {
+      // Fallback to product_id if link is not available
+      console.log('Navigating to product by ID:', banner.product_id);
+      navigate(`/product/${banner.product_id}`);
+    } else if (banner.category_id) {
+      // Fallback to category_id if available
+      console.log('Navigating to category by ID:', banner.category_id);
+      navigate(`/category/${banner.category_id}`);
+    } else {
+      console.log('No valid link found for banner');
+    }
   };
 
   if (loading) {
@@ -84,23 +111,7 @@ const BannerSlider = () => {
           >
             <div 
               className="block w-full h-full cursor-pointer"
-              onClick={() => {
-                console.log('Banner clicked:', banner);
-                console.log('Banner link:', banner.link);
-                console.log('Banner product_id:', banner.product_id);
-                
-                // First try to use the link field which should contain the proper URL
-                if (banner.link && banner.link !== '#') {
-                  console.log('Navigating to link:', banner.link);
-                  navigate(banner.link);
-                } else if (banner.product_id) {
-                  // Fallback to product_id if link is not available
-                  console.log('Navigating to product by ID:', banner.product_id);
-                  navigate(`/product/${banner.product_id}`);
-                } else {
-                  console.log('No valid link found for banner');
-                }
-              }}
+              onClick={() => handleBannerClick(banner)}
             >
               <img
                 src={banner.image}
