@@ -114,7 +114,11 @@ const BannerSlider = () => {
               onClick={() => handleBannerClick(banner)}
             >
               <img
-                src={banner.image}
+                src={banner.image.startsWith('http') 
+                  ? banner.image 
+                  : banner.image.startsWith('/media/') 
+                    ? `https://ecom-parent-project.onrender.com${banner.image}`
+                    : `https://ecom-parent-project.onrender.com/media/${banner.image}`}
                 onLoad={() => console.log('Banner image loaded successfully')}
                 onError={(e) => {
                   console.error('Error loading banner image:', e, banner.image);
