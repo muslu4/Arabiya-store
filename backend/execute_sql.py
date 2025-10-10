@@ -3,6 +3,7 @@
 Execute SQL script to create tables
 """
 import os
+import sys
 import psycopg2
 from django.conf import settings
 
@@ -37,8 +38,14 @@ def execute_sql_script():
         with open(sql_path, 'r') as f:
             sql_script = f.read()
 
-        # Execute SQL script
-        cursor.execute(sql_script)
+        # Split script into individual statements
+        statements = sql_script.split(';')
+
+        # Execute each statement
+        for statement in statements:
+            if statement.strip():
+                print(f"Executing: {statement[:50]}...")
+                cursor.execute(statement)
 
         # Commit changes
         conn.commit()
@@ -49,12 +56,20 @@ def execute_sql_script():
 
     except Exception as e:
         print(f"Error executing SQL script: {e}")
+        import traceback
+        traceback.print_exc()
         return False
 
 if __name__ == '__main__':
     # Configure Django settings
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecom_project.settings')
-    import django
-    django.setup()
 
-    execute_sql_script()
+    try:
+        import django
+        django.setup()
+        execute_sql_script()
+    except Exception as e:
+        print(f"Error setting up Django: {e}")
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
