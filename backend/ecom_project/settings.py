@@ -541,4 +541,10 @@ JAZZMIN_UI_TWEAKS = {
         },
         "jquery": "https://code.jquery.com/jquery-3.6.0.min.js",
     },
+
+# استيراد إعدادات Firebase
+try:
+    from .settings_firebase import *
+except ImportError:
+    pass
 }
