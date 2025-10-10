@@ -1,2 +1,2 @@
 web: gunicorn ecom_project.wsgi:application --bind 0.0.0.0:$PORT --chdir backend
-release: python ../execute_sql.py && python manage.py makemigrations --chdir backend && python manage.py migrate --chdir backend && python manage.py loaddata products/fixtures/coupons.json --chdir backend && python manage.py clear_cache --chdir backend && python manage.py collectstatic --no-input --chdir backend
+release: python manage.py makemigrations --chdir backend && python manage.py migrate --chdir backend && python manage.py loaddata products/fixtures/coupons.json --chdir backend && python manage.py clear_cache --chdir backend && python manage.py collectstatic --no-input --chdir backend
