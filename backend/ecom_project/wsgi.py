@@ -23,12 +23,10 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecom_project.settings')
 try:
     # التحقق مما إذا كان هذا هو أول تشغيل للتطبيق
     if not os.path.exists(BASE_DIR / 'db_initialized.txt'):
-        from django.core.management import execute_from_command_line
-        from io import StringIO
+        from django.core.management import call_command
         
         # تنفيذ الترحيلات
-        out = StringIO()
-        execute_from_command_line(['manage.py', 'migrate', '--noinput'], stdout=out)
+        call_command('migrate', '--noinput')
         
         # إنشاء ملف للإشارة إلى أن الترحيلات تم تنفيذها
         with open(BASE_DIR / 'db_initialized.txt', 'w') as f:

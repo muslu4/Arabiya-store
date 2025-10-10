@@ -540,7 +540,7 @@ JAZZMIN_UI_TWEAKS = {
             "js": "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js",
         },
         "jquery": "https://code.jquery.com/jquery-3.6.0.min.js",
-    },
+    }
 
 # استيراد إعدادات Firebase
 try:
