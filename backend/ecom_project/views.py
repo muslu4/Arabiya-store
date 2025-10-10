@@ -27,10 +27,10 @@ def home_view(request):
             'admin': '/admin/',
         },
         'stats': {
-            'total_products': Product.objects.count(),
-            'total_categories': Category.objects.count(),
-            'total_users': User.objects.count(),
-            'total_orders': Order.objects.count(),
+            'total_products': 0,
+            'total_categories': 0,
+            'total_users': 0,
+            'total_orders': 0,
         }
     }
     
@@ -82,9 +82,9 @@ def api_info(request):
             'password': 'admin123'
         },
         'stats': {
-            'total_products': Product.objects.count(),
-            'total_categories': Category.objects.count(),
-            'total_users': User.objects.count(),
-            'total_orders': Order.objects.count(),
+            'total_products': 0,
+            'total_categories': 0,
+            'total_users': 0,
+            'total_orders': 0,
         }
     })
