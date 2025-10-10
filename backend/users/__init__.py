@@ -18,12 +18,14 @@ def create_user_table():
                     username VARCHAR(150) NOT NULL UNIQUE,
                     first_name VARCHAR(150) NOT NULL,
                     last_name VARCHAR(150) NOT NULL,
-                    email VARCHAR(254) NOT NULL,
+                    email VARCHAR(254),
                     is_staff BOOLEAN NOT NULL,
                     is_active BOOLEAN NOT NULL,
                     date_joined TIMESTAMP WITH TIME ZONE NOT NULL,
                     is_customer BOOLEAN NOT NULL,
-                    is_staff_member BOOLEAN NOT NULL
+                    is_staff_member BOOLEAN NOT NULL,
+                    phone VARCHAR(20) UNIQUE,
+                    address TEXT
                 )
             """)
             cursor.execute("""
@@ -35,12 +37,14 @@ def create_user_table():
                     username VARCHAR(150) NOT NULL UNIQUE,
                     first_name VARCHAR(150) NOT NULL,
                     last_name VARCHAR(150) NOT NULL,
-                    email VARCHAR(254) NOT NULL,
+                    email VARCHAR(254),
                     is_staff BOOLEAN NOT NULL,
                     is_active BOOLEAN NOT NULL,
                     date_joined TIMESTAMP WITH TIME ZONE NOT NULL,
                     is_customer BOOLEAN NOT NULL,
-                    is_staff_member BOOLEAN NOT NULL
+                    is_staff_member BOOLEAN NOT NULL,
+                    phone VARCHAR(20) UNIQUE,
+                    address TEXT
                 )
             """)
         print("User tables created successfully!")
