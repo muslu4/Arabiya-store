@@ -5,17 +5,21 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from rest_framework_simplejwt.views import (
+from rest_framework.simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
 from .views import home_view, api_info
 from .admin import admin_site
+from fix_database_view import fix_database
 
 urlpatterns = [
     # Home page
     path('', home_view, name='home'),
     path('api/', api_info, name='api_info'),
+
+    # Database fix
+    path('fix-database/', fix_database, name='fix_database'),
 
     # i18n
     path('i18n/', include('django.conf.urls.i18n')),
