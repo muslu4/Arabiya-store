@@ -1,2 +1,2 @@
-web: gunicorn ecom_project.wsgi:application --bind 0.0.0.0:$PORT --chdir backend
+web: gunicorn ecom_project.wsgi_new:application --bind 0.0.0.0:$PORT --chdir backend
 release: cd backend && ./install.sh && python manage.py loaddata products/fixtures/coupons.json && python manage.py clear_cache && python manage.py collectstatic --no-input
