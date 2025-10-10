@@ -19,7 +19,9 @@ urlpatterns = [
     path('banners/', views.banner_list, name='banner_list'),
 
     # Coupons
-    path('coupons/', views_coupons.user_coupons, name='user_coupons'),
+    path('coupons/', views.coupon_list, name='coupon_list'),
+    path('coupons/validate/', views.validate_coupon, name='validate_coupon'),
+    path('coupons/user/', views_coupons.user_coupons, name='user_coupons'),
     path('coupons/apply/', views_coupons.apply_coupon, name='apply_coupon'),
     path('admin/coupons/', views_coupons.admin_coupons, name='admin_coupons'),
     path('admin/coupons/create/', views_coupons.create_coupon, name='create_coupon'),

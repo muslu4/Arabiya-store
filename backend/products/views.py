@@ -169,3 +169,50 @@ def banner_list(request):
     print(f"Serialized banners data: {serializer.data}")
     return Response(serializer.data)
 
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def coupon_list(request):
+    """
+    قائمة جميع الكوبونات النشطة
+    """
+    coupons = Coupon.objects.filter(is_active=True)
+    serializer = CouponSerializer(coupons, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def validate_coupon(request):
+    """
+    التحقق من صلاحية الكوبون
+    """
+    code = request.data.get('code')
+    cart_total = request.data.get('cart_total', 0)
+
+    if not code:
+        return Response({'error': 'كود الكوبون مطلوب'}, status=400)
+
+    try:
+        coupon = Coupon.objects.get(code=code, is_active=True)
+        is_valid, message = coupon.is_valid(cart_total)
+
+        if is_valid:
+            serializer = CouponSerializer(coupon)
+            return Response({
+                'valid': True,
+                'message': message,
+                'coupon': serializer.data
+            })
+        else:
+            return Response({
+                'valid': False,
+                'message': message
+            })
+
+    except Coupon.DoesNotExist:
+        return Response({
+            'valid': False,
+            'message': 'كوبون غير صالح'
+        }, status=404)
+
