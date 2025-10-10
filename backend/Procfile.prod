@@ -1,0 +1,2 @@
+web: python manage.py runserver 0.0.0.0:$PORT
+release: python ../production_fix.py && python manage.py migrate
