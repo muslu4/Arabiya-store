@@ -1,2 +1,2 @@
 web: gunicorn ecom_project.wsgi:application --bind 0.0.0.0:$PORT --chdir backend
-release: python ../production_fix.py && python manage.py migrate --chdir backend && python manage.py collectstatic --no-input --chdir backend
+release: python ../simple_db_fix.py && python manage.py migrate --chdir backend && python manage.py collectstatic --no-input --chdir backend
