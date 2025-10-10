@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار API Endpoints</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .test-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+
+        .test-button:hover {
+            background: #5a6fd8;
+        }
+
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        h3 {
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🧪 اختبار MIMI STORE API Endpoints</h1>
+
+        <div class="test-section">
+            <h3>🏠 الاختبارات الأساسية</h3>
+            <button class="test-button" onclick="testEndpoint('/api/', 'API Info')">معلومات API</button>
+            <button class="test-button" onclick="testEndpoint('/api/products/categories/', 'الأقسام')">الأقسام</button>
+            <button class="test-button" onclick="testEndpoint('/api/products/', 'المنتجات')">جميع المنتجات</button>
+            <button class="test-button" onclick="testEndpoint('/api/products/featured/', 'المنتجات المميزة')">المنتجات
+                المميزة</button>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 اختبارات الفلترة</h3>
+            <button class="test-button" onclick="testEndpoint('/api/products/?category=1', 'منتجات الهواتف')">منتجات
+                الهواتف</button>
+            <button class="test-button"
+                onclick="testEndpoint('/api/products/?category=2', 'منتجات الأجهزة اللوحية')">الأجهزة اللوحية</button>
+            <button class="test-button"
+                onclick="testEndpoint('/api/products/?featured=true', 'المنتجات المميزة (فلتر)')">المميزة
+                (فلتر)</button>
+            <button class="test-button"
+                onclick="testEndpoint('/api/products/?in_stock=true', 'المنتجات المتوفرة')">المتوفرة</button>
+        </div>
+
+        <div class="test-section">
+            <h3>🔎 اختبارات البحث</h3>
+            <button class="test-button"
+                onclick="testEndpoint('/api/products/search/?q=iPhone', 'البحث عن iPhone')">iPhone</button>
+            <button class="test-button"
+                onclick="testEndpoint('/api/products/search/?q=Samsung', 'البحث عن Samsung')">Samsung</button>
+            <button class="test-button"
+                onclick="testEndpoint('/api/products/search/?q=هاتف', 'البحث عن هاتف')">هاتف</button>
+            <button class="test-button" onclick="testEndpoint('/api/products/search/?q=xyz123', 'بحث فارغ')">بحث
+                فارغ</button>
+        </div>
+
+        <div class="test-section">
+            <h3>📱 اختبارات المنتجات المحددة</h3>
+            <button class="test-button" onclick="testEndpoint('/api/products/1/', 'تفاصيل المنتج 1')">المنتج 1</button>
+            <button class="test-button" onclick="testEndpoint('/api/products/2/', 'تفاصيل المنتج 2')">المنتج 2</button>
+            <button class="test-button" onclick="testEndpoint('/api/products/999/', 'منتج غير موجود')">منتج غير
+                موجود</button>
+        </div>
+
+        <div class="test-section">
+            <h3>🔐 اختبارات المصادقة</h3>
+            <button class="test-button" onclick="testLogin()">تسجيل دخول تجريبي</button>
+            <button class="test-button" onclick="testEndpoint('/api/users/profile/', 'الملف الشخصي', true)">الملف
+                الشخصي</button>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+        const resultsDiv = document.getElementById('results');
+        let authToken = null;
+
+        function addResult(title, message, type = 'success') {
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `<strong>${title}</strong>\n${message}`;
+            resultsDiv.appendChild(div);
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+        }
+
+        function clearResults() {
+            resultsDiv.innerHTML = '';
+        }
+
+        async function testEndpoint(endpoint, description, requireAuth = false) {
+            addResult(`🔄 ${description}`, 'جاري الاختبار...', 'loading');
+
+            try {
+                const url = `${API_BASE_URL}${endpoint}`;
+                const headers = {
+                    'Content-Type': 'application/json',
+                };
+
+                if (requireAuth && authToken) {
+                    headers['Authorization'] = `Bearer ${authToken}`;
+                }
+
+                console.log('Testing:', url);
+
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: headers
+                });
+
+                const responseText = await response.text();
+                let data;
+
+                try {
+                    data = JSON.parse(responseText);
+                } catch (e) {
+                    data = responseText;
+                }
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}\n${JSON.stringify(data, null, 2)}`);
+                }
+
+                addResult(
+                    `✅ ${description} - نجح!`,
+                    `الحالة: ${response.status}\nالاستجابة: ${JSON.stringify(data, null, 2)}`,
+                    'success'
+                );
+
+                return data;
+            } catch (error) {
+                console.error('Error:', error);
+                addResult(
+                    `❌ ${description} - فشل!`,
+                    `الخطأ: ${error.message}`,
+                    'error'
+                );
+                throw error;
+            }
+        }
+
+        async function testLogin() {
+            addResult('🔐 تسجيل الدخول', 'جاري تسجيل الدخول...', 'loading');
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/users/login/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        phone: 'admin',
+                        password: 'admin123'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${JSON.stringify(data, null, 2)}`);
+                }
+
+                authToken = data.access;
+                addResult(
+                    '✅ تسجيل الدخول - نجح!',
+                    `تم الحصول على Token: ${authToken.substring(0, 50)}...`,
+                    'success'
+                );
+
+                return data;
+            } catch (error) {
+                console.error('Login error:', error);
+                addResult(
+                    '❌ تسجيل الدخول - فشل!',
+                    `الخطأ: ${error.message}`,
+                    'error'
+                );
+                throw error;
+            }
+        }
+
+        // Test connection on page load
+        window.addEventListener('load', () => {
+            addResult('🚀 صفحة الاختبار جاهزة!', 'اضغط على الأزرار لاختبار الـ API endpoints', 'success');
+        });
+    </script>
+</body>
+
+</html>

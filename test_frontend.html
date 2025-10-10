@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIMI STORE - اختبار الاتصال</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+        }
+
+        .test-button:hover {
+            background: #5a6fd8;
+        }
+
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🧪 اختبار اتصال MIMI STORE API</h1>
+
+        <div>
+            <button class="test-button" onclick="testConnection()">اختبار الاتصال الأساسي</button>
+            <button class="test-button" onclick="testCategories()">اختبار الأقسام</button>
+            <button class="test-button" onclick="testProducts()">اختبار المنتجات</button>
+            <button class="test-button" onclick="testFeatured()">اختبار المنتجات المميزة</button>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000/api';
+        const resultsDiv = document.getElementById('results');
+
+        function addResult(message, type = 'success') {
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.textContent = message;
+            resultsDiv.appendChild(div);
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+        }
+
+        function clearResults() {
+            resultsDiv.innerHTML = '';
+        }
+
+        async function makeRequest(endpoint, description) {
+            addResult(`🔄 ${description}...`, 'loading');
+
+            try {
+                const url = `${API_BASE_URL}${endpoint}`;
+                console.log('Testing:', url);
+
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                addResult(`✅ ${description} - نجح!\nالاستجابة: ${JSON.stringify(data, null, 2)}`, 'success');
+                return data;
+            } catch (error) {
+                console.error('Error:', error);
+                addResult(`❌ ${description} - فشل!\nالخطأ: ${error.message}`, 'error');
+                throw error;
+            }
+        }
+
+        async function testConnection() {
+            clearResults();
+            await makeRequest('/', 'اختبار الاتصال الأساسي');
+        }
+
+        async function testCategories() {
+            clearResults();
+            await makeRequest('/products/categories/', 'جلب الأقسام');
+        }
+
+        async function testProducts() {
+            clearResults();
+            await makeRequest('/products/', 'جلب المنتجات');
+        }
+
+        async function testFeatured() {
+            clearResults();
+            await makeRequest('/products/featured/', 'جلب المنتجات المميزة');
+        }
+
+        // Test connection on page load
+        window.addEventListener('load', () => {
+            addResult('🚀 صفحة الاختبار جاهزة!', 'success');
+            addResult('💡 اضغط على الأزرار لاختبار الاتصال مع API', 'loading');
+        });
+    </script>
+</body>
+
+</html>
