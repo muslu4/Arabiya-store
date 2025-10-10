@@ -17,4 +17,4 @@ python manage.py collectstatic --noinput
 python manage.py migrate --noinput
 
 # إنشاء مستخدم مدير إذا لم يكن موجودًا
-echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('admin', 'admin@example.com', 'admin123') if not User.objects.filter(username='admin').exists() else None" | python manage.py shell
+echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('01234567890', 'admin@example.com', 'admin123') if not User.objects.filter(phone='01234567890').exists() else None" | python manage.py shell
