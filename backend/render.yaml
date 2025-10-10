@@ -1,0 +1,27 @@
+services:
+  # نوع الخدمة: خادم ويب
+  - type: web
+    name: ecom-backend
+    env: python
+    # إعدادات البناء
+    buildCommand: "./install.sh"
+    # إعدادات التشغيل
+    startCommand: "gunicorn ecom_project.wsgi:application --bind 0.0.0.0:$PORT --chdir backend"
+    # متغيرات البيئة
+    envVars:
+      - key: DEBUG
+        value: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ecom-postgres
+          property: connectionString
+      - key: FIREBASE_CREDENTIALS_PATH
+        value: firebase/ecomproject-a8173-38763797948f.json
+      - key: FIREBASE_PROJECT_ID
+        value: ecomproject-a8173
+
+# قاعدة البيانات
+databases:
+  - name: ecom-postgres
+    databaseName: ecom_db
+    user: ecom_user
