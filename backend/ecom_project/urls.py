@@ -11,15 +11,11 @@ from django.conf.urls.static import static
 # )
 from .views import home_view, api_info
 from .admin import admin_site
-from fix_database_view import fix_database
 
 urlpatterns = [
     # Home page
     path('', home_view, name='home'),
     path('api/', api_info, name='api_info'),
-
-    # Database fix
-    path('fix-database/', fix_database, name='fix_database'),
 
     # i18n
     path('i18n/', include('django.conf.urls.i18n')),
@@ -48,8 +44,11 @@ if settings.DEBUG:
 else:
     # In production, serve media files through Django
     from django.views.static import serve
+    from django.conf.urls.static import static
     urlpatterns += [
         path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),
     ]
+    # Also serve media files in production
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Admin site customization is now handled in admin.py
