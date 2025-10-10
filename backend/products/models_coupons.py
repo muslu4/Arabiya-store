@@ -67,33 +67,33 @@ class Coupon(models.Model):
     # هل الكوبون نشط
     is_active = models.BooleanField('نشط', default=True)
 
-    # المنتجات والأقسام المستثناة
-    excluded_products = models.ManyToManyField(
-        'Product',
-        related_name='excluded_coupons',
-        blank=True,
-        verbose_name='المنتجات المستثناة'
-    )
-    excluded_categories = models.ManyToManyField(
-        'Category',
-        related_name='excluded_coupons',
-        blank=True,
-        verbose_name='الأقسام المستثناة'
-    )
+    # المنتجات والأقسام المستثناة - تم تعطيل مؤقتًا لحل مشاكل قاعدة البيانات
+    # excluded_products = models.ManyToManyField(
+    #     'Product',
+    #     related_name='excluded_coupons',
+    #     blank=True,
+    #     verbose_name='المنتجات المستثناة'
+    # )
+    # excluded_categories = models.ManyToManyField(
+    #     'Category',
+    #     related_name='excluded_coupons',
+    #     blank=True,
+    #     verbose_name='الأقسام المستثناة'
+    # )
 
-    # المنتجات والأقسام المحددة (إذا تم تحديدها، يعمل الكوبون عليها فقط)
-    applicable_products = models.ManyToManyField(
-        'Product',
-        related_name='applicable_coupons',
-        blank=True,
-        verbose_name='المنتجات المحددة'
-    )
-    applicable_categories = models.ManyToManyField(
-        'Category',
-        related_name='applicable_coupons',
-        blank=True,
-        verbose_name='الأقسام المحددة'
-    )
+    # المنتجات والأقسام المحددة (إذا تم تحديدها، يعمل الكوبون عليها فقط) - تم تعطيل مؤقتًا
+    # applicable_products = models.ManyToManyField(
+    #     'Product',
+    #     related_name='applicable_coupons',
+    #     blank=True,
+    #     verbose_name='المنتجات المحددة'
+    # )
+    # applicable_categories = models.ManyToManyField(
+    #     'Category',
+    #     related_name='applicable_coupons',
+    #     blank=True,
+    #     verbose_name='الأقسام المحددة'
+    # )
 
     created_at = models.DateTimeField('تاريخ الإنشاء', auto_now_add=True)
     updated_at = models.DateTimeField('تاريخ التحديث', auto_now=True)
@@ -150,20 +150,21 @@ class Coupon(models.Model):
         for item in cart_items:
             product = item['product']
 
-            # التحقق مما إذا كان المنتج مستثنى
-            if self.excluded_products.filter(id=product.id).exists():
-                continue
+            # التحقق من المنتجات المستثناة - تم تعطيل مؤقتًا
+            # if self.excluded_products.filter(id=product.id).exists():
+            #     continue
 
-            # التحقق مما إذا كان قسم المنتج مستثنى
-            if self.excluded_categories.filter(id=product.category.id).exists():
-                continue
+            # التحقق من الأقسام المستثناة - تم تعطيل مؤقتًا
+            # if self.excluded_categories.filter(id=product.category.id).exists():
+            #     continue
 
-            # إذا تم تحديد منتجات أو أقسام محددة، تحقق من أن المنتج ضمنها
-            if self.applicable_products.exists() and not self.applicable_products.filter(id=product.id).exists():
-                continue
+            # التحقق من المنتجات المحددة - تم تعطيل مؤقتًا
+            # if self.applicable_products.exists() and not self.applicable_products.filter(id=product.id).exists():
+            #     continue
 
-            if self.applicable_categories.exists() and not self.applicable_categories.filter(id=product.category.id).exists():
-                continue
+            # التحقق من الأقسام المحددة - تم تعطيل مؤقتًا
+            # if self.applicable_categories.exists() and not self.applicable_categories.filter(id=product.category.id).exists():
+            #     continue
 
             # إضافة قيمة المنتج إلى المجموع
             applicable_items_total += item['price'] * item['quantity']
