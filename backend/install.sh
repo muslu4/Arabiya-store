@@ -10,6 +10,9 @@ pip install psycopg psycopg-binary
 # جمع الملفات الثابتة
 python manage.py collectstatic --noinput
 
+# إنشاء الترحيلات
+python manage.py makemigrations --noinput
+
 # تنفيذ الترحيلات
 python manage.py migrate --noinput
 
