@@ -142,6 +142,13 @@ TIME_ZONE = 'Asia/Riyadh'
 USE_I18N = True
 USE_TZ = True
 
+# Languages
+LANGUAGES = [
+    ('ar', 'العربية'),
+    ('en', 'English'),
+]
+LANGUAGE_CODE = 'ar'
+
 # Currency
 CURRENCY_SYMBOL = 'د.ع'
 CURRENCY_CODE = 'IQD'
