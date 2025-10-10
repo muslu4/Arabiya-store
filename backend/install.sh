@@ -8,8 +8,7 @@ pip install -r requirements.txt
 pip install psycopg psycopg-binary
 
 # إنشاء الجداول مباشرة
-chmod +x create_tables.sh
-./create_tables.sh
+python create_tables.py
 
 # جمع الملفات الثابتة
 python manage.py collectstatic --noinput
