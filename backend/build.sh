@@ -3,6 +3,10 @@
 # تثبيت المتطلبات
 pip install -r requirements.txt
 
+# ترحيل قاعدة البيانات
+python manage.py makemigrations
+python manage.py migrate
+
 # جمع الملفات الثابتة
 python manage.py collectstatic --noinput
 
