@@ -549,4 +549,3 @@ try:
     from .settings_firebase import *
 except ImportError:
     pass
-}
