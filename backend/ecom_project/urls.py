@@ -5,10 +5,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from rest_framework.simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+# from rest_framework.simplejwt.views import (
+#     TokenObtainPairView,
+#     TokenRefreshView,
+# )
 from .views import home_view, api_info
 from .admin import admin_site
 from fix_database_view import fix_database
@@ -30,9 +30,9 @@ urlpatterns = [
     # Admin
     path('admin/', admin_site.urls),
     
-    # API Authentication
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # API Authentication (commented out due to missing module)
+    # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     
     # API Routes
     path('api/users/', include('users.urls')),
