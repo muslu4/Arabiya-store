@@ -53,5 +53,28 @@ def create_user_table():
     except Exception as e:
         print(f"Unexpected error creating user tables: {e}")
 
-# Create tables when the app is imported
+# تحديث الجداول لإضافة الأعمدة المفقودة
+def update_user_tables():
+    """
+    Update user tables to add missing columns
+    """
+    try:
+        with connection.cursor() as cursor:
+            # قراءة ملف SQL
+            sql_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'update_tables.sql')
+            if os.path.exists(sql_path):
+                with open(sql_path, 'r') as f:
+                    sql_commands = f.read()
+
+                # تنفيذ أوامر SQL
+                cursor.execute(sql_commands)
+
+            print("User tables updated successfully!")
+    except ProgrammingError as e:
+        print(f"Error updating user tables: {e}")
+    except Exception as e:
+        print(f"Unexpected error updating user tables: {e}")
+
+# Create and update tables when the app is imported
 create_user_table()
+update_user_tables()
