@@ -11,7 +11,11 @@ pip install psycopg psycopg-binary
 python manage.py collectstatic --noinput
 
 # إنشاء الترحيلات
-python manage.py makemigrations --noinput
+python manage.py makemigrations users --noinput
+python manage.py makemigrations products --noinput
+python manage.py makemigrations orders --noinput
+python manage.py makemigrations notifications --noinput
+python manage.py makemigrations test_app --noinput
 
 # تنفيذ الترحيلات
 python manage.py migrate --noinput
