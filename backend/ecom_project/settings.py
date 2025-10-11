@@ -105,6 +105,7 @@ AUTH_USER_MODEL = 'users.User'
 
 # Authentication backends
 AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
     'users.backends.PhoneBackend',
 ]
 
@@ -400,7 +401,7 @@ JAZZMIN_SETTINGS = {
     "copyright": "© 2024 MIMI STORE - جميع الحقوق محفوظة",
 
     # Search model
-    "search_model": ["users.User", "products.Product", "orders.Order"],
+    "search_model": ["users.User", "products.Product", "products.Coupon", "orders.Order"],
 
     # Field name to display for the user in top right
     "user_avatar": None,
@@ -431,12 +432,26 @@ JAZZMIN_SETTINGS = {
 
     # Custom links to append to app groups
     "custom_links": {
-        "products": [{
-            "name": "إضافة منتج جديد", 
-            "url": "admin:products_product_add", 
-            "icon": "fas fa-plus",
-            "permissions": ["products.add_product"]
-        }],
+        "products": [
+            {
+                "name": "إضافة منتج جديد", 
+                "url": "admin:products_product_add", 
+                "icon": "fas fa-plus",
+                "permissions": ["products.add_product"]
+            },
+            {
+                "name": "إدارة الكوبونات", 
+                "url": "admin:products_coupon_changelist", 
+                "icon": "fas fa-ticket-alt",
+                "permissions": ["products.view_coupon"]
+            },
+            {
+                "name": "إضافة كوبون جديد", 
+                "url": "admin:products_coupon_add", 
+                "icon": "fas fa-plus-circle",
+                "permissions": ["products.add_coupon"]
+            }
+        ],
         "orders": [{
             "name": "الطلبات الجديدة", 
             "url": "admin:orders_order_changelist", 
@@ -459,8 +474,15 @@ JAZZMIN_SETTINGS = {
         "users.User": "fas fa-user-circle",
         "products.Product": "fas fa-box",
         "products.Category": "fas fa-tags",
+        "products.Coupon": "fas fa-ticket-alt",
+        "products.CouponUsage": "fas fa-receipt",
+        "products.Banner": "fas fa-image",
+        "products.ProductReview": "fas fa-star",
+        "products.ProductView": "fas fa-eye",
         "orders.Order": "fas fa-shopping-cart",
         "orders.OrderItem": "fas fa-list",
+        "notifications.Notification": "fas fa-bell",
+        "notifications.DeviceToken": "fas fa-mobile-alt",
     },
 
     # Icons that are used when one is not manually specified

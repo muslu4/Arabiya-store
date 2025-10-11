@@ -26,7 +26,6 @@
     "serve": "^14.2.0",
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
-    "tailwindcss": "^3.4.18",
     "url": "^0.11.4",
     "web-vitals": "^2.1.4"
   },
@@ -61,7 +60,8 @@
     "@tailwindcss/forms": "^0.5.10",
     "autoprefixer": "^10.4.21",
     "cross-env": "^10.0.0",
-    "postcss": "^8.5.6"
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.14"
   },
   "proxy": "https://ecom-parent-project.onrender.com"
 }

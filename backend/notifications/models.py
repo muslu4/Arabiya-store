@@ -14,8 +14,8 @@ class Notification(models.Model):
     )
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications', verbose_name="المستلم")
-    type = models.CharField(max_length=30, choices=TYPE_CHOICES, verbose_name="نوع الإشعار")
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications', verbose_name="المستمل", null=True, blank=True)
+    type = models.CharField(max_length=30, choices=TYPE_CHOICES, verbose_name="نوع الإشعار", null=True, blank=True)
     title = models.CharField(max_length=100, verbose_name="العنوان")
     message = models.TextField(verbose_name="الرسالة")
     data = models.JSONField(default=dict, blank=True, verbose_name="البيانات الإضافية")

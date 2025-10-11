@@ -1,60 +1,95 @@
 @echo off
 chcp 65001 >nul
-echo 🚀 بدء تشغيل MIMI STORE...
+title MIMI STORE - تشغيل المشروع
 
-REM Check if virtual environment exists
+REM ═══════════════════════════════════════════════════════════
+REM  MIMI STORE - تشغيل سريع
+REM ═══════════════════════════════════════════════════════════
+
+cls
+echo.
+echo ╔════════════════════════════════════════════════════════════╗
+echo ║                                                            ║
+echo ║              🛍️  MIMI STORE - تشغيل المشروع 🛍️            ║
+echo ║                                                            ║
+echo ╚════════════════════════════════════════════════════════════╝
+echo.
+echo.
+
+cd /d "%~dp0"
+
+REM ═══════════════════════════════════════════════════════════
+REM  تشغيل Backend
+REM ═══════════════════════════════════════════════════════════
+echo [1/2] 🔧 تشغيل Backend...
+echo.
+
 if not exist "backend\env" (
-    echo 📦 إنشاء البيئة الافتراضية...
+    echo ⚠️  تحذير: البيئة الافتراضية غير موجودة!
+    echo 📦 جاري الإنشاء...
     cd backend
     python -m venv env
     cd ..
 )
 
-REM Activate virtual environment
-echo 🔧 تفعيل البيئة الافتراضية...
-call backend\env\Scripts\activate
+start "MIMI Backend" cmd /k "cd /d "%~dp0backend" && env\Scripts\activate && python manage.py runserver 8000"
+echo ✅ Backend يعمل على: http://localhost:8000
+echo.
 
-REM Install backend dependencies
-echo 📥 تثبيت متطلبات Backend...
-pip install -r requirements.txt
-
-REM Run migrations
-echo 🗄️ تشغيل migrations...
-python manage.py makemigrations users
-python manage.py makemigrations products
-python manage.py makemigrations orders
-python manage.py migrate
-
-REM Create admin user
-echo 👤 إنشاء المستخدم الإداري (إذا لم يكن موجودًا)...
-python create_admin_simple.py
-
-REM Create sample data
-echo 📊 إنشاء البيانات التجريبية...
-python create_sample_data.py
-
-REM Start backend server
-echo 🖥️ تشغيل Backend server...
-start "MIMI STORE Backend" cmd /k "backend\env\Scripts\python.exe manage.py runserver"
-
-REM Wait a bit for backend to start
 timeout /t 3 /nobreak >nul
 
+REM ═══════════════════════════════════════════════════════════
+REM  تشغيل Frontend
+REM ═══════════════════════════════════════════════════════════
+echo [2/2] 🎨 تشغيل Frontend...
 echo.
-echo ✅ تم تشغيل MIMI STORE Backend بنجاح!
+
+if not exist "frontend\node_modules" (
+    echo ⚠️  تحذير: حزم Node.js غير مثبتة!
+    echo 📦 جاري التثبيت... (قد يستغرق دقائق)
+    cd frontend
+    call npm install
+    cd ..
+)
+
+start "MIMI Frontend" cmd /k "cd /d "%~dp0frontend" && npm start"
+echo ✅ Frontend يعمل على: http://localhost:3002
+echo.
+
+timeout /t 5 /nobreak >nul
+
+REM ═══════════════════════════════════════════════════════════
+REM  فتح المتصفح
+REM ═══════════════════════════════════════════════════════════
+echo 🌐 فتح المتصفح...
+timeout /t 3 /nobreak >nul
+start http://localhost:3002
+
+cls
+echo.
+echo ╔════════════════════════════════════════════════════════════╗
+echo ║                                                            ║
+echo ║              ✅ تم تشغيل المشروع بنجاح! ✅                ║
+echo ║                                                            ║
+echo ╚════════════════════════════════════════════════════════════╝
+echo.
 echo.
 echo 🔗 الروابط:
-echo    Backend API: http://localhost:8000/api
-echo    Django Admin: http://localhost:8000/admin
+echo    ┌────────────────────────────────────────────────────
+echo    │ 🌐 المتجر:         http://localhost:3002
+echo    │ 🔧 API:            http://localhost:8000/api
+echo    │ 👤 لوحة الإدارة:   http://localhost:8000/admin
+echo    └────────────────────────────────────────────────────
 echo.
-echo 👤 بيانات المشرف:
-echo    الهاتف: admin
-echo    كلمة المرور: admin123
+echo 👤 بيانات الدخول:
+echo    ┌────────────────────────────────────────────────────
+echo    │ الهاتف:          admin
+echo    │ كلمة المرور:     admin123
+echo    └────────────────────────────────────────────────────
 echo.
-echo 📱 اختبار API:
-echo    المنتجات: http://localhost:8000/api/products/
-echo    الأقسام: http://localhost:8000/api/products/categories/
+echo 💡 ملاحظات:
+echo    • لإيقاف الخوادم: أغلق نوافذ Backend و Frontend
+echo    • للمساعدة: اقرأ ملف START_GUIDE_AR.md
 echo.
-echo  لإيقاف الخادم، أغلق نافذة Backend
-echo.
+echo ═══════════════════════════════════════════════════════════
 pause

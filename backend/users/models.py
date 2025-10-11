@@ -4,6 +4,7 @@ from django.db import models
 
 
 class User(AbstractUser):
+    id = models.AutoField(primary_key=True)
     email = models.EmailField(blank=True, null=True, verbose_name="البريد الإلكتروني")
     phone = models.CharField(max_length=20, unique=True, verbose_name="رقم الهاتف")
     address = models.TextField(blank=True, null=True, verbose_name="العنوان")
@@ -11,7 +12,7 @@ class User(AbstractUser):
     is_staff_member = models.BooleanField(default=False, verbose_name="موظف")
 
     USERNAME_FIELD = 'phone'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username']
 
     class Meta:
         verbose_name = "مستخدم"

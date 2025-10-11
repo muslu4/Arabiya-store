@@ -79,7 +79,7 @@ class BannerAdmin(admin.ModelAdmin):
 
 
 # تسجيل نماذج الكوبونات
-@admin.register(Coupon)
+# Note: Registration is done in ecom_project/admin.py for custom admin site
 class CouponAdmin(admin.ModelAdmin):
     """إعدادات عرض الكوبونات في لوحة الإدارة"""
     list_display = [
@@ -127,14 +127,14 @@ class CouponAdmin(admin.ModelAdmin):
                 'used_count'
             )
         }),
-        ('تطبيق الكوبون', {
-            'fields': (
-                'applicable_products',
-                'applicable_categories',
-                'excluded_products',
-                'excluded_categories'
-            )
-        }),
+        # ('تطبيق الكوبون', {
+        #     'fields': (
+        #         'applicable_products',
+        #         'applicable_categories',
+        #         'excluded_products',
+        #         'excluded_categories'
+        #     )
+        # }),
         ('معلومات النظام', {
             'fields': (
                 'id',
@@ -152,7 +152,7 @@ class CouponAdmin(admin.ModelAdmin):
         return self.readonly_fields
 
 
-@admin.register(CouponUsage)
+# Note: Registration is done in ecom_project/admin.py for custom admin site
 class CouponUsageAdmin(admin.ModelAdmin):
     """إعدادات عرض استخدامات الكوبونات في لوحة الإدارة"""
     list_display = [
@@ -187,3 +187,11 @@ class CouponUsageAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         """منع تعديل استخدامات الكوبونات"""
         return False
+
+
+# تسجيل النماذج الأخرى
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(Product, ProductAdmin)
+admin.site.register(ProductReview, ProductReviewAdmin)
+admin.site.register(ProductView, ProductViewAdmin)
+admin.site.register(Banner, BannerAdmin)

@@ -25,25 +25,5 @@ class UserAdmin(BaseUserAdmin):
     )
 
 
-class NotificationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'recipient', 'type', 'is_read', 'created_at')
-    list_filter = ('type', 'is_read', 'created_at')
-    search_fields = ('title', 'message', 'recipient__email')
-    ordering = ('-created_at',)
-    readonly_fields = ('created_at',)
-
-    fieldsets = (
-        (None, {'fields': ('recipient', 'type', 'title', 'message')}),
-        ('معلومات إضافية', {'fields': ('data', 'order', 'is_read', 'created_at')}),
-    )
-
-
 # تسجيل النماذج مع لوحة الإدارة
 admin.site.register(User, UserAdmin)
-
-# تسجيل نموذج الإشعارات إذا كان موجودًا
-try:
-    from .models import Notification
-    admin.site.register(Notification, NotificationAdmin)
-except ImportError:
-    pass

@@ -42,7 +42,7 @@ class MIMIAdminSite(AdminSite):
         )['total'] or Decimal('0')
         
         # Recent activity
-        extra_context['recent_orders'] = Order.objects.select_related('user').order_by('-created_at')[:5]
+        extra_context['recent_orders'] = Order.objects.order_by('-created_at')[:5]
         extra_context['recent_users'] = User.objects.order_by('-date_joined')[:5]
         extra_context['recent_products'] = Product.objects.order_by('-created_at')[:5]
         
@@ -54,7 +54,7 @@ class MIMIAdminSite(AdminSite):
 
         # Notifications (recent + unread count)
         try:
-            from users.models import Notification
+            from notifications.models import Notification
             extra_context['recent_notifications'] = Notification.objects.select_related('recipient')[:5]
             extra_context['unread_notifications_count'] = Notification.objects.filter(is_read=False).count()
         except Exception:
@@ -67,8 +67,8 @@ class MIMIAdminSite(AdminSite):
 admin_site = MIMIAdminSite(name='mimi_admin')
 
 # Import and register all admin classes
-from users.admin import UserAdmin, NotificationAdmin
-from products.admin import CategoryAdmin, ProductAdmin, ProductReviewAdmin, ProductViewAdmin, BannerAdmin
+from users.admin import UserAdmin
+from products.admin import CategoryAdmin, ProductAdmin, ProductReviewAdmin, ProductViewAdmin, BannerAdmin, CouponAdmin, CouponUsageAdmin
 from orders.admin import OrderAdmin, OrderItemAdmin
 
 # Register models with custom admin site
@@ -79,7 +79,8 @@ admin_site.register(Order, OrderAdmin)
 
 # Register Notification
 try:
-    from users.models import Notification
+    from notifications.models import Notification
+    from notifications.admin import NotificationAdmin
     admin_site.register(Notification, NotificationAdmin)
 except Exception:
     pass
@@ -106,3 +107,11 @@ try:
     admin_site.register(Banner, BannerAdmin)
 except:
     pass
+
+# Register Coupon models
+try:
+    from products.models_coupons import Coupon, CouponUsage
+    admin_site.register(Coupon, CouponAdmin)
+    admin_site.register(CouponUsage, CouponUsageAdmin)
+except Exception as e:
+    print(f"Error registering Coupon models: {e}")

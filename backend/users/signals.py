@@ -12,6 +12,7 @@ def create_superuser(sender, **kwargs):
     if sender.name == 'users':
         if not User.objects.filter(phone='01234567890').exists():
             User.objects.create_superuser(
+                username='admin',
                 phone='01234567890',
                 email='admin@example.com',
                 password='admin123',
