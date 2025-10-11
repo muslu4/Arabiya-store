@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -o errexit
 
+# Build timestamp: 2025-01-12 02:35:00
 echo "🚀 Starting build process..."
 
 # تثبيت المتطلبات
