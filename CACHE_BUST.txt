@@ -1,3 +1,8 @@
-Build Version: 2025-01-12-02-35-00
+Build Version: 2025-01-12-02-45-00
 This file forces Render to rebuild from scratch.
 DO NOT DELETE THIS FILE.
+
+Changes in this build:
+- Added verify-postcss.js to auto-fix PostCSS config
+- Added postinstall script to verify configuration
+- Updated package.json to v1.0.2

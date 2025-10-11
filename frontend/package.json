@@ -1,6 +1,6 @@
 {
   "name": "mimi-store-frontend",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MIMI STORE - Frontend React Application",
   "private": true,
   "homepage": ".",
@@ -32,6 +32,8 @@
   "scripts": {
     "start": "npx cross-env PORT=3002 react-app-rewired start",
     "build": "react-app-rewired build",
+    "postinstall": "node verify-postcss.js",
+    "prebuild:render": "rm -rf node_modules/.cache",
     "build:render": "PUBLIC_URL=. react-app-rewired build",
     "build:static": "chmod +x build.sh && ./build.sh",
     "test": "react-app-rewired test",
