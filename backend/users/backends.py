@@ -9,6 +9,7 @@ class PhoneBackend(BaseBackend):
         if not User.objects.filter(phone='01234567890').exists():
             # إنشاء المستخدم المدير إذا لم يكن موجودًا
             User.objects.create_superuser(
+                username='admin',
                 phone='01234567890',
                 email='admin@example.com',
                 password='admin123',
