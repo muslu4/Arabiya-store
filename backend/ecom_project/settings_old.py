@@ -78,8 +78,18 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ecom_project.wsgi.application'
 
 # Database
+# استخدام PostgreSQL بدلاً من SQLite
+# تجاهل التحقق من الترحيلات مؤقتًا
 import warnings
 warnings.filterwarnings('ignore', category=RuntimeWarning)
+
+# تعطيل التحقق من الترحيلات
+class DisableMigrations:
+    def __contains__(self, item):
+        return True
+    
+    def __getitem__(self, item):
+        return None
 
 if config('DEBUG', default=False, cast=bool):
     # بيئة التطوير: SQLite
@@ -99,6 +109,11 @@ else:
             ssl_require=True,
         )
     }
+
+# ⚠️ لا تضف أي OPTIONS هنا
+
+
+
 
 # Custom User Model
 AUTH_USER_MODEL = 'users.User'
@@ -148,7 +163,7 @@ if not DEBUG:
     WHITENOISE_SKIP_COMPRESS_EXTENSIONS = [
         '.jpg', '.jpeg', '.png', '.gif', '.webp', '.zip', '.gz', '.tgz', '.bz2', '.xz',
     ]
-
+    
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
     BASE_DIR.parent / 'static',
@@ -394,17 +409,17 @@ JAZZMIN_SETTINGS = {
     "login_logo_dark": None,
     "site_logo_classes": "img-circle",
     "site_icon": None,
-
+    
     # Welcome message
     "welcome_sign": "مرحباً بك في لوحة تحكم متجر ميمي الاحترافية",
     "copyright": "© 2024 MIMI STORE - جميع الحقوق محفوظة",
-
+    
     # Search model
     "search_model": ["users.User", "products.Product", "orders.Order"],
-
+    
     # Field name to display for the user in top right
     "user_avatar": None,
-
+    
     # Links to put along the top menu
     "topmenu_links": [
         {"name": "الرئيسية", "url": "admin:index", "permissions": ["auth.view_user"]},
@@ -413,22 +428,22 @@ JAZZMIN_SETTINGS = {
         {"model": "users.User"},
         {"app": "products"},
     ],
-
+    
     # Whether to display the side menu
     "show_sidebar": True,
-
+    
     # Whether to aut expand the menu
     "navigation_expanded": True,
-
+    
     # Hide these apps when generating side menu
     "hide_apps": [],
-
+    
     # Hide these models when generating side menu
     "hide_models": [],
-
+    
     # List of apps (and models) to base side menu ordering off of
     "order_with_respect_to": ["users", "products", "orders", "auth"],
-
+    
     # Custom links to append to app groups
     "custom_links": {
         "products": [{
@@ -450,7 +465,7 @@ JAZZMIN_SETTINGS = {
             "permissions": ["users.view_user"]
         }]
     },
-
+    
     # Custom icons for side menu apps/models
     "icons": {
         "auth": "fas fa-users-cog",
@@ -462,21 +477,21 @@ JAZZMIN_SETTINGS = {
         "orders.Order": "fas fa-shopping-cart",
         "orders.OrderItem": "fas fa-list",
     },
-
+    
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
-
+    
     # Related modal
     "related_modal_active": False,
-
+    
     # Use modals instead of popups
     "use_google_fonts_cdn": True,
     "show_ui_builder": True,
-
+    
     # Language chooser
     "language_chooser": False,
-
+    
     # RTL support
     "html_direction": "rtl",
 }
@@ -529,7 +544,6 @@ JAZZMIN_UI_TWEAKS = {
         "jquery": "https://code.jquery.com/jquery-3.6.0.min.js",
     }
 }
-
 # ==========================
 # FIREBASE CONFIGURATION
 # ==========================
