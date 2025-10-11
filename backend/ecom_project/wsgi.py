@@ -31,6 +31,19 @@ try:
         # إنشاء ملف للإشارة إلى أن الترحيلات تم تنفيذها
         with open(BASE_DIR / 'db_initialized.txt', 'w') as f:
             f.write('Database initialized')
+            
+        # إنشاء المستخدم المدير
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        if not User.objects.filter(phone='01234567890').exists():
+            User.objects.create_superuser(
+                phone='01234567890',
+                email='admin@example.com',
+                password='admin123',
+                first_name='Admin',
+                last_name='User'
+            )
+            print("Superuser created successfully!")
 except Exception as e:
     # تسجيل الخطأ ولكن لا يوقف تشغيل التطبيق
     print(f"Error during automatic migration: {e}")
