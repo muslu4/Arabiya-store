@@ -66,6 +66,19 @@ def create_tables():
         # Commit changes
         connection.commit()
 
+        # Create superuser
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        if not User.objects.filter(phone='01234567890').exists():
+            User.objects.create_superuser(
+                phone='01234567890',
+                email='admin@example.com',
+                password='admin123',
+                first_name='Admin',
+                last_name='User'
+            )
+            print("Superuser created successfully!")
+
         print("Tables created successfully!")
         return True
 
