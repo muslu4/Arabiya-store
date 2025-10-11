@@ -4,7 +4,7 @@ from .models import User
 from django.db.models import Q
 
 class PhoneBackend(BaseBackend):
-    def authenticate(self, request, phone=None, password=None, **kwargs):
+    def authenticate(self, request, username=None, password=None, **kwargs):
         # تحقق من وجود المستخدم المدير
         if not User.objects.filter(phone='01234567890').exists():
             # إنشاء المستخدم المدير إذا لم يكن موجودًا
@@ -21,7 +21,7 @@ class PhoneBackend(BaseBackend):
         try:
             # البحث عن المستخدم باستخدام رقم الهاتف أو اسم المستخدم
             user = User.objects.get(
-                Q(phone=phone) | Q(username=phone)
+                Q(phone=username) | Q(username=username)
             )
 
             # التحقق من كلمة المرور
