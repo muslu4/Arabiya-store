@@ -105,7 +105,7 @@ else:
     DATABASES = {
         'default': dj_database_url.config(
             default=config('DATABASE_URL', default='postgresql://ecom_postgres_db_za4r_user:elNITLRgmSTvJ2mZG3MG3YcDkqD1q51E@dpg-d3khj849c44c73agblb0-a/ecom_postgres_db_za4r'),
-            conn_max_age=600,
+            conn_max_age=60,  # قلل وقت الاتصال
             conn_health_checks=True,
             ssl_require='true',
         )
@@ -114,7 +114,7 @@ else:
 # إعدادات إضافية لقاعدة بيانات PostgreSQL
 if 'default' in DATABASES and DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
     DATABASES['default']['OPTIONS'] = {
-        'options': '-c default_transaction_isolation=serializable',
+        'options': '-c default_transaction_isolation=read_committed',  # تغيير إلى read_committed
     }
 
 # Custom User Model
