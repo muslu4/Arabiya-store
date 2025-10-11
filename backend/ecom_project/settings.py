@@ -486,7 +486,7 @@ JAZZMIN_SETTINGS = {
     "show_ui_builder": True,
     
     # Language chooser
-    "language_chooser": True,
+    "language_chooser": False,
     
     # RTL support
     "html_direction": "rtl",
