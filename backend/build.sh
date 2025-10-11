@@ -18,6 +18,10 @@ python manage.py collectstatic --noinput
 
 # إنشاء جدول المستخدمين المخصص (إذا لم يكن موجودًا)
 echo "👤 Creating superuser if needed..."
-echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('admin', 'admin@example.com', 'admin123') if not User.objects.filter(username='admin').exists() else None" | python manage.py shell
+echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser(phone='01234567890', password='admin123', first_name='Admin', last_name='User') if not User.objects.filter(phone='01234567890').exists() else print('Superuser already exists')" | python manage.py shell
+
+# إنشاء الكوبونات الافتراضية
+echo "🎫 Creating default coupons..."
+python create_coupons.py || echo "Coupons already exist or error occurred"
 
 echo "✅ Build completed successfully!"
