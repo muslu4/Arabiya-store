@@ -8,4 +8,4 @@ class UsersConfig(AppConfig):
     verbose_name = 'المستخدمون'
     
     def ready(self):
-        import users.admin_views
+        import users.signals
