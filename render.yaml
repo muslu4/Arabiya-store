@@ -3,12 +3,17 @@ services:
   - type: web
     name: mimi-store-backend
     env: python
-    buildCommand: cd backend && chmod +x build.sh && ./build.sh
+    buildCommand: |
+      cd backend
+      pip install -r requirements.txt
+      python manage.py makemigrations --noinput
+      python manage.py migrate --noinput
+      python manage.py collectstatic --noinput
     startCommand: cd backend && gunicorn ecom_project.wsgi:application
 
     envVars:
       - key: PYTHONPATH
-        value: .
+        value: backend
       - key: PYTHON_VERSION
         value: 3.11.9
       - key: SECRET_KEY
