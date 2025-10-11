@@ -92,30 +92,28 @@ class DisableMigrations:
         return None
 
 if config('DEBUG', default=False, cast=bool):
-    # في بيئة التطوير المحلية، استخدم SQLite لتجنب مشاكل الاتصال
+    # بيئة التطوير: SQLite
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-    MIGRATION_MODULES = DisableMigrations()
 else:
-    # في بيئة الإنتاج، استخدم PostgreSQL
+    # بيئة الإنتاج: PostgreSQL
     DATABASES = {
         'default': dj_database_url.config(
-            default=config('DATABASE_URL', default='postgresql://ecom_postgres_db_za4r_user:elNITLRgmSTvJ2mZG3MG3YcDkqD1q51E@dpg-d3khj849c44c73agblb0-a/ecom_postgres_db_za4r'),
-            conn_max_age=60,  # قلل وقت الاتصال
+            default=config('DATABASE_URL'),
+            conn_max_age=600,
             conn_health_checks=True,
-            ssl_require='true',
+            ssl_require=True,
         )
     }
 
-# إعدادات إضافية لقاعدة بيانات PostgreSQL
-if 'default' in DATABASES and DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
-    DATABASES['default']['OPTIONS'] = {
-        'options': '-c default_transaction_isolation=read committed',  # تصحيح القيمة
-    }
+# ⚠️ لا تضف أي OPTIONS هنا
+
+
+
 
 # Custom User Model
 AUTH_USER_MODEL = 'users.User'
@@ -141,13 +139,6 @@ LANGUAGE_CODE = 'ar'
 TIME_ZONE = 'Asia/Riyadh'
 USE_I18N = True
 USE_TZ = True
-
-# Languages
-LANGUAGES = [
-    ('ar', 'العربية'),
-    ('en', 'English'),
-]
-LANGUAGE_CODE = 'ar'
 
 # Currency
 CURRENCY_SYMBOL = 'د.ع'
@@ -495,7 +486,7 @@ JAZZMIN_SETTINGS = {
     "show_ui_builder": True,
     
     # Language chooser
-    "language_chooser": False,
+    "language_chooser": True,
     
     # RTL support
     "html_direction": "rtl",
@@ -547,12 +538,31 @@ JAZZMIN_UI_TWEAKS = {
             "js": "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js",
         },
         "jquery": "https://code.jquery.com/jquery-3.6.0.min.js",
-    }
-}
+    }},
+# ==========================
+# FIREBASE CONFIGURATION
+# ==========================
+import json
 
+firebase_credentials_json = config('FIREBASE_CREDENTIALS_JSON', default=None)
+FIREBASE_CREDENTIALS_PATH = config('FIREBASE_CREDENTIALS_PATH', default=str(BASE_DIR / 'firebase' / 'ecomproject-a8173-38763797948f.json'))
 
-# استيراد إعدادات Firebase
 try:
-    from .settings_firebase import *
-except ImportError:
-    pass
+    import firebase_admin
+    from firebase_admin import credentials
+
+    if firebase_credentials_json:
+        cred_dict = json.loads(firebase_credentials_json)
+        cred = credentials.Certificate(cred_dict)
+    elif os.path.exists(FIREBASE_CREDENTIALS_PATH):
+        cred = credentials.Certificate(FIREBASE_CREDENTIALS_PATH)
+    else:
+        cred = None
+
+    if cred:
+        firebase_admin.initialize_app(cred)
+        print("✅ Firebase initialized successfully.")
+    else:
+        print("⚠️ Firebase credentials not found. Skipping initialization.")
+except ModuleNotFoundError:
+    print("⚠️ مكتبة Firebase Admin غير مثبتة. يمكنك تثبيتها لاحقًا باستخدام pip install firebase-admin")
