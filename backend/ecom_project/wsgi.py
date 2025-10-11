@@ -27,6 +27,9 @@ try:
         
         # تنفيذ الترحيلات
         call_command('migrate', '--noinput')
+
+        # التأكد من إنشاء جدول الجلسات
+        call_command('migrate', 'sessions', '--noinput')
         
         # إنشاء ملف للإشارة إلى أن الترحيلات تم تنفيذها
         with open(BASE_DIR / 'db_initialized.txt', 'w') as f:
