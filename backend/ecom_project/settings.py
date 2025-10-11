@@ -114,7 +114,7 @@ else:
 # إعدادات إضافية لقاعدة بيانات PostgreSQL
 if 'default' in DATABASES and DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
     DATABASES['default']['OPTIONS'] = {
-        'options': '-c default_transaction_isolation=read_committed',  # تغيير إلى read_committed
+        'options': '-c default_transaction_isolation=read committed',  # تصحيح القيمة
     }
 
 # Custom User Model
