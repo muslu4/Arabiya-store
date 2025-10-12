@@ -6,8 +6,10 @@ services:
     buildCommand: |
       cd backend
       pip install -r requirements.txt
-      python manage.py makemigrations --noinput
-      python manage.py migrate --noinput
+      python manage.py makemigrations --noinput || echo "⚠️ makemigrations failed"
+      python manage.py migrate --run-syncdb --noinput || python manage.py migrate --noinput
+      python create_superuser.py || echo "⚠️ Superuser already exists"
+      python create_coupons.py || echo "⚠️ Coupons already exist"
       python manage.py collectstatic --noinput
     startCommand: cd backend && gunicorn ecom_project.wsgi:application
 
