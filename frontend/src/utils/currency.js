@@ -5,9 +5,9 @@
 const SYMBOL = process.env.REACT_APP_CURRENCY_SYMBOL || 'د.ع';
 const CODE = process.env.REACT_APP_CURRENCY_CODE || 'IQD';
 
-// Default threshold: 200,000 IQD (can be overridden via env)
+// Default threshold: 100,000 IQD (can be overridden via env)
 const FREE_SHIPPING_THRESHOLD = Number(
-    process.env.REACT_APP_FREE_SHIPPING_THRESHOLD || 200000
+    process.env.REACT_APP_FREE_SHIPPING_THRESHOLD || 100000
 );
 
 // Simple formatter: IQD has no minor units typically, but keep 2 decimals if needed

@@ -75,9 +75,9 @@ def upload_image_to_imgbb(request):
 @permission_classes([AllowAny])
 def product_list(request):
     """
-    قائمة جميع المنتجات
+    قائمة جميع المنتجات مرتبة حسب display_order
     """
-    products = Product.objects.all()
+    products = Product.objects.all().order_by('display_order', '-created_at')
     serializer = ProductSerializer(products, many=True)
     return Response(serializer.data)
 
@@ -98,15 +98,15 @@ def product_detail(request, pk):
 @permission_classes([AllowAny])
 def category_list(request):
     """
-    قائمة جميع الفئات
+    قائمة جميع الفئات مرتبة حسب display_order
     """
-    # Return all categories regardless of active status
-    categories = Category.objects.all()
+    # Return all categories ordered by display_order
+    categories = Category.objects.all().order_by('display_order', 'name')
     print(f"Found {categories.count()} total categories")
     
     # Log categories for debugging
     for category in categories:
-        print(f"Category: {category.name}, ID: {category.id}, Active: {category.is_active}")
+        print(f"Category: {category.name}, ID: {category.id}, Active: {category.is_active}, Display Order: {category.display_order}")
         
     serializer = CategorySerializer(categories, many=True)
     print(f"Returning {len(serializer.data)} categories")

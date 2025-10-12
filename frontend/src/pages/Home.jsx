@@ -425,6 +425,10 @@ const Home = ({ user, setUser }) => {
                       src={product.image || '/placeholder-product.png'}
                       alt={product.name}
                       className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"%3E%3Crect fill="%23f3f4f6" width="400" height="400"/%3E%3Ctext fill="%239ca3af" font-family="sans-serif" font-size="24" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3Eلا توجد صورة%3C/text%3E%3C/svg%3E';
+                      }}
                     />
                     {product.discount > 0 && (
                       <div className="absolute top-3 left-3 bg-gradient-to-r from-red-500 to-red-600 text-white w-10 h-10 rounded-full text-xs font-bold shadow-lg flex items-center justify-center">
@@ -465,23 +469,29 @@ const Home = ({ user, setUser }) => {
 
                     {/* Price */}
                     <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
-                      <div className="flex items-center space-x-1 md:space-x-2 space-x-reverse">
+                      <div className="flex flex-col space-y-1">
                         {product.discount > 0 ? (
                           <>
-                            <span className="text-base md:text-lg font-bold text-indigo-600 flex items-center">
-                              {formatCurrency(product.price * (1 - product.discount / 100))}
-                              <span className="text-xs text-gray-500 mr-1">د.ع</span>
-                            </span>
-                            <span className="text-xs md:text-sm text-gray-500 line-through flex items-center hidden sm:inline">
-                              {formatCurrency(product.price)}
-                              <span className="text-xs text-gray-500 mr-1">د.ع</span>
-                            </span>
+                            <div className="flex items-center space-x-1 space-x-reverse">
+                              <span className="text-base md:text-lg font-bold text-indigo-600">
+                                {formatCurrency(product.price * (1 - product.discount / 100))}
+                              </span>
+                              <span className="text-xs text-gray-500">د.ع</span>
+                            </div>
+                            <div className="flex items-center space-x-1 space-x-reverse">
+                              <span className="text-xs md:text-sm text-gray-500 line-through">
+                                {formatCurrency(product.price)}
+                              </span>
+                              <span className="text-xs text-gray-400">د.ع</span>
+                            </div>
                           </>
                         ) : (
-                          <span className="text-base md:text-lg font-bold text-indigo-600 flex items-center">
-                            {formatCurrency(product.price)}
-                            <span className="text-xs text-gray-500 mr-1">د.ع</span>
-                          </span>
+                          <div className="flex items-center space-x-1 space-x-reverse">
+                            <span className="text-base md:text-lg font-bold text-indigo-600">
+                              {formatCurrency(product.price)}
+                            </span>
+                            <span className="text-xs text-gray-500">د.ع</span>
+                          </div>
                         )}
                       </div>
                     </div>

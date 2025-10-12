@@ -21,24 +21,37 @@ class OrderSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'status', 'created_at', 'updated_at']
 
 class CreateOrderSerializer(serializers.ModelSerializer):
+    items = serializers.ListField(write_only=True)
+    
     class Meta:
         model = Order
         fields = [
             'customer_name', 'customer_phone', 'customer_email', 
             'customer_address', 'governorate', 'additional_info', 
-            'payment_method', 'subtotal', 'delivery_fee', 'total'
+            'payment_method', 'subtotal', 'delivery_fee', 'total', 'items'
         ]
 
     def create(self, validated_data):
-        # Extract items from the request data
-        items_data = self.context.get('items', [])
+        # Extract items from validated data
+        items_data = validated_data.pop('items', [])
 
         # Create the order
         order = Order.objects.create(**validated_data)
 
         # Create order items
+        from products.models import Product
         for item_data in items_data:
-            OrderItem.objects.create(order=order, **item_data)
+            product_id = item_data.get('product_id')
+            product = Product.objects.get(id=product_id)
+            
+            OrderItem.objects.create(
+                order=order,
+                product=product,
+                product_name=item_data.get('product_name', product.name),
+                price=item_data.get('price', product.price),
+                quantity=item_data.get('quantity', 1),
+                total_price=item_data.get('total_price', product.price * item_data.get('quantity', 1))
+            )
 
         return order
 

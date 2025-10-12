@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { formatCurrency } from '../utils/currency';
+import { formatCurrency, getFreeShippingThreshold } from '../utils/currency';
 import { api } from '../api';
 
 const Cart = ({ cart, onCartChange, onClose, handleCheckout }) => {
@@ -18,8 +18,17 @@ const Cart = ({ cart, onCartChange, onClose, handleCheckout }) => {
     }
   };
 
-  const getTotalPrice = () => {
+  const getSubtotal = () => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  };
+
+  const getShippingCost = () => {
+    const subtotal = getSubtotal();
+    return subtotal >= getFreeShippingThreshold() ? 0 : 5000;
+  };
+
+  const getTotalPrice = () => {
+    return getSubtotal() + getShippingCost();
   };
 
   return (
@@ -53,9 +62,26 @@ const Cart = ({ cart, onCartChange, onClose, handleCheckout }) => {
         </div>
         {cart.length > 0 && (
           <div className="p-4 border-t">
-            <div className="flex justify-between items-center font-bold text-lg mb-4">
-              <span>المجموع:</span>
-              <span>{formatCurrency(getTotalPrice())}</span>
+            <div className="space-y-2 mb-4">
+              <div className="flex justify-between text-gray-700">
+                <span>المجموع الفرعي:</span>
+                <span>{formatCurrency(getSubtotal())}</span>
+              </div>
+              <div className="flex justify-between text-gray-700">
+                <span>أجور التوصيل:</span>
+                <span className={getShippingCost() === 0 ? 'text-green-600 font-medium' : ''}>
+                  {getShippingCost() === 0 ? 'مجاني' : formatCurrency(getShippingCost())}
+                </span>
+              </div>
+              {getSubtotal() < getFreeShippingThreshold() && (
+                <div className="text-xs text-gray-500 text-center py-1 bg-blue-50 rounded">
+                  أضف {formatCurrency(getFreeShippingThreshold() - getSubtotal())} للحصول على توصيل مجاني
+                </div>
+              )}
+              <div className="flex justify-between items-center font-bold text-lg border-t pt-2">
+                <span>الإجمالي:</span>
+                <span>{formatCurrency(getTotalPrice())}</span>
+              </div>
             </div>
             <div className="flex flex-col space-y-3">
               <button 

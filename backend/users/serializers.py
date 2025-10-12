@@ -4,10 +4,12 @@ from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source='username', read_only=True)
+    
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name',
-                 'phone', 'address', 'is_customer', 'is_staff_member', 'date_joined']
+        fields = ['id', 'username', 'name', 'email', 'first_name', 'last_name',
+                 'phone', 'address', 'governorate', 'is_customer', 'is_staff_member', 'date_joined']
         read_only_fields = ['id', 'date_joined']
 
 
@@ -29,18 +31,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data.pop('password_confirm')
 
-        # Extract governorate if present
-        governorate = validated_data.pop('governorate', '')
-
-        # Combine name and governorate into address
-        address = validated_data.get('address', '')
-        if governorate:
-            if address:
-                address = f"{address}, {governorate}"
-            else:
-                address = governorate
-
-        validated_data['address'] = address
+        # Keep governorate as a separate field
+        # No need to combine it with address anymore
 
         user = User.objects.create_user(**validated_data)
         return user

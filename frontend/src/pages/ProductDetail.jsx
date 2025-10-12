@@ -209,7 +209,7 @@ const ProductDetail = ({ user }) => {
                       style={{ backgroundColor: '#ffffff' }}
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = 'https://via.placeholder.com/600x400?text=Product+Image';
+                        e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"%3E%3Crect fill="%23f3f4f6" width="600" height="400"/%3E%3Ctext fill="%239ca3af" font-family="sans-serif" font-size="24" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3Eلا توجد صورة%3C/text%3E%3C/svg%3E';
                       }}
                     />
                   </div>
@@ -249,6 +249,10 @@ const ProductDetail = ({ user }) => {
                       src={image}
                       alt={`${product.name} ${index + 1}`}
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"%3E%3Crect fill="%23f3f4f6" width="80" height="80"/%3E%3Ctext fill="%239ca3af" font-family="sans-serif" font-size="10" dy="3.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3Eلا توجد%3C/text%3E%3C/svg%3E';
+                      }}
                     />
                   </button>
                 ))}

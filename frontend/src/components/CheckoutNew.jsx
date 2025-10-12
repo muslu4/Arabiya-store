@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api, endpoints } from '../api';
-import { formatCurrency } from '../utils/currency';
+import { formatCurrency, getFreeShippingThreshold } from '../utils/currency';
 
 const Checkout = ({ cart, onCheckout, onClose }) => {
   const [loading, setLoading] = useState(false);
@@ -85,27 +85,41 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
     }
 
     try {
-      // Prepare order data
-      const orderData = {
-        customer: {
-          name: formData.customerName,
-          phone: formData.customerPhone,
+      // Calculate subtotal and total
+      const subtotal = cart.reduce((sum, item) => {
+        const itemPrice = item.price || 0;
+        const itemQuantity = item.quantity || 0;
+        return sum + (itemPrice * itemQuantity);
+      }, 0);
 
-          address: formData.customerAddress,
-          governorate: formData.governorate,
-        },
+      const deliveryFee = subtotal >= 100000 ? 0 : 5000;
+      const total = subtotal + deliveryFee;
+
+      // Prepare order data matching backend expectations
+      const orderData = {
+        customer_name: formData.customerName,
+        customer_phone: formData.customerPhone,
+        customer_email: formData.customerEmail || '',
+        customer_address: formData.customerAddress,
+        governorate: formData.governorate,
         additional_info: formData.additionalInfo || '',
-        payment_method: formData.paymentMethod,
+        payment_method: formData.paymentMethod === 'cash' ? 'cash_on_delivery' : 'bank_transfer',
+        subtotal: subtotal,
+        delivery_fee: deliveryFee,
+        total: total,
         items: cart.map(item => ({
           product_id: item.id,
+          product_name: item.name,
+          price: item.price,
           quantity: item.quantity,
+          total_price: item.price * item.quantity
         })),
       };
 
       console.log('Sending order data:', orderData); // Log the data being sent
 
-      // Send order to backend
-      const response = await api.post(endpoints.orders, orderData);
+      // Send order to backend using create endpoint
+      const response = await api.post(endpoints.createOrder, orderData);
 
       // Clear cart and show success message
       localStorage.removeItem('cart');
@@ -294,11 +308,34 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
                         </div>
                       ))}
                     </div>
-                    <div className="border-t border-gray-200 mt-3 pt-3">
-                      <div className="flex justify-between font-medium">
-                        <span>الإجمالي:</span>
-                        <span>{formatCurrency(cart.reduce((total, item) => total + (item.price * item.quantity), 0) + 5.0)}</span>
+                    <div className="border-t border-gray-200 mt-3 pt-3 space-y-2">
+                      <div className="flex justify-between text-gray-700">
+                        <span>المجموع الفرعي:</span>
+                        <span>{formatCurrency(cart.reduce((total, item) => total + (item.price * item.quantity), 0))}</span>
                       </div>
+                      {(() => {
+                        const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+                        const shippingCost = subtotal >= getFreeShippingThreshold() ? 0 : 5000;
+                        return (
+                          <>
+                            <div className="flex justify-between text-gray-700">
+                              <span>أجور التوصيل:</span>
+                              <span className={shippingCost === 0 ? 'text-green-600 font-medium' : ''}>
+                                {shippingCost === 0 ? 'مجاني' : formatCurrency(shippingCost)}
+                              </span>
+                            </div>
+                            {subtotal < getFreeShippingThreshold() && (
+                              <div className="text-xs text-gray-500 text-center py-1">
+                                أضف {formatCurrency(getFreeShippingThreshold() - subtotal)} للحصول على توصيل مجاني
+                              </div>
+                            )}
+                            <div className="flex justify-between font-bold text-lg border-t pt-2">
+                              <span>الإجمالي:</span>
+                              <span>{formatCurrency(subtotal + shippingCost)}</span>
+                            </div>
+                          </>
+                        );
+                      })()}
                     </div>
                   </div>
                 </div>

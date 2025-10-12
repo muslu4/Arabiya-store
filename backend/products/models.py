@@ -17,13 +17,14 @@ class Category(models.Model):
         related_name='children', verbose_name='القسم الأب'
     )
     is_active = models.BooleanField('نشط', default=True)
+    display_order = models.PositiveIntegerField('ترتيب العرض', default=0, help_text='الأقسام ذات الترتيب الأقل تظهر أولاً')
     created_at = models.DateTimeField('تاريخ الإنشاء', auto_now_add=True)
     updated_at = models.DateTimeField('تاريخ التحديث', auto_now=True)
     
     class Meta:
         verbose_name = 'قسم'
         verbose_name_plural = 'الأقسام'
-        ordering = ['name']
+        ordering = ['display_order', 'name']
     
     def __str__(self):
         return self.name
@@ -94,6 +95,7 @@ class Product(models.Model):
     # Status
     is_active = models.BooleanField('نشط', default=True)
     is_featured = models.BooleanField('منتج مميز', default=False)
+    display_order = models.PositiveIntegerField('ترتيب العرض', default=0, help_text='المنتجات ذات الترتيب الأقل تظهر أولاً')
     
     # Timestamps
     created_at = models.DateTimeField('تاريخ الإنشاء', auto_now_add=True)
@@ -102,7 +104,7 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'منتج'
         verbose_name_plural = 'المنتجات'
-        ordering = ['-created_at']
+        ordering = ['display_order', '-created_at']
         indexes = [
             models.Index(fields=['category', 'is_active']),
             models.Index(fields=['is_featured', 'is_active']),

@@ -5,23 +5,24 @@ from .models_coupons import Coupon, CouponUsage
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'parent', 'is_active')
+    list_display = ('name', 'parent', 'display_order', 'is_active')
     list_filter = ('is_active', 'parent')
     search_fields = ('name', 'description', 'parent__name')
+    list_editable = ('display_order', 'is_active')
     prepopulated_fields = {}  # يمكن إضافة حقول يتم ملؤها تلقائيًا إذا لزم الأمر
 
     fieldsets = (
         (None, {
-            'fields': ('name', 'parent', 'description', 'image', 'image_url', 'is_active')
+            'fields': ('name', 'parent', 'description', 'image', 'image_url', 'is_active', 'display_order')
         }),
     )
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'brand', 'price', 'stock_quantity', 'is_active', 'is_featured', 'created_at')
+    list_display = ('name', 'category', 'brand', 'price', 'stock_quantity', 'display_order', 'is_active', 'is_featured', 'created_at')
     list_filter = ('category', 'brand', 'is_active', 'is_featured', 'created_at')
     search_fields = ('name', 'description', 'brand', 'model')
-    list_editable = ('price', 'stock_quantity', 'is_active', 'is_featured')
+    list_editable = ('price', 'stock_quantity', 'display_order', 'is_active', 'is_featured')
 
     fieldsets = (
         ('📦 معلومات أساسية', {
@@ -43,7 +44,7 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('slug', 'meta_description', 'tags')
         }),
         ('⚡ الحالة والمميزات', {
-            'fields': ('is_active', 'is_featured')
+            'fields': ('is_active', 'is_featured', 'display_order')
         }),
     )
 

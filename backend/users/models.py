@@ -8,6 +8,7 @@ class User(AbstractUser):
     email = models.EmailField(blank=True, null=True, verbose_name="البريد الإلكتروني")
     phone = models.CharField(max_length=20, unique=True, verbose_name="رقم الهاتف")
     address = models.TextField(blank=True, null=True, verbose_name="العنوان")
+    governorate = models.CharField(max_length=50, blank=True, null=True, verbose_name="المحافظة")
     is_customer = models.BooleanField(default=True, verbose_name="عميل")
     is_staff_member = models.BooleanField(default=False, verbose_name="موظف")
 
