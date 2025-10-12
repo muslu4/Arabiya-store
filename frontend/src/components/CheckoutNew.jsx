@@ -33,7 +33,7 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
   useEffect(() => {
     if (user) {
       setFormData({
-        customerName: user.name || '',
+        customerName: user.name || user.username || '',
         customerPhone: user.phone || '',
         customerAddress: user.address || '',
         governorate: user.governorate || '',
