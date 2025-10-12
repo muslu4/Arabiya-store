@@ -5,9 +5,9 @@
 const SYMBOL = process.env.REACT_APP_CURRENCY_SYMBOL || 'د.ع';
 const CODE = process.env.REACT_APP_CURRENCY_CODE || 'IQD';
 
-// Default threshold: 100,000 IQD (can be overridden via env)
+// Default threshold: 120,000 IQD (can be overridden via env)
 const FREE_SHIPPING_THRESHOLD = Number(
-    process.env.REACT_APP_FREE_SHIPPING_THRESHOLD || 100000
+    process.env.REACT_APP_FREE_SHIPPING_THRESHOLD || 120000
 );
 
 // Simple formatter: IQD has no minor units typically, but keep 2 decimals if needed
@@ -34,29 +34,17 @@ export function getFreeShippingThreshold() {
 }
 
 /**
- * حساب رسوم التوصيل بناءً على الوزن الإجمالي
- * @param {number} totalWeight - الوزن الإجمالي بالكيلوغرام
+ * حساب رسوم التوصيل - رسوم ثابتة 5,000 د.ع
+ * @param {number} totalWeight - الوزن الإجمالي بالكيلوغرام (غير مستخدم حالياً)
  * @param {number} subtotal - المجموع الفرعي للطلب
  * @returns {number} - رسوم التوصيل بالدينار العراقي
  */
 export function calculateShippingFee(totalWeight, subtotal) {
-    // إذا كان المجموع أكثر من عتبة الشحن المجاني، الشحن مجاني
+    // إذا كان المجموع أكثر من عتبة الشحن المجاني (120,000 د.ع)، الشحن مجاني
     if (subtotal >= FREE_SHIPPING_THRESHOLD) {
         return 0;
     }
     
-    // حساب رسوم التوصيل بناءً على الوزن
-    // السعر الأساسي: 1000 د.ع لكل كيلوغرام
-    const pricePerKg = 1000;
-    const baseWeight = 0.5; // الوزن الأساسي المجاني (نصف كيلو)
-    
-    if (totalWeight <= baseWeight) {
-        return 1000; // رسوم أساسية للأوزان الخفيفة
-    }
-    
-    // حساب الوزن الإضافي
-    const additionalWeight = Math.ceil(totalWeight - baseWeight);
-    const shippingFee = 1000 + (additionalWeight * pricePerKg);
-    
-    return shippingFee;
+    // رسوم توصيل ثابتة: 5,000 د.ع
+    return 5000;
 }
