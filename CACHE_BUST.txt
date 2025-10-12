@@ -1,14 +1,3 @@
-🔥 NUCLEAR OPTION - FORCE POSTCSS IN WEBPACK!
-Timestamp: 2025-01-12 03:30:00
-
-THE REAL FIX:
-1. ✅ Modified config-overrides.js to FORCE PostCSS config in webpack
-2. ✅ PostCSS loader options hardcoded to use @tailwindcss/postcss
-3. ✅ Version bump to 1.0.5
-
-WHY verify-postcss.js DIDN'T WORK:
-- react-app-rewired uses webpack's PostCSS loader
-- The loader reads config from webpack, NOT from postcss.config.js
-- We need to override the loader options directly in webpack config
-
-THIS IS THE NUCLEAR OPTION - IT WILL WORK!
+DOWNGRADE TO TAILWIND V3 - 2025-01-XX 18:00
+Reverted from Tailwind CSS v4 to v3.4.17 (stable)
+Reason: v4 doesn't support @apply with gradients and complex utilities
