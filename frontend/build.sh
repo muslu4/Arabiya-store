@@ -1,9 +1,17 @@
-#!/bin/bash
-# Create build directory if it doesn't exist
-mkdir -p build
+#!/usr/bin/env bash
+set -o errexit
 
-# Copy public files to build
-cp -r public/* build/
+echo "🔥 FORCING PostCSS FIX..."
+node verify-postcss.js
 
-# Build the React app
+echo "📦 Installing dependencies..."
+npm ci --legacy-peer-deps
+
+echo "🧹 Clearing cache..."
+rm -rf node_modules/.cache || true
+rm -rf .cache || true
+
+echo "🏗️ Building React app..."
 npm run build
+
+echo "✅ Frontend build completed!"
