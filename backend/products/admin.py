@@ -63,14 +63,22 @@ class ProductViewAdmin(admin.ModelAdmin):
 
 
 class BannerAdmin(admin.ModelAdmin):
-    list_display = ('title', 'is_active', 'display_order', 'created_at')
-    list_filter = ('is_active', 'created_at')
-    search_fields = ('title', 'description')
+    list_display = ('title', 'product', 'is_active', 'display_order', 'created_at')
+    list_filter = ('is_active', 'created_at', 'product')
+    search_fields = ('title', 'description', 'product__name')
     list_editable = ('is_active', 'display_order')
-
+    autocomplete_fields = ['product']  # Enable autocomplete for product selection
+    
     fieldsets = (
-        (None, {
-            'fields': ('title', 'description', 'image', 'image_url', 'product', 'link_url')
+        ('معلومات الإعلان', {
+            'fields': ('title', 'description')
+        }),
+        ('الصور والروابط', {
+            'fields': ('image', 'image_url')
+        }),
+        ('ربط المنتج', {
+            'fields': ('product', 'link_url'),
+            'description': 'اختر المنتج المرتبط بالإعلان. سيتم توجيه المستخدم لصفحة المنتج عند الضغط على الإعلان.'
         }),
         ('إعدادات العرض', {
             'fields': ('is_active', 'display_order')
