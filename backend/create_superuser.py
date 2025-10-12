@@ -1,51 +1,22 @@
 #!/usr/bin/env python
-"""
-Create superuser with phone number
-"""
+"""Create superuser if it doesn't exist"""
 import os
-import sys
 import django
 
-def create_superuser():
-    """
-    Create superuser with phone number
-    """
-    try:
-        from django.contrib.auth import get_user_model
-        User = get_user_model()
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecom_project.settings')
+django.setup()
 
-        # Check if user already exists
-        if User.objects.filter(phone='01234567890').exists():
-            print("Superuser already exists!")
-            return True
+from django.contrib.auth import get_user_model
 
-        # Create superuser
-        user = User.objects.create_superuser(
-            phone='01234567890',
-            email='admin@example.com',
-            password='admin123',
-            first_name='Admin',
-            last_name='User'
-        )
+User = get_user_model()
 
-        print(f"Superuser created successfully with phone: {user.phone}")
-        return True
-
-    except Exception as e:
-        print(f"Error creating superuser: {e}")
-        import traceback
-        traceback.print_exc()
-        return False
-
-if __name__ == '__main__':
-    # Configure Django settings
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecom_project.settings')
-
-    try:
-        django.setup()
-        create_superuser()
-    except Exception as e:
-        print(f"Error setting up Django: {e}")
-        import traceback
-        traceback.print_exc()
-        sys.exit(1)
+if not User.objects.filter(phone='01234567890').exists():
+    User.objects.create_superuser(
+        phone='01234567890',
+        password='admin123',
+        first_name='Admin',
+        last_name='User'
+    )
+    print('✅ Superuser created successfully!')
+else:
+    print('ℹ️ Superuser already exists')
