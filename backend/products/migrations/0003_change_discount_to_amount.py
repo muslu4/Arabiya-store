@@ -7,7 +7,7 @@ import django.core.validators
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('products', '0002_alter_product_main_image_alter_product_image_2_and_more'),
+        ('products', '0002_alter_category_options_alter_product_options_and_more'),
     ]
 
     operations = [
