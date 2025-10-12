@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api, endpoints } from '../api';
-import { formatCurrency, getFreeShippingThreshold } from '../utils/currency';
+import { formatCurrency, getFreeShippingThreshold, calculateShippingFee } from '../utils/currency';
 
 const Checkout = ({ cart, onCheckout, onClose }) => {
   const [loading, setLoading] = useState(false);
@@ -85,14 +85,22 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
     }
 
     try {
-      // Calculate subtotal and total
+      // Calculate subtotal and total weight
       const subtotal = cart.reduce((sum, item) => {
         const itemPrice = item.price || 0;
         const itemQuantity = item.quantity || 0;
         return sum + (itemPrice * itemQuantity);
       }, 0);
 
-      const deliveryFee = subtotal >= 100000 ? 0 : 5000;
+      // Calculate total weight (in kg)
+      const totalWeight = cart.reduce((sum, item) => {
+        const itemWeight = item.weight || 0.5; // افتراض 0.5 كجم إذا لم يكن الوزن محدداً
+        const itemQuantity = item.quantity || 0;
+        return sum + (itemWeight * itemQuantity);
+      }, 0);
+
+      // Calculate delivery fee based on weight
+      const deliveryFee = calculateShippingFee(totalWeight, subtotal);
       const total = subtotal + deliveryFee;
 
       // Prepare order data matching backend expectations
@@ -315,7 +323,12 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
                       </div>
                       {(() => {
                         const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-                        const shippingCost = subtotal >= getFreeShippingThreshold() ? 0 : 5000;
+                        const totalWeight = cart.reduce((sum, item) => {
+                          const itemWeight = item.weight || 0.5; // افتراض 0.5 كجم إذا لم يكن الوزن محدداً
+                          const itemQuantity = item.quantity || 0;
+                          return sum + (itemWeight * itemQuantity);
+                        }, 0);
+                        const shippingCost = calculateShippingFee(totalWeight, subtotal);
                         return (
                           <>
                             <div className="flex justify-between text-gray-700">

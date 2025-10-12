@@ -58,10 +58,13 @@ class Product(models.Model):
         decimal_places=2,
         validators=[MinValueValidator(0)]
     )
-    discount_percentage = models.IntegerField(
-        'نسبة الخصم',
+    discount_amount = models.DecimalField(
+        'مبلغ الخصم (د.ع)',
+        max_digits=10,
+        decimal_places=2,
         default=0,
-        validators=[MinValueValidator(0), MaxValueValidator(100)]
+        validators=[MinValueValidator(0)],
+        help_text='أدخل مبلغ الخصم بالدينار العراقي (مثال: 2000 لخصم 2000 د.ع)'
     )
     
     # Inventory
@@ -126,15 +129,22 @@ class Product(models.Model):
     @property
     def discounted_price(self):
         """Calculate discounted price"""
-        if self.discount_percentage > 0:
-            discount_amount = (self.price * self.discount_percentage) / 100
-            return self.price - discount_amount
+        if self.discount_amount > 0:
+            final_price = self.price - self.discount_amount
+            return max(final_price, 0)  # لا يمكن أن يكون السعر سالباً
         return self.price
+    
+    @property
+    def discount_percentage(self):
+        """Calculate discount percentage for display"""
+        if self.discount_amount > 0 and self.price > 0:
+            return int((self.discount_amount / self.price) * 100)
+        return 0
     
     @property
     def is_on_sale(self):
         """Check if product is on sale"""
-        return self.discount_percentage > 0
+        return self.discount_amount > 0
     
     @property
     def is_in_stock(self):

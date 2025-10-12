@@ -32,3 +32,31 @@ export function formatCurrencyWithDecimals(value, { withCode = false } = {}) {
 export function getFreeShippingThreshold() {
     return FREE_SHIPPING_THRESHOLD;
 }
+
+/**
+ * حساب رسوم التوصيل بناءً على الوزن الإجمالي
+ * @param {number} totalWeight - الوزن الإجمالي بالكيلوغرام
+ * @param {number} subtotal - المجموع الفرعي للطلب
+ * @returns {number} - رسوم التوصيل بالدينار العراقي
+ */
+export function calculateShippingFee(totalWeight, subtotal) {
+    // إذا كان المجموع أكثر من عتبة الشحن المجاني، الشحن مجاني
+    if (subtotal >= FREE_SHIPPING_THRESHOLD) {
+        return 0;
+    }
+    
+    // حساب رسوم التوصيل بناءً على الوزن
+    // السعر الأساسي: 1000 د.ع لكل كيلوغرام
+    const pricePerKg = 1000;
+    const baseWeight = 0.5; // الوزن الأساسي المجاني (نصف كيلو)
+    
+    if (totalWeight <= baseWeight) {
+        return 1000; // رسوم أساسية للأوزان الخفيفة
+    }
+    
+    // حساب الوزن الإضافي
+    const additionalWeight = Math.ceil(totalWeight - baseWeight);
+    const shippingFee = 1000 + (additionalWeight * pricePerKg);
+    
+    return shippingFee;
+}
