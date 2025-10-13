@@ -4,15 +4,28 @@ import { api } from '../api';
 import Checkout from './Checkout';
 
 const Cart = ({ cart, onCartChange, onClose, handleCheckout }) => {
+  const [notification, setNotification] = useState({ show: false, message: '', type: 'success' });
   const whatsappLink = "https://wa.me/9647737698219";
   const telegramLink = "https://t.me/+9647737698219";
   const phoneLink = "tel:07737698219";
+
+  const showNotification = (message, type = 'success') => {
+    setNotification({ show: true, message, type });
+    setTimeout(() => {
+      setNotification({ show: false, message: '', type: 'success' });
+    }, 3000);
+  };
 
   const handleQuantityChange = (product, newQuantity) => {
     if (newQuantity < 1) {
       // Remove item if quantity is less than 1
       onCartChange(cart.filter(item => item.id !== product.id));
     } else {
+      // التحقق من المخزون المتوفر
+      if (newQuantity > product.stock) {
+        showNotification(`عذراً، المخزون المتوفر فقط ${product.stock} قطعة`, 'error');
+        return;
+      }
       onCartChange(cart.map(item =>
         item.id === product.id ? { ...item, quantity: newQuantity } : item
       ));
@@ -30,6 +43,14 @@ const Cart = ({ cart, onCartChange, onClose, handleCheckout }) => {
           <h2 className="text-xl font-bold">سلة التسوق</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-800">&times;</button>
         </div>
+        
+        {/* إشعار الخطأ */}
+        {notification.show && (
+          <div className={`mx-4 mt-4 p-3 rounded-md ${notification.type === 'error' ? 'bg-red-100 text-red-700 border border-red-300' : 'bg-green-100 text-green-700 border border-green-300'}`}>
+            <p className="text-sm text-center font-medium">{notification.message}</p>
+          </div>
+        )}
+        
         <div className="p-4" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
           {cart.length === 0 ? (
             <p className="text-center text-gray-500">سلتك فارغة.</p>
