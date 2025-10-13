@@ -1,232 +1,199 @@
-# ═══════════════════════════════════════════════════════════════
-#  🔍 سكريبت تشخيص مشكلة عدم ظهور التحديثات
-# ═══════════════════════════════════════════════════════════════
+# ========================================
+#    🔍 سكريبت تشخيص المشاكل
+# ========================================
 
-Write-Host "`n" -NoNewline
-Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Cyan
-Write-Host "  🔍 تشخيص مشكلة عدم ظهور التحديثات على الموقع" -ForegroundColor Yellow
-Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "   🔍 تشخيص المشاكل" -ForegroundColor Green
+Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
-# ─────────────────────────────────────────────────────────────────
-# 1. التحقق من Git Repository
-# ─────────────────────────────────────────────────────────────────
-Write-Host "📌 الخطوة 1: التحقق من Git Repository" -ForegroundColor Green
-Write-Host "─────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
-
-Set-Location "c:\Users\a\Desktop\ecom_setup\ecom_project\ecom_project"
-
-Write-Host "`n✅ آخر 3 Commits:" -ForegroundColor Cyan
-git log --oneline -3
-
-$lastCommit = git log -1 --format="%h - %s (%ar)"
-Write-Host "`n📍 آخر Commit: " -NoNewline -ForegroundColor Yellow
-Write-Host "$lastCommit" -ForegroundColor White
-
-# ─────────────────────────────────────────────────────────────────
-# 2. التحقق من Build Files
-# ─────────────────────────────────────────────────────────────────
-Write-Host "`n`n📌 الخطوة 2: التحقق من ملفات Build" -ForegroundColor Green
-Write-Host "─────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
-
-$buildFiles = Get-ChildItem "frontend\build\static\js\main.*.js" -ErrorAction SilentlyContinue
-
-if ($buildFiles) {
-    $buildFile = $buildFiles[0]
-    $buildTime = $buildFile.LastWriteTime
-    
-    Write-Host "`n✅ ملف Build الرئيسي:" -ForegroundColor Cyan
-    Write-Host "   📁 الاسم: $($buildFile.Name)" -ForegroundColor White
-    Write-Host "   🕐 التاريخ: $($buildTime.ToString('dd/MM/yyyy hh:mm:ss tt'))" -ForegroundColor White
-    
-    # التحقق من المحتوى
-    $content = Get-Content $buildFile.FullName -Raw
-    
-    Write-Host "`n🔍 فحص المحتوى:" -ForegroundColor Cyan
-    
-    if ($content -match "120000") {
-        Write-Host "   ✅ يحتوي على: 120000 (صحيح)" -ForegroundColor Green
-    } else {
-        Write-Host "   ❌ لا يحتوي على: 120000" -ForegroundColor Red
+# قائمة المشاكل
+$problems = @(
+    @{
+        Number = 1
+        Name = "الخصم لا يظهر في بطاقة المنتج"
+        File = "frontend/src/pages/Home.jsx"
+        Check = "discount_percentage"
+    },
+    @{
+        Number = 2
+        Name = "يمكن إضافة أكثر من المخزون المتوفر"
+        File = "frontend/src/pages/Home.jsx"
+        Check = "product.stock"
+    },
+    @{
+        Number = 3
+        Name = "خطأ 405 عند إرسال الطلب"
+        File = "frontend/src/api.js"
+        Check = "params:"
+    },
+    @{
+        Number = 4
+        Name = "خطأ تسجيل الدخول يوجه إلى 404"
+        File = "frontend/src/pages/Login.jsx"
+        Check = "error.response?.status"
+    },
+    @{
+        Number = 5
+        Name = "الصور تختفي من ImgBB"
+        File = "backend/products/models.py"
+        Check = "main_image"
     }
-    
-    if ($content -match "200000") {
-        Write-Host "   ❌ يحتوي على: 200000 (خطأ - قديم)" -ForegroundColor Red
-    } else {
-        Write-Host "   ✅ لا يحتوي على: 200000 (صحيح)" -ForegroundColor Green
-    }
-    
-} else {
-    Write-Host "`n❌ لم يتم العثور على ملفات Build!" -ForegroundColor Red
-    Write-Host "   يجب تشغيل: npm run build" -ForegroundColor Yellow
+)
+
+Write-Host "اختر المشكلة التي تريد تشخيصها:" -ForegroundColor Yellow
+Write-Host ""
+
+foreach ($problem in $problems) {
+    Write-Host "  $($problem.Number). $($problem.Name)" -ForegroundColor White
 }
 
-# ─────────────────────────────────────────────────────────────────
-# 3. التحقق من الكود المصدري
-# ─────────────────────────────────────────────────────────────────
-Write-Host "`n`n📌 الخطوة 3: التحقق من الكود المصدري" -ForegroundColor Green
-Write-Host "─────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
+Write-Host ""
+Write-Host "  0. تشخيص جميع المشاكل" -ForegroundColor Cyan
+Write-Host ""
 
-$currencyFile = "frontend\src\utils\currency.js"
-if (Test-Path $currencyFile) {
-    $currencyContent = Get-Content $currencyFile -Raw
+$choice = Read-Host "أدخل رقم المشكلة"
+
+Write-Host ""
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host ""
+
+function Test-Problem {
+    param (
+        [hashtable]$Problem
+    )
     
-    if ($currencyContent -match "FREE_SHIPPING_THRESHOLD.*?(\d+)") {
-        $threshold = $matches[1]
-        Write-Host "`n✅ قيمة FREE_SHIPPING_THRESHOLD في الكود:" -ForegroundColor Cyan
-        Write-Host "   📊 القيمة: $threshold" -ForegroundColor White
+    Write-Host "🔍 تشخيص: $($Problem.Name)" -ForegroundColor Yellow
+    Write-Host ""
+    
+    if (Test-Path $Problem.File) {
+        Write-Host "  ✅ الملف موجود: $($Problem.File)" -ForegroundColor Green
         
-        if ($threshold -eq "120000") {
-            Write-Host "   ✅ صحيحة (120,000)" -ForegroundColor Green
+        $content = Get-Content $Problem.File -Raw
+        if ($content -match [regex]::Escape($Problem.Check)) {
+            Write-Host "  ✅ التحديث موجود في الملف" -ForegroundColor Green
+            Write-Host ""
+            Write-Host "  📝 السطر المطابق:" -ForegroundColor Cyan
+            $lines = Get-Content $Problem.File | Select-String $Problem.Check -Context 2
+            foreach ($line in $lines) {
+                Write-Host "    $($line.Line)" -ForegroundColor White
+            }
         } else {
-            Write-Host "   ❌ خاطئة (يجب أن تكون 120,000)" -ForegroundColor Red
+            Write-Host "  ❌ التحديث غير موجود في الملف!" -ForegroundColor Red
+            Write-Host ""
+            Write-Host "  💡 الحل:" -ForegroundColor Yellow
+            Write-Host "    - تأكد من رفع التحديثات من GitHub" -ForegroundColor White
+            Write-Host "    - أو أعد تطبيق التحديثات" -ForegroundColor White
+        }
+    } else {
+        Write-Host "  ❌ الملف غير موجود: $($Problem.File)" -ForegroundColor Red
+        Write-Host ""
+        Write-Host "  💡 الحل:" -ForegroundColor Yellow
+        Write-Host "    - تأكد من أنك في المجلد الصحيح" -ForegroundColor White
+        Write-Host "    - المجلد الصحيح: C:\Users\a\Desktop\ecom_setup\ecom_project\ecom_project" -ForegroundColor White
+    }
+    
+    Write-Host ""
+    Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Gray
+    Write-Host ""
+}
+
+if ($choice -eq "0") {
+    # تشخيص جميع المشاكل
+    foreach ($problem in $problems) {
+        Test-Problem -Problem $problem
+    }
+} elseif ($choice -ge 1 -and $choice -le $problems.Count) {
+    # تشخيص مشكلة محددة
+    $selectedProblem = $problems[$choice - 1]
+    Test-Problem -Problem $selectedProblem
+    
+    # عرض معلومات إضافية حسب المشكلة
+    Write-Host "📚 معلومات إضافية:" -ForegroundColor Cyan
+    Write-Host ""
+    
+    switch ($choice) {
+        "1" {
+            Write-Host "  المشكلة: الخصم لا يظهر في بطاقة المنتج" -ForegroundColor White
+            Write-Host ""
+            Write-Host "  الحل المطبق:" -ForegroundColor Yellow
+            Write-Host "    - تم إضافة حقول الخصم في Serializer" -ForegroundColor White
+            Write-Host "    - تم تحديث عرض السعر في Home.jsx" -ForegroundColor White
+            Write-Host "    - الآن يظهر السعر الأصلي مع خط" -ForegroundColor White
+            Write-Host ""
+            Write-Host "  التحقق:" -ForegroundColor Yellow
+            Write-Host "    1. افتح الموقع" -ForegroundColor White
+            Write-Host "    2. ابحث عن منتج عليه خصم" -ForegroundColor White
+            Write-Host "    3. يجب أن ترى السعر الأصلي مع خط" -ForegroundColor White
+            Write-Host "    4. والسعر الجديد بلون مميز" -ForegroundColor White
+        }
+        "2" {
+            Write-Host "  المشكلة: يمكن إضافة أكثر من المخزون المتوفر" -ForegroundColor White
+            Write-Host ""
+            Write-Host "  الحل المطبق:" -ForegroundColor Yellow
+            Write-Host "    - تم إضافة التحقق من المخزون في addToCart" -ForegroundColor White
+            Write-Host "    - رسالة خطأ عند تجاوز المخزون" -ForegroundColor White
+            Write-Host "    - زر معطل عند نفاد المخزون" -ForegroundColor White
+            Write-Host ""
+            Write-Host "  التحقق:" -ForegroundColor Yellow
+            Write-Host "    1. افتح الموقع" -ForegroundColor White
+            Write-Host "    2. جرب إضافة منتج للسلة" -ForegroundColor White
+            Write-Host "    3. جرب إضافة أكثر من المتوفر" -ForegroundColor White
+            Write-Host "    4. يجب أن تظهر رسالة خطأ" -ForegroundColor White
+        }
+        "3" {
+            Write-Host "  المشكلة: خطأ 405 عند إرسال الطلب" -ForegroundColor White
+            Write-Host ""
+            Write-Host "  الحل المطبق:" -ForegroundColor Yellow
+            Write-Host "    - تم إزالة timestamp parameter من api.js" -ForegroundColor White
+            Write-Host "    - تم إصلاح URLs في Backend" -ForegroundColor White
+            Write-Host "    - الآن الطلبات تُرسل بنجاح" -ForegroundColor White
+            Write-Host ""
+            Write-Host "  التحقق:" -ForegroundColor Yellow
+            Write-Host "    1. افتح الموقع" -ForegroundColor White
+            Write-Host "    2. أضف منتجات للسلة" -ForegroundColor White
+            Write-Host "    3. اذهب للدفع" -ForegroundColor White
+            Write-Host "    4. أكمل الطلب" -ForegroundColor White
+            Write-Host "    5. يجب أن يُرسل بنجاح" -ForegroundColor White
+        }
+        "4" {
+            Write-Host "  المشكلة: خطأ تسجيل الدخول يوجه إلى 404" -ForegroundColor White
+            Write-Host ""
+            Write-Host "  الحل المطبق:" -ForegroundColor Yellow
+            Write-Host "    - تم تحسين معالجة الأخطاء في Login.jsx" -ForegroundColor White
+            Write-Host "    - رسائل خطأ واضحة بالعربية" -ForegroundColor White
+            Write-Host "    - عدم التوجيه عند الخطأ" -ForegroundColor White
+            Write-Host ""
+            Write-Host "  التحقق:" -ForegroundColor Yellow
+            Write-Host "    1. افتح صفحة تسجيل الدخول" -ForegroundColor White
+            Write-Host "    2. أدخل رقم هاتف خاطئ" -ForegroundColor White
+            Write-Host "    3. يجب أن تظهر رسالة خطأ" -ForegroundColor White
+            Write-Host "    4. يجب أن تبقى في نفس الصفحة" -ForegroundColor White
+        }
+        "5" {
+            Write-Host "  المشكلة: الصور تختفي من ImgBB" -ForegroundColor White
+            Write-Host ""
+            Write-Host "  السبب:" -ForegroundColor Yellow
+            Write-Host "    - ImgBB قد يحذف الصور بعد فترة" -ForegroundColor White
+            Write-Host "    - خاصة إذا تم استخدام expiration parameter" -ForegroundColor White
+            Write-Host ""
+            Write-Host "  الحلول المقترحة:" -ForegroundColor Yellow
+            Write-Host "    1. استخدام Cloudinary (موصى به)" -ForegroundColor White
+            Write-Host "    2. استخدام Render.com Disk + WhiteNoise" -ForegroundColor White
+            Write-Host "    3. التأكد من عدم استخدام expiration" -ForegroundColor White
+            Write-Host ""
+            Write-Host "  📄 راجع ملف: 📋_حل_مشكلة_الصور_ImgBB.txt" -ForegroundColor Cyan
         }
     }
-}
-
-# ─────────────────────────────────────────────────────────────────
-# 4. مقارنة التواريخ
-# ─────────────────────────────────────────────────────────────────
-Write-Host "`n`n📌 الخطوة 4: مقارنة التواريخ" -ForegroundColor Green
-Write-Host "─────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
-
-$lastCommitDate = git log -1 --format="%ai"
-$commitDateTime = [DateTime]::Parse($lastCommitDate)
-
-Write-Host "`n📅 تاريخ آخر Commit: $($commitDateTime.ToString('dd/MM/yyyy hh:mm:ss tt'))" -ForegroundColor Cyan
-
-if ($buildFiles) {
-    $buildDateTime = $buildFiles[0].LastWriteTime
-    Write-Host "📅 تاريخ آخر Build:  $($buildDateTime.ToString('dd/MM/yyyy hh:mm:ss tt'))" -ForegroundColor Cyan
-    
-    $timeDiff = ($buildDateTime - $commitDateTime).TotalSeconds
-    
-    Write-Host "`n⏱️  الفرق الزمني: " -NoNewline -ForegroundColor Yellow
-    
-    if ($timeDiff -gt 0) {
-        Write-Host "$([Math]::Abs($timeDiff)) ثانية (Build أحدث من Commit)" -ForegroundColor Green
-        Write-Host "   ✅ Build تم بعد آخر تعديل - صحيح!" -ForegroundColor Green
-    } elseif ($timeDiff -lt 0) {
-        Write-Host "$([Math]::Abs($timeDiff)) ثانية (Build أقدم من Commit)" -ForegroundColor Red
-        Write-Host "   ❌ Build قديم - يجب إعادة Build!" -ForegroundColor Red
-    } else {
-        Write-Host "نفس الوقت" -ForegroundColor Yellow
-    }
-}
-
-# ─────────────────────────────────────────────────────────────────
-# 5. التحقق من حالة Git
-# ─────────────────────────────────────────────────────────────────
-Write-Host "`n`n📌 الخطوة 5: التحقق من حالة Git" -ForegroundColor Green
-Write-Host "─────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
-
-$gitStatus = git status --porcelain
-
-if ($gitStatus) {
-    Write-Host "`n⚠️  يوجد تغييرات غير محفوظة:" -ForegroundColor Yellow
-    git status --short
-    Write-Host "`n   💡 يجب تشغيل:" -ForegroundColor Cyan
-    Write-Host "      git add ." -ForegroundColor White
-    Write-Host "      git commit -m 'Update'" -ForegroundColor White
-    Write-Host "      git push origin main" -ForegroundColor White
 } else {
-    Write-Host "`n✅ لا توجد تغييرات غير محفوظة" -ForegroundColor Green
-    Write-Host "   كل شيء محفوظ على Git" -ForegroundColor White
+    Write-Host "❌ اختيار غير صحيح!" -ForegroundColor Red
 }
 
-# ─────────────────────────────────────────────────────────────────
-# 6. اختبار الاتصال بالموقع
-# ─────────────────────────────────────────────────────────────────
-Write-Host "`n`n📌 الخطوة 6: اختبار الاتصال بالموقع" -ForegroundColor Green
-Write-Host "─────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
-
-try {
-    $response = Invoke-WebRequest -Uri "https://www.mimistore1iq.store" -Method Head -TimeoutSec 10 -ErrorAction Stop
-    Write-Host "`n✅ الموقع يعمل بشكل صحيح" -ForegroundColor Green
-    Write-Host "   📊 Status Code: $($response.StatusCode)" -ForegroundColor White
-} catch {
-    Write-Host "`n❌ فشل الاتصال بالموقع" -ForegroundColor Red
-    Write-Host "   الخطأ: $($_.Exception.Message)" -ForegroundColor Yellow
-}
-
-# ─────────────────────────────────────────────────────────────────
-# 7. التوصيات
-# ─────────────────────────────────────────────────────────────────
-Write-Host "`n`n📌 الخطوة 7: التوصيات" -ForegroundColor Green
-Write-Host "─────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
-
-Write-Host "`n🎯 الخطوات التالية المطلوبة:" -ForegroundColor Yellow
+Write-Host ""
+Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
-# التحقق من Build
-if ($buildFiles -and $buildDateTime -gt $commitDateTime) {
-    Write-Host "✅ 1. Build محدث وصحيح" -ForegroundColor Green
-} else {
-    Write-Host "❌ 1. يجب إعادة Build:" -ForegroundColor Red
-    Write-Host "      cd frontend" -ForegroundColor White
-    Write-Host "      npm run build" -ForegroundColor White
-    Write-Host "      cd .." -ForegroundColor White
-}
-
-# التحقق من Git
-if (-not $gitStatus) {
-    Write-Host "✅ 2. Git محدث" -ForegroundColor Green
-} else {
-    Write-Host "❌ 2. يجب رفع التغييرات على Git:" -ForegroundColor Red
-    Write-Host "      git add ." -ForegroundColor White
-    Write-Host "      git commit -m 'Rebuild with updates'" -ForegroundColor White
-    Write-Host "      git push origin main" -ForegroundColor White
-}
-
-# Render.com
-Write-Host "⚠️  3. يجب التحقق من Render.com:" -ForegroundColor Yellow
-Write-Host "      • افتح: https://dashboard.render.com" -ForegroundColor White
-Write-Host "      • تحقق من حالة النشر (Deploy Status)" -ForegroundColor White
-Write-Host "      • إذا لم يبدأ تلقائياً، اضغط 'Manual Deploy'" -ForegroundColor White
-
-# Cache
-Write-Host "⚠️  4. يجب مسح الكاش:" -ForegroundColor Yellow
-Write-Host "      • المتصفح: Ctrl + Shift + Delete" -ForegroundColor White
-Write-Host "      • Cloudflare: Purge Everything" -ForegroundColor White
-Write-Host "      • افتح الموقع في Incognito Mode" -ForegroundColor White
-
-# ─────────────────────────────────────────────────────────────────
-# 8. روابط سريعة
-# ─────────────────────────────────────────────────────────────────
-Write-Host "`n`n📌 روابط سريعة" -ForegroundColor Green
-Write-Host "─────────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
-Write-Host ""
-
-$openLinks = Read-Host "هل تريد فتح الروابط المهمة؟ (y/n)"
-
-if ($openLinks -eq 'y' -or $openLinks -eq 'Y') {
-    Write-Host "`n🚀 فتح الروابط..." -ForegroundColor Cyan
-    
-    Start-Process "https://dashboard.render.com"
-    Start-Sleep -Seconds 1
-    
-    Start-Process "https://www.mimistore1iq.store"
-    Start-Sleep -Seconds 1
-    
-    $openCloudflare = Read-Host "`nهل تستخدم Cloudflare؟ (y/n)"
-    if ($openCloudflare -eq 'y' -or $openCloudflare -eq 'Y') {
-        Start-Process "https://dash.cloudflare.com"
-    }
-    
-    Write-Host "`n✅ تم فتح الروابط!" -ForegroundColor Green
-}
-
-# ─────────────────────────────────────────────────────────────────
-# النهاية
-# ─────────────────────────────────────────────────────────────────
-Write-Host "`n`n═══════════════════════════════════════════════════════════════" -ForegroundColor Cyan
-Write-Host "  ✅ انتهى التشخيص" -ForegroundColor Yellow
-Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Cyan
-Write-Host ""
-Write-Host "💡 نصيحة: إذا كانت المشكلة مستمرة، تأكد من:" -ForegroundColor Yellow
-Write-Host "   1. Render.com نشر آخر Commit" -ForegroundColor White
-Write-Host "   2. مسح كاش Cloudflare (Purge Everything)" -ForegroundColor White
-Write-Host "   3. فتح الموقع في Incognito Mode" -ForegroundColor White
-Write-Host ""
-
-Read-Host "اضغط Enter للخروج"
+# انتظار ضغطة مفتاح
+Write-Host "اضغط أي مفتاح للخروج..." -ForegroundColor Gray
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
