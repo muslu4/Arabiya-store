@@ -117,12 +117,17 @@ const Login = ({ setUser }) => {
       navigate('/');
     } catch (error) {
       console.error('Authentication error:', error);
-      if (error.response?.data?.error) {
+      // عدم التوجيه لصفحة أخرى، فقط عرض رسالة الخطأ
+      if (error.response?.status === 401) {
+        setError('رقم الهاتف أو كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى.');
+      } else if (error.response?.data?.error) {
         setError(error.response.data.error);
       } else if (error.response?.data?.message) {
         setError(error.response.data.message);
+      } else if (error.response?.status === 404) {
+        setError('رقم الهاتف غير مسجل. يرجى إنشاء حساب جديد.');
       } else {
-        setError(isLogin ? 'خطأ في تسجيل الدخول' : 'حدث خطأ أثناء إنشاء الحساب. يرجى التأكد من ملء جميع الحقول بشكل صحيح والمحاولة مرة أخرى.');
+        setError(isLogin ? 'خطأ في تسجيل الدخول. يرجى التحقق من رقم الهاتف وكلمة المرور.' : 'حدث خطأ أثناء إنشاء الحساب. يرجى التأكد من ملء جميع الحقول بشكل صحيح والمحاولة مرة أخرى.');
       }
     } finally {
       setLoading(false);

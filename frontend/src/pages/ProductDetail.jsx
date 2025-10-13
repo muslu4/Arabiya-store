@@ -56,16 +56,33 @@ const ProductDetail = ({ user }) => {
   };
 
   const addToCart = () => {
+    // التحقق من المخزون
+    if (stockCount <= 0) {
+      showNotification('عذراً، هذا المنتج غير متوفر في المخزون', 'error');
+      return;
+    }
+
     const existingItem = cart.find(item => item.id === product.id);
     let newCart;
 
     if (existingItem) {
+      // التحقق من أن الكمية الجديدة لا تتجاوز المخزون
+      const newQuantity = existingItem.quantity + quantity;
+      if (newQuantity > stockCount) {
+        showNotification(`عذراً، المخزون المتوفر فقط ${stockCount} قطعة`, 'error');
+        return;
+      }
       newCart = cart.map(item =>
         item.id === product.id
-          ? { ...item, quantity: item.quantity + quantity }
+          ? { ...item, quantity: newQuantity }
           : item
       );
     } else {
+      // التحقق من أن الكمية المطلوبة لا تتجاوز المخزون
+      if (quantity > stockCount) {
+        showNotification(`عذراً، المخزون المتوفر فقط ${stockCount} قطعة`, 'error');
+        return;
+      }
       newCart = [...cart, { ...product, quantity }];
     }
 
@@ -73,12 +90,13 @@ const ProductDetail = ({ user }) => {
     localStorage.setItem('cart', JSON.stringify(newCart));
 
     // Show success message
-    showNotification(`تم إضافة ${quantity} من ${product.name} للسلة بنجاح!`);
+    showNotification(`تم إضافة ${quantity} من ${product.name} للسلة بنجاح!`, 'success');
   };
 
-  const showNotification = (message) => {
+  const showNotification = (message, type = 'success') => {
     const notification = document.createElement('div');
-    notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 bounce-in';
+    const bgColor = type === 'error' ? 'bg-red-500' : 'bg-green-500';
+    notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 bounce-in`;
     notification.textContent = message;
     document.body.appendChild(notification);
 
@@ -317,7 +335,7 @@ const ProductDetail = ({ user }) => {
             </div>
 
             {/* Quantity Selector */}
-            {product.stock > 0 && (
+            {stockCount > 0 && (
               <div className="flex items-center space-x-4 space-x-reverse">
                 <span className="text-gray-700">الكمية:</span>
                 <div className="flex items-center border border-gray-300 rounded-lg">
@@ -331,7 +349,7 @@ const ProductDetail = ({ user }) => {
                     {quantity}
                   </span>
                   <button
-                    onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
+                    onClick={() => setQuantity(Math.min(stockCount, quantity + 1))}
                     className="px-3 py-2 text-gray-600 hover:text-primary-600 transition-colors"
                   >
                     +

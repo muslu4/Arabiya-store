@@ -103,13 +103,25 @@ const Home = ({ user, setUser }) => {
   };
 
   const addToCart = (product) => {
+    // التحقق من المخزون
+    if (product.stock <= 0) {
+      showNotification('عذراً، هذا المنتج غير متوفر في المخزون', 'error');
+      return;
+    }
+
     const existingItem = cart.find(item => item.id === product.id);
     let newCart;
 
     if (existingItem) {
+      // التحقق من أن الكمية الجديدة لا تتجاوز المخزون
+      const newQuantity = existingItem.quantity + 1;
+      if (newQuantity > product.stock) {
+        showNotification(`عذراً، المخزون المتوفر فقط ${product.stock} قطعة`, 'error');
+        return;
+      }
       newCart = cart.map(item =>
         item.id === product.id
-          ? { ...item, quantity: item.quantity + 1 }
+          ? { ...item, quantity: newQuantity }
           : item
       );
     } else {
@@ -119,13 +131,14 @@ const Home = ({ user, setUser }) => {
     handleCartChange(newCart);
 
     // Show success message
-    showNotification('تم إضافة المنتج للسلة بنجاح!');
+    showNotification('تم إضافة المنتج للسلة بنجاح!', 'success');
   };
 
-  const showNotification = (message) => {
+  const showNotification = (message, type = 'success') => {
     // Create notification element
     const notification = document.createElement('div');
-    notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 bounce-in';
+    const bgColor = type === 'error' ? 'bg-red-500' : 'bg-green-500';
+    notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 bounce-in`;
     notification.textContent = message;
     document.body.appendChild(notification);
 
@@ -430,9 +443,9 @@ const Home = ({ user, setUser }) => {
                         e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"%3E%3Crect fill="%23f3f4f6" width="400" height="400"/%3E%3Ctext fill="%239ca3af" font-family="sans-serif" font-size="24" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3Eلا توجد صورة%3C/text%3E%3C/svg%3E';
                       }}
                     />
-                    {product.discount > 0 && (
+                    {(product.discount_percentage || product.discount) > 0 && (
                       <div className="absolute top-3 left-3 bg-gradient-to-r from-red-500 to-red-600 text-white w-10 h-10 rounded-full text-xs font-bold shadow-lg flex items-center justify-center">
-                        <span>{product.discount}%</span>
+                        <span>{product.discount_percentage || product.discount}%</span>
                       </div>
                     )}
                     {product.stock <= 5 && product.stock > 0 && (
@@ -470,19 +483,17 @@ const Home = ({ user, setUser }) => {
                     {/* Price */}
                     <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
                       <div className="flex flex-col space-y-1">
-                        {product.discount > 0 ? (
+                        {(product.discount_percentage || product.discount) > 0 ? (
                           <>
                             <div className="flex items-center space-x-1 space-x-reverse">
                               <span className="text-base md:text-lg font-bold text-indigo-600">
-                                {formatCurrency(product.price * (1 - product.discount / 100))}
+                                {formatCurrency(product.discounted_price || (product.price * (1 - (product.discount_percentage || product.discount) / 100)))}
                               </span>
-                              <span className="text-xs text-gray-500">د.ع</span>
                             </div>
                             <div className="flex items-center space-x-1 space-x-reverse">
                               <span className="text-xs md:text-sm text-gray-500 line-through">
                                 {formatCurrency(product.price)}
                               </span>
-                              <span className="text-xs text-gray-400">د.ع</span>
                             </div>
                           </>
                         ) : (
@@ -490,7 +501,6 @@ const Home = ({ user, setUser }) => {
                             <span className="text-base md:text-lg font-bold text-indigo-600">
                               {formatCurrency(product.price)}
                             </span>
-                            <span className="text-xs text-gray-500">د.ع</span>
                           </div>
                         )}
                       </div>
