@@ -15,9 +15,28 @@ class OrderViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
 
     def get_serializer_class(self):
-        if self.action == 'create':
+        if self.action == 'create' or self.action == 'create_order':
             return CreateOrderSerializer
         return OrderSerializer
+
+    def create(self, request, *args, **kwargs):
+        """
+        Override default create to use CreateOrderSerializer and send notifications.
+        This handles POST /api/orders/
+        """
+        serializer = CreateOrderSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        # The serializer's .create() method handles creating the order and its items.
+        order = serializer.save()
+        
+        # Send notification to admins
+        self.send_admin_notification(order)
+        
+        # Re-serialize the created order instance with the default serializer
+        response_serializer = OrderSerializer(order)
+        headers = self.get_success_headers(serializer.data)
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     @action(detail=False, methods=['post'], permission_classes=[AllowAny], url_path='create')
     def create_order(self, request, *args, **kwargs):
