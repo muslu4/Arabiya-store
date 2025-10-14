@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.urls import reverse
 from django.utils import timezone
-from .models import Order, OrderItem, Cart, CartItem, OrderStatusHistory
+from .models import Order, OrderItem, Cart, CartItem, OrderStatusHistory, NewOrder, ProcessedOrder
 
 
 class OrderItemInline(admin.TabularInline):
@@ -394,10 +394,6 @@ class OrderStatusHistoryAdmin(admin.ModelAdmin):
     
     def has_change_permission(self, request, obj=None):
         return False
-
-
-# Import Proxy Models from models.py
-from .models import NewOrder, ProcessedOrder
 
 
 # Admin for New Orders (Pending only)
