@@ -5,6 +5,8 @@ services:
     env: python
     buildCommand: |
       cd backend
+      find . -type d -name __pycache__ -exec rm -rf {} + || true
+      find . -name "*.pyc" -delete || true
       pip install -r requirements.txt
       python manage.py makemigrations --noinput || echo "⚠️ makemigrations failed"
       python manage.py migrate --run-syncdb --noinput || python manage.py migrate --noinput
