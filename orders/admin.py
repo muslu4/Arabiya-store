@@ -23,8 +23,8 @@ class OrderStatusHistoryInline(admin.TabularInline):
         return False
 
 
-# @admin.register(Order) - Registered in main admin.py
-class OrderAdmin(admin.ModelAdmin):
+# Base Order Admin Class
+class BaseOrderAdmin(admin.ModelAdmin):
     list_display = (
         'order_number_display', 'user_display', 'status_display', 'payment_status_display',
         'total_amount_display', 'items_count_display', 'created_at_display', 'actions_column'
@@ -394,3 +394,170 @@ class OrderStatusHistoryAdmin(admin.ModelAdmin):
     
     def has_change_permission(self, request, obj=None):
         return False
+
+
+# Proxy Models for separating New Orders and Processed Orders
+class NewOrder(Order):
+    """Proxy model for new/pending orders"""
+    class Meta:
+        proxy = True
+        verbose_name = 'طلب جديد'
+        verbose_name_plural = '📥 الطلبات الجديدة'
+
+
+class ProcessedOrder(Order):
+    """Proxy model for processed orders (confirmed, cancelled, etc.)"""
+    class Meta:
+        proxy = True
+        verbose_name = 'طلب'
+        verbose_name_plural = '📦 الطلبات'
+
+
+# Admin for New Orders (Pending only)
+class NewOrderAdmin(BaseOrderAdmin):
+    """Admin interface for new/pending orders only"""
+    
+    def get_queryset(self, request):
+        """Show only pending orders"""
+        qs = super().get_queryset(request)
+        return qs.filter(status='pending').select_related('user').prefetch_related('items__product')
+    
+    actions = ['mark_as_confirmed', 'mark_as_cancelled']
+    
+    def mark_as_confirmed(self, request, queryset):
+        """Confirm selected orders - they will move to Processed Orders"""
+        updated = 0
+        for order in queryset:
+            if order.status == 'pending':
+                order.status = 'confirmed'
+                order.confirmed_at = timezone.now()
+                order.save()
+                
+                # Create status history
+                OrderStatusHistory.objects.create(
+                    order=order,
+                    old_status='pending',
+                    new_status='confirmed',
+                    changed_by=request.user,
+                    notes='تم التأكيد من لوحة الإدارة'
+                )
+                updated += 1
+        
+        self.message_user(request, f'✅ تم تأكيد {updated} طلب وتم نقلهم إلى قسم الطلبات')
+    mark_as_confirmed.short_description = '✅ تأكيد الطلبات المحددة'
+    
+    def mark_as_cancelled(self, request, queryset):
+        """Cancel selected orders - they will move to Processed Orders"""
+        updated = 0
+        for order in queryset:
+            if order.can_be_cancelled():
+                old_status = order.status
+                order.status = 'cancelled'
+                order.save()
+                
+                # Restore stock quantities
+                for item in order.items.all():
+                    if item.product:
+                        item.product.increase_stock(item.quantity)
+                
+                # Create status history
+                OrderStatusHistory.objects.create(
+                    order=order,
+                    old_status=old_status,
+                    new_status='cancelled',
+                    changed_by=request.user,
+                    notes='تم الإلغاء من لوحة الإدارة'
+                )
+                updated += 1
+        
+        self.message_user(request, f'🗑️ تم إلغاء {updated} طلب وتم نقلهم إلى قسم الطلبات')
+    mark_as_cancelled.short_description = '🗑️ إلغاء الطلبات المحددة'
+
+
+# Admin for Processed Orders (All except pending)
+class ProcessedOrderAdmin(BaseOrderAdmin):
+    """Admin interface for all processed orders (confirmed, shipped, delivered, cancelled)"""
+    
+    def get_queryset(self, request):
+        """Show all orders except pending"""
+        qs = super().get_queryset(request)
+        return qs.exclude(status='pending').select_related('user').prefetch_related('items__product')
+    
+    actions = ['mark_as_shipped', 'mark_as_delivered', 'mark_as_cancelled']
+    
+    def mark_as_shipped(self, request, queryset):
+        updated = 0
+        for order in queryset:
+            if order.status in ['confirmed', 'processing']:
+                old_status = order.status
+                order.status = 'shipped'
+                order.shipped_at = timezone.now()
+                order.save()
+                
+                # Create status history
+                OrderStatusHistory.objects.create(
+                    order=order,
+                    old_status=old_status,
+                    new_status='shipped',
+                    changed_by=request.user,
+                    notes='تم الشحن من لوحة الإدارة'
+                )
+                updated += 1
+        
+        self.message_user(request, f'📦 تم شحن {updated} طلب')
+    mark_as_shipped.short_description = '📦 شحن الطلبات المحددة'
+    
+    def mark_as_delivered(self, request, queryset):
+        updated = 0
+        for order in queryset:
+            if order.status == 'shipped':
+                order.status = 'delivered'
+                order.delivered_at = timezone.now()
+                order.save()
+                
+                # Create status history
+                OrderStatusHistory.objects.create(
+                    order=order,
+                    old_status='shipped',
+                    new_status='delivered',
+                    changed_by=request.user,
+                    notes='تم التسليم من لوحة الإدارة'
+                )
+                updated += 1
+        
+        self.message_user(request, f'✅ تم تسليم {updated} طلب')
+    mark_as_delivered.short_description = '✅ تسليم الطلبات المحددة'
+    
+    def mark_as_cancelled(self, request, queryset):
+        updated = 0
+        for order in queryset:
+            if order.can_be_cancelled():
+                old_status = order.status
+                order.status = 'cancelled'
+                order.save()
+                
+                # Restore stock quantities
+                for item in order.items.all():
+                    if item.product:
+                        item.product.increase_stock(item.quantity)
+                
+                # Create status history
+                OrderStatusHistory.objects.create(
+                    order=order,
+                    old_status=old_status,
+                    new_status='cancelled',
+                    changed_by=request.user,
+                    notes='تم الإلغاء من لوحة الإدارة'
+                )
+                updated += 1
+        
+        self.message_user(request, f'🗑️ تم إلغاء {updated} طلب')
+    mark_as_cancelled.short_description = '🗑️ إلغاء الطلبات المحددة'
+
+
+# Register the proxy models
+admin.site.register(NewOrder, NewOrderAdmin)
+admin.site.register(ProcessedOrder, ProcessedOrderAdmin)
+
+# Keep OrderAdmin as alias for backward compatibility
+OrderAdmin = BaseOrderAdmin

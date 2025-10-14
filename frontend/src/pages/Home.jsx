@@ -125,7 +125,21 @@ const Home = ({ user, setUser }) => {
           : item
       );
     } else {
-      newCart = [...cart, { ...product, quantity: 1 }];
+      // حساب السعر المخصوم الصحيح
+      const priceNum = Number(product?.price ?? 0);
+      const discountAmount = Number(product?.discount_amount ?? 0);
+      const finalPrice = product?.discounted_price 
+        ? Number(product.discounted_price) 
+        : (discountAmount > 0 ? Math.max(priceNum - discountAmount, 0) : priceNum);
+      
+      // حفظ المنتج مع السعر المخصوم
+      const productWithDiscountedPrice = {
+        ...product,
+        price: finalPrice,
+        original_price: priceNum,
+        quantity: 1
+      };
+      newCart = [...cart, productWithDiscountedPrice];
     }
 
     handleCartChange(newCart);

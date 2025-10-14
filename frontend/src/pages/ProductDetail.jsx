@@ -83,7 +83,15 @@ const ProductDetail = ({ user }) => {
         showNotification(`عذراً، المخزون المتوفر فقط ${stockCount} قطعة`, 'error');
         return;
       }
-      newCart = [...cart, { ...product, quantity }];
+      // حفظ المنتج مع السعر المخصوم
+      const productWithDiscountedPrice = {
+        ...product,
+        // تأكد من حفظ السعر المخصوم الصحيح
+        price: finalPrice,
+        original_price: priceNum,
+        quantity
+      };
+      newCart = [...cart, productWithDiscountedPrice];
     }
 
     setCart(newCart);
@@ -135,9 +143,15 @@ const ProductDetail = ({ user }) => {
 
   // Normalize numeric fields and images to avoid runtime errors
   const priceNum = Number(product?.price ?? 0);
-  const discountNum = Number((product?.discount ?? product?.discount_percentage) ?? 0);
+  const discountAmount = Number(product?.discount_amount ?? 0);
+  const discountPercentage = Number(product?.discount_percentage ?? 0);
   const stockCount = typeof product?.stock_quantity === 'number' ? product.stock_quantity : (product?.is_in_stock ? 1 : 0);
-  const finalPrice = discountNum > 0 ? priceNum * (1 - discountNum / 100) : priceNum;
+  
+  // استخدام السعر المخصوم من الـ API مباشرة (discounted_price)
+  // أو حسابه من السعر الأصلي - مبلغ الخصم
+  const finalPrice = product?.discounted_price 
+    ? Number(product.discounted_price) 
+    : (discountAmount > 0 ? Math.max(priceNum - discountAmount, 0) : priceNum);
 
   const productImages = Array.isArray(product?.all_images) && product.all_images.length > 0
     ? product.all_images
@@ -233,10 +247,10 @@ const ProductDetail = ({ user }) => {
                   </div>
                 </div>
               </div>
-              {discountNum > 0 && (
+              {discountPercentage > 0 && (
                 <div className="absolute top-4 left-4 w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex flex-col items-center justify-center shadow-lg border-2 border-white transform rotate-3">
                   <span className="text-white font-bold text-xs">خصم</span>
-                  <span className="text-white font-bold text-lg">{discountNum}%</span>
+                  <span className="text-white font-bold text-lg">{discountPercentage}%</span>
                 </div>
               )}
               {stockCount <= 5 && stockCount > 0 && (
@@ -292,7 +306,7 @@ const ProductDetail = ({ user }) => {
               <span className="text-4xl font-bold text-primary-600">
                 {formatCurrency(finalPrice)}
               </span>
-              {discountNum > 0 && (
+              {discountAmount > 0 && (
                 <span className="text-xl text-gray-500 line-through">
                   {formatCurrency(priceNum)}
                 </span>

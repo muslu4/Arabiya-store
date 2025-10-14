@@ -69,13 +69,15 @@ admin_site = MIMIAdminSite(name='mimi_admin')
 # Import and register all admin classes
 from users.admin import UserAdmin
 from products.admin import CategoryAdmin, ProductAdmin, ProductReviewAdmin, ProductViewAdmin, BannerAdmin, CouponAdmin, CouponUsageAdmin
-from orders.admin import OrderAdmin, OrderItemAdmin
+from orders.admin import OrderAdmin, OrderItemAdmin, NewOrder, NewOrderAdmin, ProcessedOrder, ProcessedOrderAdmin
 
 # Register models with custom admin site
 admin_site.register(User, UserAdmin)
 admin_site.register(Category, CategoryAdmin)
 admin_site.register(Product, ProductAdmin)
-admin_site.register(Order, OrderAdmin)
+# Register New Orders and Processed Orders separately
+admin_site.register(NewOrder, NewOrderAdmin)
+admin_site.register(ProcessedOrder, ProcessedOrderAdmin)
 
 # Register Notification and DeviceToken
 try:
