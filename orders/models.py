@@ -335,3 +335,19 @@ class OrderStatusHistory(models.Model):
     
     def __str__(self):
         return f'طلب #{self.order.order_number}: {self.old_status} → {self.new_status}'
+
+
+class NewOrder(Order):
+    """Proxy model for new/pending orders"""
+    class Meta:
+        proxy = True
+        verbose_name = 'طلب جديد'
+        verbose_name_plural = '📥 الطلبات الجديدة'
+
+
+class ProcessedOrder(Order):
+    """Proxy model for processed orders (confirmed, shipped, delivered, cancelled)"""
+    class Meta:
+        proxy = True
+        verbose_name = 'طلب'
+        verbose_name_plural = '📦 الطلبات'

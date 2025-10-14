@@ -69,7 +69,8 @@ admin_site = MIMIAdminSite(name='mimi_admin')
 # Import and register all admin classes
 from users.admin import UserAdmin
 from products.admin import CategoryAdmin, ProductAdmin, ProductReviewAdmin, ProductViewAdmin, BannerAdmin, CouponAdmin, CouponUsageAdmin
-from orders.admin import OrderAdmin, OrderItemAdmin, NewOrder, NewOrderAdmin, ProcessedOrder, ProcessedOrderAdmin
+from orders.admin import OrderAdmin, OrderItemAdmin, NewOrderAdmin, ProcessedOrderAdmin
+from orders.models import NewOrder, ProcessedOrder
 
 # Register models with custom admin site
 admin_site.register(User, UserAdmin)

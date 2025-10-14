@@ -396,21 +396,8 @@ class OrderStatusHistoryAdmin(admin.ModelAdmin):
         return False
 
 
-# Proxy Models for separating New Orders and Processed Orders
-class NewOrder(Order):
-    """Proxy model for new/pending orders"""
-    class Meta:
-        proxy = True
-        verbose_name = 'طلب جديد'
-        verbose_name_plural = '📥 الطلبات الجديدة'
-
-
-class ProcessedOrder(Order):
-    """Proxy model for processed orders (confirmed, cancelled, etc.)"""
-    class Meta:
-        proxy = True
-        verbose_name = 'طلب'
-        verbose_name_plural = '📦 الطلبات'
+# Import Proxy Models from models.py
+from .models import NewOrder, ProcessedOrder
 
 
 # Admin for New Orders (Pending only)
