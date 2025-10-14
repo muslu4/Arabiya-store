@@ -76,7 +76,8 @@ from orders.models import NewOrder, ProcessedOrder
 admin_site.register(User, UserAdmin)
 admin_site.register(Category, CategoryAdmin)
 admin_site.register(Product, ProductAdmin)
-# Register New Orders and Processed Orders separately
+# Register all Order models (base Order + proxy models)
+admin_site.register(Order, OrderAdmin)
 admin_site.register(NewOrder, NewOrderAdmin)
 admin_site.register(ProcessedOrder, ProcessedOrderAdmin)
 

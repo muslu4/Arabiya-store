@@ -206,12 +206,17 @@ class ProcessedOrderAdmin(BaseOrderAdmin):
     mark_as_cancelled.short_description = '🗑️ إلغاء الطلبات المحددة'
 
 
-# Register the proxy models
+# Create OrderAdmin class for the base Order model
+class OrderAdmin(BaseOrderAdmin):
+    """
+    Admin for the base Order model - shows all orders
+    """
+    pass
+
+# Register all models with Django's default admin site
+admin.site.register(Order, OrderAdmin)
 admin.site.register(NewOrder, NewOrderAdmin)
 admin.site.register(ProcessedOrder, ProcessedOrderAdmin)
-
-# Keep OrderAdmin and OrderItemAdmin for backward compatibility
-OrderAdmin = BaseOrderAdmin
 
 
 @admin.register(OrderItem)
