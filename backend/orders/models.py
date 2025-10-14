@@ -51,3 +51,20 @@ class OrderItem(models.Model):
         verbose_name = "عنصر في الطلب"
         verbose_name_plural = "عناصر الطلب"
 
+
+# Proxy Models for separating new orders from processed orders
+class NewOrder(Order):
+    """Proxy model for new/pending orders"""
+    class Meta:
+        proxy = True
+        verbose_name = "طلب جديد"
+        verbose_name_plural = "الطلبات الجديدة"
+
+
+class ProcessedOrder(Order):
+    """Proxy model for processed orders (confirmed, shipped, delivered, cancelled)"""
+    class Meta:
+        proxy = True
+        verbose_name = "طلب معالج"
+        verbose_name_plural = "الطلبات المعالجة"
+
