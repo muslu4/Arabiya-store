@@ -77,11 +77,12 @@ admin_site.register(Category, CategoryAdmin)
 admin_site.register(Product, ProductAdmin)
 admin_site.register(Order, OrderAdmin)
 
-# Register Notification
+# Register Notification and DeviceToken
 try:
-    from notifications.models import Notification
-    from notifications.admin import NotificationAdmin
+    from notifications.models import Notification, DeviceToken
+    from notifications.admin import NotificationAdmin, DeviceTokenAdmin
     admin_site.register(Notification, NotificationAdmin)
+    admin_site.register(DeviceToken, DeviceTokenAdmin)
 except Exception:
     pass
 

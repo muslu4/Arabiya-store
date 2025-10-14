@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import Notification, DeviceToken
 
-@admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):
     list_display = ('title', 'recipient', 'type', 'is_read', 'created_at')
     list_filter = ('type', 'is_read', 'created_at')
@@ -21,7 +20,6 @@ class NotificationAdmin(admin.ModelAdmin):
         }),
     )
 
-@admin.register(DeviceToken)
 class DeviceTokenAdmin(admin.ModelAdmin):
     list_display = ('user', 'token', 'device_type', 'is_active', 'created_at')
     list_filter = ('device_type', 'is_active', 'created_at')

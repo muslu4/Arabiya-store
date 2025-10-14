@@ -462,6 +462,12 @@ JAZZMIN_SETTINGS = {
             "url": "admin:users_user_changelist", 
             "icon": "fas fa-users",
             "permissions": ["users.view_user"]
+        }],
+        "notifications": [{
+            "name": "الإشعارات", 
+            "url": "admin:notifications_notification_changelist", 
+            "icon": "fas fa-bell",
+            "permissions": ["notifications.view_notification"]
         }]
     },
 
