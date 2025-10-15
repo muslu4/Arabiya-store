@@ -1,7 +1,9 @@
 
 from django.contrib import admin
+from django import forms
 from .models import Category, Product, ProductReview, ProductView, Banner
 from .models_coupons import Coupon, CouponUsage
+from .widgets import ImgBBUploadWidget
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -18,7 +20,21 @@ class CategoryAdmin(admin.ModelAdmin):
     )
 
 
+class ProductAdminForm(forms.ModelForm):
+    """Custom form for Product admin with ImgBB upload widgets"""
+    class Meta:
+        model = Product
+        fields = '__all__'
+        widgets = {
+            'main_image': ImgBBUploadWidget(attrs={'placeholder': 'رابط الصورة الرئيسية من ImgBB'}),
+            'image_2': ImgBBUploadWidget(attrs={'placeholder': 'رابط الصورة الثانية من ImgBB'}),
+            'image_3': ImgBBUploadWidget(attrs={'placeholder': 'رابط الصورة الثالثة من ImgBB'}),
+            'image_4': ImgBBUploadWidget(attrs={'placeholder': 'رابط الصورة الرابعة من ImgBB'}),
+        }
+
+
 class ProductAdmin(admin.ModelAdmin):
+    form = ProductAdminForm
     list_display = ('name', 'category', 'brand', 'price', 'stock_quantity', 'display_order', 'is_active', 'is_featured', 'created_at')
     list_filter = ('category', 'brand', 'is_active', 'is_featured', 'created_at')
     search_fields = ('name', 'description', 'brand', 'model')

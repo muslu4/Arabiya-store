@@ -153,9 +153,14 @@ const ProductDetail = ({ user }) => {
     ? Number(product.discounted_price) 
     : (discountAmount > 0 ? Math.max(priceNum - discountAmount, 0) : priceNum);
 
+  // Get all product images
   const productImages = Array.isArray(product?.all_images) && product.all_images.length > 0
     ? product.all_images
     : [product?.main_image || product?.image || 'https://via.placeholder.com/600x400/f3f4f6/9ca3af?text=صورة+المنتج'];
+  
+  // Debug: Log product images
+  console.log('Product all_images:', product?.all_images);
+  console.log('Product images to display:', productImages);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -240,8 +245,9 @@ const ProductDetail = ({ user }) => {
                       className="max-w-full max-h-full object-contain"
                       style={{ backgroundColor: '#ffffff' }}
                       onError={(e) => {
+                        console.error('Failed to load image:', productImages[selectedImage]);
                         e.target.onerror = null;
-                        e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"%3E%3Crect fill="%23f3f4f6" width="600" height="400"/%3E%3Ctext fill="%239ca3af" font-family="sans-serif" font-size="24" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3Eلا توجد صورة%3C/text%3E%3C/svg%3E';
+                        e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"%3E%3Crect fill="%23f3f4f6" width="600" height="400"/%3E%3Ctext fill="%239ca3af" font-family="sans-serif" font-size="20" dy="10.5" font-weight="bold" x="50%25" y="45%25" text-anchor="middle"%3Eالصورة غير متوفرة%3C/text%3E%3Ctext fill="%23dc3545" font-family="sans-serif" font-size="14" dy="10.5" x="50%25" y="55%25" text-anchor="middle"%3EImgBB Image Not Found%3C/text%3E%3C/svg%3E';
                       }}
                     />
                   </div>
