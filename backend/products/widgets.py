@@ -11,8 +11,8 @@ from django.utils.safestring import mark_safe
 class ImgBBUploadWidget(forms.TextInput):
     """
     Custom widget for uploading images to ImgBB
+    Renders HTML directly without needing a template file
     """
-    template_name = 'admin/widgets/imgbb_upload.html'
     
     def __init__(self, attrs=None):
         default_attrs = {'class': 'vTextField'}
