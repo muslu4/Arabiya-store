@@ -6,7 +6,7 @@ import Checkout from './Checkout';
 const Cart = ({ cart, onCartChange, onClose, handleCheckout }) => {
   const [notification, setNotification] = useState({ show: false, message: '', type: 'success' });
   const whatsappLink = "https://wa.me/9647737698219";
-  const telegramLink = "https://t.me/+9647737698219";
+  const telegramLink = "https://t.me/mimi_store10";
   const phoneLink = "tel:07737698219";
 
   const showNotification = (message, type = 'success') => {

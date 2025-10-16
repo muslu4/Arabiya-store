@@ -9,7 +9,7 @@ const Cart = ({ cart, onCartChange, onClose, handleCheckout }) => {
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [loadingCoupon, setLoadingCoupon] = useState(false);
   const whatsappLink = "https://wa.me/9647737698219";
-  const telegramLink = "https://t.me/+9647737698219";
+  const telegramLink = "https://t.me/mimi_store10";
   const phoneLink = "tel:07737698219";
 
   const showNotification = (message, type = 'success') => {
