@@ -56,7 +56,7 @@ const Cart = ({ cart, onCartChange, onClose, handleCheckout }) => {
 
     setLoadingCoupon(true);
     try {
-      const response = await api.post('/api/coupons/apply/', {
+      const response = await api.post('/coupons/apply/', {
         code: couponCode,
         total: getSubtotal()
       });
