@@ -455,6 +455,42 @@ body {
     margin-top: 0.25rem;
 }
 
+/* Enhanced Status Badge Visibility */
+.result-list .field-status.pending {
+    background: #fff3cd !important;
+    color: #000000 !important;
+    border: 1px solid #856404 !important;
+    font-weight: 600;
+}
+
+.result-list .field-status.processing {
+    background: #cce5ff !important;
+    color: #000000 !important;
+    border: 1px solid #004085 !important;
+    font-weight: 600;
+}
+
+.result-list .field-status.shipped {
+    background: #b8e0e8 !important;
+    color: #000000 !important;
+    border: 1px solid #0c5460 !important;
+    font-weight: 600;
+}
+
+.result-list .field-status.delivered {
+    background: #c3e6cb !important;
+    color: #000000 !important;
+    border: 1px solid #155724 !important;
+    font-weight: 600;
+}
+
+.result-list .field-status.cancelled {
+    background: #f5c6cb !important;
+    color: #000000 !important;
+    border: 1px solid #721c24 !important;
+    font-weight: 600;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     #changelist-search {
@@ -471,34 +507,38 @@ body {
     }
 
     .result-list {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
     }
 
     .result-list thead th {
-        background-color: #e8e8e8 !important;
-        color: #000000 !important;
-        font-size: 0.7rem;
-        padding: 0.5rem 0.25rem !important;
+        background-color: #3c4f5a !important;
+        color: #ffffff !important;
+        font-size: 0.8rem;
+        padding: 0.75rem 0.5rem !important;
         text-align: right;
+        font-weight: 700;
+        border: 1px solid #2c3f4a !important;
     }
 
     .result-list tbody tr {
         background-color: #ffffff !important;
+        border: 1px solid #e9ecef !important;
     }
 
     .result-list tbody tr:nth-child(odd) td {
-        background-color: #f5f5f5 !important;
+        background-color: #f9fafb !important;
     }
 
     .result-list tbody td {
         color: #000000 !important;
         background-color: #ffffff !important;
-        font-size: 0.8rem;
-        padding: 0.4rem 0.25rem !important;
+        font-size: 0.9rem;
+        padding: 0.6rem 0.5rem !important;
+        border-right: 1px solid #e9ecef !important;
     }
 
-    .result-list tbody tr:nth-child(odd) .result-list tbody td {
-        background-color: #f5f5f5 !important;
+    .result-list tbody tr:nth-child(odd) td {
+        background-color: #f9fafb !important;
         color: #000000 !important;
     }
 
@@ -509,19 +549,34 @@ body {
     .result-list .field-amount,
     .result-list .field-date {
         color: #000000 !important;
+        font-weight: 500;
+    }
+
+    .result-list .field-id {
+        color: #0056b3 !important;
+        font-weight: 700;
+    }
+
+    .result-list .field-amount {
+        color: #006600 !important;
+        font-weight: 700;
+        font-size: 0.95rem;
     }
 
     /* Fix breadcrumbs visibility */
     .breadcrumbs {
         background: #ffffff;
+        border: 1px solid #dee2e6;
     }
 
     .breadcrumbs .current {
         color: #000000 !important;
+        font-weight: 700;
     }
 
     .breadcrumbs a {
-        color: #0066cc !important;
+        color: #0056b3 !important;
+        font-weight: 600;
     }
 
     /* Fix field colors to be readable */
@@ -529,21 +584,80 @@ body {
         color: #000000 !important;
     }
 
-    /* Ensure status badges stay visible */
+    /* Ensure status badges stay visible - override defaults */
     .result-list .field-status {
         display: inline-block !important;
+        padding: 0.4rem 0.6rem !important;
+        border-radius: 0.35rem !important;
+        font-size: 0.85rem !important;
+        font-weight: 700 !important;
+        min-width: 80px;
+        text-align: center;
+    }
+
+    /* Specific status colors for mobile */
+    .result-list .field-status.pending {
+        background: #fff3cd !important;
+        color: #000000 !important;
+        border: 2px solid #856404 !important;
+    }
+
+    .result-list .field-status.processing {
+        background: #cce5ff !important;
+        color: #000000 !important;
+        border: 2px solid #004085 !important;
+    }
+
+    .result-list .field-status.shipped {
+        background: #b8e0e8 !important;
+        color: #000000 !important;
+        border: 2px solid #0c5460 !important;
+    }
+
+    .result-list .field-status.delivered {
+        background: #c3e6cb !important;
+        color: #000000 !important;
+        border: 2px solid #155724 !important;
+    }
+
+    .result-list .field-status.cancelled {
+        background: #f5c6cb !important;
+        color: #000000 !important;
+        border: 2px solid #721c24 !important;
     }
 
     .object-tools {
         flex-wrap: wrap;
     }
 
-    .order-summary .stats {
-        grid-template-columns: 1fr;
+    .order-summary {
+        padding: 1rem;
+    }
+
+    .order-summary h3 {
+        font-size: 1rem;
+        color: #000000 !important;
+    }
+
+    .order-summary .stat-card {
+        background: #f0f0f0 !important;
+        border: 1px solid #dee2e6;
+        padding: 0.75rem;
+    }
+
+    .order-summary .stat-card .stat-value {
+        color: #000000 !important;
+        font-size: 1.3rem;
     }
 
     .order-summary .stat-card .stat-label {
         color: #000000 !important;
+        font-weight: 600;
+    }
+
+    .order-summary .stats {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
     }
 }
 </style>
