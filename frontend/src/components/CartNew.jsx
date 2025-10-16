@@ -56,9 +56,17 @@ const Cart = ({ cart, onCartChange, onClose, handleCheckout }) => {
 
     setLoadingCoupon(true);
     try {
+      // تحويل عناصر السلة إلى الصيغة المتوقعة من الـ Backend
+      const cartItems = cart.map(item => ({
+        product: item.id,
+        price: item.price,
+        quantity: item.quantity
+      }));
+
       const response = await api.post('/products/coupons/apply/', {
         code: couponCode,
-        total: getSubtotal()
+        total: getSubtotal(),
+        cart_items: cartItems
       });
 
       if (response.data.valid) {

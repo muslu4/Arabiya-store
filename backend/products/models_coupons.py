@@ -146,28 +146,27 @@ class Coupon(models.Model):
         discount_amount = Decimal(0)
         applicable_items_total = Decimal(0)
 
-        # جمع قيمة العناصر القابلة للتطبيق
-        for item in cart_items:
-            product = item['product']
+        # إذا كانت cart_items فارغة، استخدم cart_total مباشرة
+        if not cart_items or len(cart_items) == 0:
+            applicable_items_total = cart_total
+        else:
+            # جمع قيمة العناصر القابلة للتطبيق
+            for item in cart_items:
+                # الحصول على السعر والكمية
+                item_price = Decimal(str(item.get('price', 0)))
+                item_quantity = int(item.get('quantity', 1))
 
-            # التحقق من المنتجات المستثناة - تم تعطيل مؤقتًا
-            # if self.excluded_products.filter(id=product.id).exists():
-            #     continue
+                # التحقق من المنتجات المستثناة - تم تعطيل مؤقتًا
+                # product_id = item.get('product')
+                # if product_id:
+                #     product = Product.objects.get(id=product_id)
+                #     if self.excluded_products.filter(id=product.id).exists():
+                #         continue
+                #     if self.excluded_categories.filter(id=product.category.id).exists():
+                #         continue
 
-            # التحقق من الأقسام المستثناة - تم تعطيل مؤقتًا
-            # if self.excluded_categories.filter(id=product.category.id).exists():
-            #     continue
-
-            # التحقق من المنتجات المحددة - تم تعطيل مؤقتًا
-            # if self.applicable_products.exists() and not self.applicable_products.filter(id=product.id).exists():
-            #     continue
-
-            # التحقق من الأقسام المحددة - تم تعطيل مؤقتًا
-            # if self.applicable_categories.exists() and not self.applicable_categories.filter(id=product.category.id).exists():
-            #     continue
-
-            # إضافة قيمة المنتج إلى المجموع
-            applicable_items_total += item['price'] * item['quantity']
+                # إضافة قيمة المنتج إلى المجموع
+                applicable_items_total += item_price * item_quantity
 
         # حساب الخصم
         if self.discount_type == 'percentage':

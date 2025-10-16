@@ -493,6 +493,10 @@ body {
 
 /* Responsive */
 @media (max-width: 768px) {
+    body {
+        background-color: #f0f0f0;
+    }
+
     #changelist-search {
         flex-direction: column;
     }
@@ -508,32 +512,50 @@ body {
 
     .result-list {
         font-size: 0.9rem;
+        background: white;
+    }
+
+    /* Header Row - Dark Background with White Text */
+    .result-list thead {
+        background-color: #2c3e50 !important;
     }
 
     .result-list thead th {
-        background-color: #3c4f5a !important;
+        background-color: #2c3e50 !important;
         color: #ffffff !important;
-        font-size: 0.8rem;
-        padding: 0.75rem 0.5rem !important;
+        font-size: 0.85rem;
+        padding: 1rem 0.5rem !important;
         text-align: right;
         font-weight: 700;
-        border: 1px solid #2c3f4a !important;
+        border: 2px solid #1a252f !important;
+        white-space: normal;
+        word-wrap: break-word;
     }
 
+    /* Table Rows */
     .result-list tbody tr {
         background-color: #ffffff !important;
-        border: 1px solid #e9ecef !important;
+        border: 1px solid #dee2e6 !important;
     }
 
-    .result-list tbody tr:nth-child(odd) td {
+    .result-list tbody tr:hover {
+        background-color: #f5f5f5 !important;
+    }
+
+    .result-list tbody tr:nth-child(odd) {
         background-color: #f9fafb !important;
     }
 
+    .result-list tbody tr:nth-child(odd):hover {
+        background-color: #f0f0f0 !important;
+    }
+
+    /* Table Cells */
     .result-list tbody td {
         color: #000000 !important;
         background-color: #ffffff !important;
         font-size: 0.9rem;
-        padding: 0.6rem 0.5rem !important;
+        padding: 0.75rem 0.5rem !important;
         border-right: 1px solid #e9ecef !important;
     }
 
@@ -542,19 +564,23 @@ body {
         color: #000000 !important;
     }
 
-    /* Ensure all text fields are readable */
-    .result-list .field-name,
-    .result-list .field-id,
-    .result-list .field-customer,
-    .result-list .field-amount,
-    .result-list .field-date {
+    /* All Text Fields - Dark/Bold for Readability */
+    .result-list .field-name {
         color: #000000 !important;
-        font-weight: 500;
+        font-weight: 600;
+        font-size: 0.95rem;
     }
 
     .result-list .field-id {
-        color: #0056b3 !important;
+        color: #003d82 !important;
         font-weight: 700;
+        font-size: 0.95rem;
+    }
+
+    .result-list .field-customer {
+        color: #000000 !important;
+        font-weight: 600;
+        font-size: 0.9rem;
     }
 
     .result-list .field-amount {
@@ -563,10 +589,29 @@ body {
         font-size: 0.95rem;
     }
 
+    .result-list .field-date {
+        color: #333333 !important;
+        font-weight: 500;
+        font-size: 0.85rem;
+    }
+
+    .result-list .field-phone {
+        color: #003d82 !important;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .result-list .field-address {
+        color: #000000 !important;
+        font-weight: 500;
+        font-size: 0.85rem;
+    }
+
     /* Fix breadcrumbs visibility */
     .breadcrumbs {
         background: #ffffff;
         border: 1px solid #dee2e6;
+        padding: 1rem;
     }
 
     .breadcrumbs .current {
@@ -575,89 +620,138 @@ body {
     }
 
     .breadcrumbs a {
-        color: #0056b3 !important;
+        color: #003d82 !important;
         font-weight: 600;
     }
 
     /* Fix field colors to be readable */
     .result-list .field-boolean {
         color: #000000 !important;
+        font-weight: 600;
     }
 
-    /* Ensure status badges stay visible - override defaults */
+    /* Status Badges - Enhanced Visibility */
     .result-list .field-status {
         display: inline-block !important;
-        padding: 0.4rem 0.6rem !important;
-        border-radius: 0.35rem !important;
-        font-size: 0.85rem !important;
+        padding: 0.5rem 0.8rem !important;
+        border-radius: 0.4rem !important;
+        font-size: 0.9rem !important;
         font-weight: 700 !important;
-        min-width: 80px;
+        min-width: 90px;
         text-align: center;
+        border: 2px solid !important;
     }
 
-    /* Specific status colors for mobile */
+    /* Pending Status - Yellow with Dark Border */
     .result-list .field-status.pending {
-        background: #fff3cd !important;
-        color: #000000 !important;
-        border: 2px solid #856404 !important;
+        background: #fff9e6 !important;
+        color: #663300 !important;
+        border-color: #cc7700 !important;
     }
 
+    /* Processing Status - Blue with Dark Border */
     .result-list .field-status.processing {
-        background: #cce5ff !important;
-        color: #000000 !important;
-        border: 2px solid #004085 !important;
+        background: #e6f2ff !important;
+        color: #003366 !important;
+        border-color: #0052cc !important;
     }
 
+    /* Shipped Status - Light Blue with Dark Border */
     .result-list .field-status.shipped {
-        background: #b8e0e8 !important;
-        color: #000000 !important;
-        border: 2px solid #0c5460 !important;
+        background: #d9eef5 !important;
+        color: #003d5c !important;
+        border-color: #0066cc !important;
     }
 
+    /* Delivered Status - Green with Dark Border */
     .result-list .field-status.delivered {
-        background: #c3e6cb !important;
-        color: #000000 !important;
-        border: 2px solid #155724 !important;
+        background: #e8f5e9 !important;
+        color: #1b5e20 !important;
+        border-color: #2e7d32 !important;
     }
 
+    /* Cancelled Status - Red with Dark Border */
     .result-list .field-status.cancelled {
-        background: #f5c6cb !important;
-        color: #000000 !important;
-        border: 2px solid #721c24 !important;
+        background: #ffebee !important;
+        color: #b71c1c !important;
+        border-color: #d32f2f !important;
     }
 
     .object-tools {
         flex-wrap: wrap;
     }
 
+    /* Summary Cards */
     .order-summary {
         padding: 1rem;
+        background: #ffffff;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.1);
     }
 
     .order-summary h3 {
         font-size: 1rem;
         color: #000000 !important;
+        font-weight: 700;
+        margin-bottom: 1rem;
     }
 
     .order-summary .stat-card {
-        background: #f0f0f0 !important;
-        border: 1px solid #dee2e6;
-        padding: 0.75rem;
+        background: #f8f9fa !important;
+        border: 2px solid #dee2e6;
+        border-radius: 0.4rem;
+        padding: 1rem 0.75rem;
+        text-align: center;
     }
 
     .order-summary .stat-card .stat-value {
-        color: #000000 !important;
-        font-size: 1.3rem;
+        color: #003d82 !important;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
     }
 
     .order-summary .stat-card .stat-label {
         color: #000000 !important;
         font-weight: 600;
+        font-size: 0.9rem;
     }
 
     .order-summary .stats {
         grid-template-columns: 1fr;
-        gap: 0.75rem;
+        gap: 1rem;
+    }
+
+    /* Module Styling */
+    .module {
+        background: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05);
+    }
+
+    .module h2, .module caption {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+        color: white !important;
+        padding: 1rem;
+        font-size: 1.1rem;
+    }
+
+    /* Search Input */
+    #changelist-search .input-group input {
+        font-size: 1rem;
+        padding: 0.75rem;
+        border: 2px solid #dee2e6;
+    }
+
+    #changelist-search .input-group input:focus {
+        border-color: #003d82;
+        box-shadow: 0 0 0 0.2rem rgba(0, 61, 130, 0.25);
+    }
+
+    #changelist-search button {
+        background: #003d82 !important;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
     }
 }
 </style>
