@@ -33,7 +33,7 @@ def user_coupons(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([])  # السماح بالطلبات بدون تسجيل الدخول
 def apply_coupon(request):
     """
     تطبيق كوبون خصم على سلة التسوق
@@ -42,7 +42,7 @@ def apply_coupon(request):
     if not serializer.is_valid():
         return Response({
             'valid': False,
-            'message': 'كود الكوبون غير صحيح',
+            'message': serializer.errors.get('code', ['كود الكوبون غير صحيح'])[0],
             'discount_amount': 0
         }, status=status.HTTP_400_BAD_REQUEST)
 
@@ -50,7 +50,7 @@ def apply_coupon(request):
 
     # الحصول على عناصر السلة من الطلب
     cart_items = request.data.get('cart_items', [])
-    cart_total = Decimal(request.data.get('total', request.data.get('cart_total', 0)))
+    cart_total = Decimal(str(request.data.get('total', request.data.get('cart_total', 0))))
 
     # حساب قيمة الخصم
     discount_amount, message = coupon.calculate_discount(cart_items, cart_total)
@@ -69,7 +69,7 @@ def apply_coupon(request):
         'discount_amount': float(discount_amount),
         'code': coupon.code,
         'coupon_id': str(coupon.id)
-    })
+    }, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])

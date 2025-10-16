@@ -111,7 +111,7 @@ class Coupon(models.Model):
         if self.discount_type == 'percentage':
             return f"{self.discount_value}%"
         else:
-            return f"{self.discount_value} ر.س"
+            return f"{self.discount_value} د.ع"
 
     def is_valid(self, cart_total=Decimal(0)):
         """التحقق مما إذا كان الكوبون صالحًا للاستخدام"""
@@ -133,7 +133,7 @@ class Coupon(models.Model):
 
         # التحقق من الحد الأدنى للطلب
         if cart_total < self.minimum_order_amount:
-            return False, f"الحد الأدنى للطلب هو {self.minimum_order_amount} ر.س"
+            return False, f"الحد الأدنى للطلب هو {self.minimum_order_amount} د.ع"
 
         return True, "الكوبون صالح"
 
@@ -203,4 +203,4 @@ class CouponUsage(models.Model):
         unique_together = ['coupon', 'order']
 
     def __str__(self):
-        return f"{self.user.get_full_name()} - {self.coupon.code} - {self.discount_amount} ر.س"
+        return f"{self.user.get_full_name()} - {self.coupon.code} - {self.discount_amount} د.ع"

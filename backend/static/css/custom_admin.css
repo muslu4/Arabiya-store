@@ -173,8 +173,34 @@ body {
     color: var(--dark-color);
 }
 
+.table tbody td {
+    color: var(--dark-color);
+    background-color: #ffffff;
+}
+
 .table-hover tbody tr:hover {
     background-color: rgba(76, 110, 245, 0.05);
+}
+
+/* Mobile responsiveness for better text visibility */
+@media (max-width: 768px) {
+    .table thead th {
+        background-color: #e8e8e8 !important;
+        color: #000000 !important;
+        font-size: 0.75rem;
+        padding: 0.5rem 0.5rem !important;
+    }
+    
+    .table tbody td {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        font-size: 0.85rem;
+        padding: 0.5rem 0.5rem !important;
+    }
+    
+    .table tbody tr:nth-child(odd) td {
+        background-color: #f5f5f5 !important;
+    }
 }
 
 /* Buttons */
