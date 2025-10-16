@@ -187,15 +187,15 @@ const Cart = ({ cart, onCartChange, onClose, handleCheckout }) => {
                   {getShippingCost() === 0 ? 'مجاني' : formatCurrency(getShippingCost())}
                 </span>
               </div>
-              {getSubtotal() < getFreeShippingThreshold() && (
-                <div className="text-xs text-gray-500 text-center py-1 bg-blue-50 rounded">
-                  أضف {formatCurrency(getFreeShippingThreshold() - getSubtotal())} للحصول على توصيل مجاني
-                </div>
-              )}
               {couponDiscount > 0 && (
                 <div className="flex justify-between text-green-600 font-medium border-t pt-2">
                   <span>خصم الكوبون:</span>
                   <span>-{formatCurrency(couponDiscount)}</span>
+                </div>
+              )}
+              {getSubtotal() < getFreeShippingThreshold() && (
+                <div className="text-xs text-gray-500 text-center py-1 bg-blue-50 rounded">
+                  أضف {formatCurrency(getFreeShippingThreshold() - getSubtotal())} للحصول على توصيل مجاني
                 </div>
               )}
               <div className="flex justify-between items-center font-bold text-lg border-t pt-2">
