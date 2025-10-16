@@ -596,15 +596,14 @@ const Home = ({ user, setUser }) => {
             <div>
               <h4 className="font-semibold mb-4">تواصل معنا</h4>
               <div className="space-y-2 text-gray-300">
-                <a href="tel:+9647712345679" className="hover:text-white transition-colors block">📞 +964 771 234 5679</a>
+                <a href="tel:+96407737698219" className="hover:text-white transition-colors block">📞 07737698219</a>
                 <a href="https://wa.me/9647737698219" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors block">💬 واتساب</a>
                 <a href="https://t.me/mimistore" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors block">📱 تيليجرام</a>
-                <p>📍 بغداد، العراق</p>
               </div>
             </div>
           </div>
           <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">
-            <p>&copy; 2024 MIMI STORE. جميع الحقوق محفوظة.</p>
+            <p>&copy; 2025 MIMI STORE. جميع الحقوق محفوظة.</p>
           </div>
         </div>
       </footer>
