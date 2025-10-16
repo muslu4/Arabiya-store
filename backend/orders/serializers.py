@@ -16,7 +16,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'id', 'customer_name', 'customer_phone', 'customer_email', 
             'customer_address', 'governorate', 'additional_info', 
             'payment_method', 'status', 'subtotal', 'delivery_fee', 
-            'total', 'created_at', 'updated_at', 'items'
+            'coupon_code', 'coupon_discount', 'total', 'created_at', 'updated_at', 'items'
         ]
         read_only_fields = ['id', 'status', 'created_at', 'updated_at']
 
@@ -28,7 +28,8 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         fields = [
             'customer_name', 'customer_phone', 'customer_email', 
             'customer_address', 'governorate', 'additional_info', 
-            'payment_method', 'subtotal', 'delivery_fee', 'total', 'items'
+            'payment_method', 'subtotal', 'delivery_fee', 'coupon_code', 
+            'coupon_discount', 'total', 'items'
         ]
 
     def create(self, validated_data):

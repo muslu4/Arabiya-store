@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { api, endpoints } from '../api';
 import { formatCurrency, getFreeShippingThreshold, calculateShippingFee } from '../utils/currency';
 
-const Checkout = ({ cart, onCheckout, onClose }) => {
+const Checkout = ({ cart, onCheckout, onClose, appliedCoupon, couponDiscount }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [user, setUser] = useState(null);
 
-  // Load user data from localStorage on component mount
+  // Load user data and coupon data from localStorage on component mount
   useEffect(() => {
     const userData = localStorage.getItem('user');
     if (userData) {
@@ -19,7 +19,14 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
         console.error('Error parsing user data:', error);
       }
     }
-  }, []);
+
+    // Load coupon data if not passed as props (fallback to localStorage)
+    if (!appliedCoupon && !couponDiscount) {
+      const storedCoupon = localStorage.getItem('appliedCoupon');
+      const storedDiscount = localStorage.getItem('couponDiscount');
+      // Note: We'll use the props if provided, otherwise these can be loaded
+    }
+  }, [appliedCoupon, couponDiscount]);
 
   const [formData, setFormData] = useState({
     customerName: '',
@@ -101,7 +108,8 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
 
       // Calculate delivery fee based on weight
       const deliveryFee = calculateShippingFee(totalWeight, subtotal);
-      const total = subtotal + deliveryFee;
+      // Calculate total with coupon discount applied
+      const totalAfterCoupon = subtotal + deliveryFee - (couponDiscount || 0);
 
       // Prepare order data matching backend expectations
       const orderData = {
@@ -114,7 +122,9 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
         payment_method: formData.paymentMethod === 'cash' ? 'cash_on_delivery' : 'bank_transfer',
         subtotal: subtotal,
         delivery_fee: deliveryFee,
-        total: total,
+        coupon_code: appliedCoupon?.code || null,
+        coupon_discount: couponDiscount || 0,
+        total: totalAfterCoupon,
         items: cart.map(item => ({
           product_id: item.id,
           product_name: item.name,

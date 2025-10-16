@@ -24,6 +24,8 @@ class Order(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending', verbose_name="الحالة")
     subtotal = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="المجموع الفرعي")
     delivery_fee = models.DecimalField(max_digits=10, decimal_places=2, default=5.0, verbose_name="رسوم التوصيل")
+    coupon_code = models.CharField(max_length=50, blank=True, null=True, verbose_name="كود الكوبون")
+    coupon_discount = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="خصم الكوبون")
     total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="المجموع الكلي")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاريخ الإنشاء")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="تاريخ التحديث")

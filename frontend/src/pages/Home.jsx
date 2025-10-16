@@ -205,10 +205,14 @@ const Home = ({ user, setUser }) => {
     );
   }
 
+  // Load coupon data from localStorage for Checkout
+  const appliedCoupon = localStorage.getItem('appliedCoupon') ? JSON.parse(localStorage.getItem('appliedCoupon')) : null;
+  const couponDiscount = localStorage.getItem('couponDiscount') ? parseFloat(localStorage.getItem('couponDiscount')) : 0;
+
   return (
     <div className="min-h-screen bg-gray-50 pb-16">{/* pb for bottom nav */}
       {isCartOpen && <Cart cart={cart} onCartChange={handleCartChange} onClose={toggleCart} handleCheckout={handleCheckout} />}
-      {isCheckoutOpen && <Checkout cart={cart} onCheckout={handleCheckoutComplete} onClose={() => setIsCheckoutOpen(false)} />}
+      {isCheckoutOpen && <Checkout cart={cart} onCheckout={handleCheckoutComplete} onClose={() => setIsCheckoutOpen(false)} appliedCoupon={appliedCoupon} couponDiscount={couponDiscount} />}
       {/* Top bar */}
       <TopBar />
       {/* Header */}

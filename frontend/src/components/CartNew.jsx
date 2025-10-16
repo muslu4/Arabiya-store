@@ -48,6 +48,16 @@ const Cart = ({ cart, onCartChange, onClose, handleCheckout }) => {
     return getSubtotal() + getShippingCost() - couponDiscount;
   };
 
+  // Pass coupon info when checking out
+  const handleCheckoutWithCoupon = () => {
+    // Store coupon data in localStorage for Checkout component to access
+    if (appliedCoupon) {
+      localStorage.setItem('appliedCoupon', JSON.stringify(appliedCoupon));
+      localStorage.setItem('couponDiscount', couponDiscount.toString());
+    }
+    handleCheckout();
+  };
+
   const applyCoupon = async () => {
     if (!couponCode.trim()) {
       showNotification('برجاء إدخال رمز الكوبون', 'error');
@@ -177,25 +187,25 @@ const Cart = ({ cart, onCartChange, onClose, handleCheckout }) => {
                   {getShippingCost() === 0 ? 'مجاني' : formatCurrency(getShippingCost())}
                 </span>
               </div>
-              {couponDiscount > 0 && (
-                <div className="flex justify-between text-green-600 font-medium">
-                  <span>خصم الكوبون:</span>
-                  <span>-{formatCurrency(couponDiscount)}</span>
-                </div>
-              )}
               {getSubtotal() < getFreeShippingThreshold() && (
                 <div className="text-xs text-gray-500 text-center py-1 bg-blue-50 rounded">
                   أضف {formatCurrency(getFreeShippingThreshold() - getSubtotal())} للحصول على توصيل مجاني
                 </div>
               )}
+              {couponDiscount > 0 && (
+                <div className="flex justify-between text-green-600 font-medium border-t pt-2">
+                  <span>-{formatCurrency(couponDiscount)}</span>
+                  <span>خصم الكوبون:</span>
+                </div>
+              )}
               <div className="flex justify-between items-center font-bold text-lg border-t pt-2">
-                <span>الإجمالي:</span>
                 <span>{formatCurrency(getTotalPrice())}</span>
+                <span>الإجمالي:</span>
               </div>
             </div>
             <div className="flex flex-col space-y-3">
               <button 
-                onClick={handleCheckout}
+                onClick={handleCheckoutWithCoupon}
                 className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-center py-3 rounded-md font-medium hover:from-indigo-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center"
               >
                 <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
