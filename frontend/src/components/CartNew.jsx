@@ -194,13 +194,13 @@ const Cart = ({ cart, onCartChange, onClose, handleCheckout }) => {
               )}
               {couponDiscount > 0 && (
                 <div className="flex justify-between text-green-600 font-medium border-t pt-2">
-                  <span>-{formatCurrency(couponDiscount)}</span>
                   <span>خصم الكوبون:</span>
+                  <span>-{formatCurrency(couponDiscount)}</span>
                 </div>
               )}
               <div className="flex justify-between items-center font-bold text-lg border-t pt-2">
-                <span>{formatCurrency(getTotalPrice())}</span>
                 <span>الإجمالي:</span>
+                <span>{formatCurrency(getTotalPrice())}</span>
               </div>
             </div>
             <div className="flex flex-col space-y-3">

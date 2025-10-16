@@ -352,9 +352,15 @@ const Checkout = ({ cart, onCheckout, onClose, appliedCoupon, couponDiscount }) 
                                 أضف {formatCurrency(getFreeShippingThreshold() - subtotal)} للحصول على توصيل مجاني
                               </div>
                             )}
+                            {couponDiscount > 0 && (
+                              <div className="flex justify-between text-green-600 font-medium">
+                                <span>خصم الكوبون:</span>
+                                <span>-{formatCurrency(couponDiscount)}</span>
+                              </div>
+                            )}
                             <div className="flex justify-between font-bold text-lg border-t pt-2">
                               <span>الإجمالي:</span>
-                              <span>{formatCurrency(subtotal + shippingCost)}</span>
+                              <span>{formatCurrency(subtotal + shippingCost - (couponDiscount || 0))}</span>
                             </div>
                           </>
                         );
