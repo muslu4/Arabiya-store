@@ -43,7 +43,7 @@ async function applyCoupon() {
 
     try {
         showLoading();
-        const response = await apiRequest('/products/coupons/apply/', {
+        const response = await apiRequest('/coupons/apply/', {
             method: 'POST',
             body: JSON.stringify({
                 code: code,
@@ -108,7 +108,7 @@ function showCouponMessage(message, type = 'info') {
 // عرض خصم الكوبون
 function displayCouponDiscount() {
     if (couponDiscountDisplay) {
-        couponDiscountDisplay.textContent = `خصم الكوبون: ${couponDiscount} ر.س`;
+        couponDiscountDisplay.textContent = `خصم الكوبون: ${couponDiscount} د.ع`;
         couponDiscountDisplay.style.display = 'block';
     }
 

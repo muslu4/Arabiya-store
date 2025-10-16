@@ -29,7 +29,7 @@ body {
 }
 
 .breadcrumbs .current {
-    color: #495057;
+    color: #000000;
     font-weight: 600;
 }
 
@@ -479,6 +479,7 @@ body {
         color: #000000 !important;
         font-size: 0.7rem;
         padding: 0.5rem 0.25rem !important;
+        text-align: right;
     }
 
     .result-list tbody tr {
@@ -486,13 +487,51 @@ body {
     }
 
     .result-list tbody tr:nth-child(odd) td {
-        background-color: #f8f8f8 !important;
+        background-color: #f5f5f5 !important;
     }
 
     .result-list tbody td {
         color: #000000 !important;
+        background-color: #ffffff !important;
         font-size: 0.8rem;
         padding: 0.4rem 0.25rem !important;
+    }
+
+    .result-list tbody tr:nth-child(odd) .result-list tbody td {
+        background-color: #f5f5f5 !important;
+        color: #000000 !important;
+    }
+
+    /* Ensure all text fields are readable */
+    .result-list .field-name,
+    .result-list .field-id,
+    .result-list .field-customer,
+    .result-list .field-amount,
+    .result-list .field-date {
+        color: #000000 !important;
+    }
+
+    /* Fix breadcrumbs visibility */
+    .breadcrumbs {
+        background: #ffffff;
+    }
+
+    .breadcrumbs .current {
+        color: #000000 !important;
+    }
+
+    .breadcrumbs a {
+        color: #0066cc !important;
+    }
+
+    /* Fix field colors to be readable */
+    .result-list .field-boolean {
+        color: #000000 !important;
+    }
+
+    /* Ensure status badges stay visible */
+    .result-list .field-status {
+        display: inline-block !important;
     }
 
     .object-tools {
@@ -501,6 +540,10 @@ body {
 
     .order-summary .stats {
         grid-template-columns: 1fr;
+    }
+
+    .order-summary .stat-card .stat-label {
+        color: #000000 !important;
     }
 }
 </style>
