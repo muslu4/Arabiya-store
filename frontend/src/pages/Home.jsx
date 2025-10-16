@@ -447,7 +447,7 @@ const Home = ({ user, setUser }) => {
                   onClick={() => navigate(`/product/${product.id}`)}
                 >
                   {/* Product Image */}
-                  <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 h-40 md:h-48">
+                  <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 w-full aspect-square">
                     <img
                       src={product.image || '/placeholder-product.png'}
                       alt={product.name}
@@ -496,28 +496,22 @@ const Home = ({ user, setUser }) => {
 
                     {/* Price */}
                     <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
-                      <div className="flex flex-col space-y-1">
-                        {(product.discount_percentage || product.discount) > 0 ? (
-                          <>
-                            <div className="flex items-center space-x-1 space-x-reverse">
-                              <span className="text-base md:text-lg font-bold text-indigo-600">
-                                {formatCurrency(product.discounted_price || (product.price * (1 - (product.discount_percentage || product.discount) / 100)))}
-                              </span>
-                            </div>
-                            <div className="flex items-center space-x-1 space-x-reverse">
-                              <span className="text-xs md:text-sm text-gray-500 line-through">
-                                {formatCurrency(product.price)}
-                              </span>
-                            </div>
-                          </>
-                        ) : (
-                          <div className="flex items-center space-x-1 space-x-reverse">
-                            <span className="text-base md:text-lg font-bold text-indigo-600">
-                              {formatCurrency(product.price)}
-                            </span>
-                          </div>
-                        )}
-                      </div>
+                      {(product.discount_percentage || product.discount) > 0 ? (
+                        <div className="flex items-center space-x-2 space-x-reverse flex-1">
+                          <span className="text-base md:text-lg font-bold text-indigo-600">
+                            {formatCurrency(product.discounted_price || (product.price * (1 - (product.discount_percentage || product.discount) / 100)))}
+                          </span>
+                          <span className="text-xs md:text-sm text-gray-500 line-through">
+                            {formatCurrency(product.price)}
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="flex-1">
+                          <span className="text-base md:text-lg font-bold text-indigo-600">
+                            {formatCurrency(product.price)}
+                          </span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Action Buttons */}

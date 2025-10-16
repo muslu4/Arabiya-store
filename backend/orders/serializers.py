@@ -38,20 +38,27 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         # Create the order
         order = Order.objects.create(**validated_data)
 
-        # Create order items
+        # Create order items and update product stock
         from products.models import Product
         for item_data in items_data:
             product_id = item_data.get('product_id')
             product = Product.objects.get(id=product_id)
+            quantity = item_data.get('quantity', 1)
             
+            # Create the order item
             OrderItem.objects.create(
                 order=order,
                 product=product,
                 product_name=item_data.get('product_name', product.name),
                 price=item_data.get('price', product.price),
-                quantity=item_data.get('quantity', 1),
-                total_price=item_data.get('total_price', product.price * item_data.get('quantity', 1))
+                quantity=quantity,
+                total_price=item_data.get('total_price', product.price * quantity)
             )
+            
+            # Update product stock (decrease by quantity sold)
+            if product.stock_quantity >= quantity:
+                product.stock_quantity -= quantity
+                product.save()
 
         return order
 

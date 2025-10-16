@@ -4,6 +4,10 @@ import { api } from '../api';
 
 const Cart = ({ cart, onCartChange, onClose, handleCheckout }) => {
   const [notification, setNotification] = useState({ show: false, message: '', type: 'success' });
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [loadingCoupon, setLoadingCoupon] = useState(false);
   const whatsappLink = "https://wa.me/9647737698219";
   const telegramLink = "https://t.me/+9647737698219";
   const phoneLink = "tel:07737698219";
@@ -41,7 +45,41 @@ const Cart = ({ cart, onCartChange, onClose, handleCheckout }) => {
   };
 
   const getTotalPrice = () => {
-    return getSubtotal() + getShippingCost();
+    return getSubtotal() + getShippingCost() - couponDiscount;
+  };
+
+  const applyCoupon = async () => {
+    if (!couponCode.trim()) {
+      showNotification('برجاء إدخال رمز الكوبون', 'error');
+      return;
+    }
+
+    setLoadingCoupon(true);
+    try {
+      const response = await api.post('/api/coupons/apply/', {
+        code: couponCode,
+        total: getSubtotal()
+      });
+
+      if (response.data.valid) {
+        setAppliedCoupon(response.data);
+        setCouponDiscount(response.data.discount_amount);
+        showNotification(`تم تطبيق الكوبون بنجاح! خصم: ${response.data.discount_amount}`, 'success');
+      } else {
+        showNotification(response.data.message || 'الكوبون غير صحيح', 'error');
+      }
+    } catch (error) {
+      showNotification(error.response?.data?.message || 'خطأ في تطبيق الكوبون', 'error');
+    } finally {
+      setLoadingCoupon(false);
+    }
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponDiscount(0);
+    setCouponCode('');
+    showNotification('تم إزالة الكوبون', 'success');
   };
 
   return (
@@ -83,6 +121,43 @@ const Cart = ({ cart, onCartChange, onClose, handleCheckout }) => {
         </div>
         {cart.length > 0 && (
           <div className="p-4 border-t">
+            {/* حقل الكوبون */}
+            <div className="mb-4 pb-4 border-b">
+              {!appliedCoupon ? (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="رمز الكوبون"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                    onKeyPress={(e) => e.key === 'Enter' && applyCoupon()}
+                    className="flex-1 px-2 py-2 border border-gray-300 rounded-md text-sm"
+                    disabled={loadingCoupon}
+                  />
+                  <button
+                    onClick={applyCoupon}
+                    disabled={loadingCoupon}
+                    className="px-3 py-2 bg-indigo-600 text-white rounded-md text-sm hover:bg-indigo-700 disabled:bg-gray-400 transition-colors"
+                  >
+                    {loadingCoupon ? 'جاري...' : 'تطبيق'}
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between bg-green-50 p-2 rounded-md">
+                  <div>
+                    <p className="text-sm font-medium text-green-700">✓ تم تطبيق الكوبون</p>
+                    <p className="text-xs text-green-600">{appliedCoupon.code}</p>
+                  </div>
+                  <button
+                    onClick={removeCoupon}
+                    className="text-red-600 hover:text-red-800 text-sm"
+                  >
+                    إزالة
+                  </button>
+                </div>
+              )}
+            </div>
+
             <div className="space-y-2 mb-4">
               <div className="flex justify-between text-gray-700">
                 <span>المجموع الفرعي:</span>
@@ -94,6 +169,12 @@ const Cart = ({ cart, onCartChange, onClose, handleCheckout }) => {
                   {getShippingCost() === 0 ? 'مجاني' : formatCurrency(getShippingCost())}
                 </span>
               </div>
+              {couponDiscount > 0 && (
+                <div className="flex justify-between text-green-600 font-medium">
+                  <span>خصم الكوبون:</span>
+                  <span>-{formatCurrency(couponDiscount)}</span>
+                </div>
+              )}
               {getSubtotal() < getFreeShippingThreshold() && (
                 <div className="text-xs text-gray-500 text-center py-1 bg-blue-50 rounded">
                   أضف {formatCurrency(getFreeShippingThreshold() - getSubtotal())} للحصول على توصيل مجاني

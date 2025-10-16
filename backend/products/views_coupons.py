@@ -40,29 +40,34 @@ def apply_coupon(request):
     """
     serializer = CouponApplySerializer(data=request.data)
     if not serializer.is_valid():
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            'valid': False,
+            'message': 'كود الكوبون غير صحيح',
+            'discount_amount': 0
+        }, status=status.HTTP_400_BAD_REQUEST)
 
     coupon = serializer.validated_data['code']
 
     # الحصول على عناصر السلة من الطلب
     cart_items = request.data.get('cart_items', [])
-    cart_total = Decimal(request.data.get('cart_total', 0))
+    cart_total = Decimal(request.data.get('total', request.data.get('cart_total', 0)))
 
     # حساب قيمة الخصم
     discount_amount, message = coupon.calculate_discount(cart_items, cart_total)
 
     if discount_amount <= 0:
         return Response({
-            'success': False,
+            'valid': False,
             'message': message,
-            'discount_amount': 0
+            'discount_amount': 0,
+            'code': coupon.code
         }, status=status.HTTP_400_BAD_REQUEST)
 
     return Response({
-        'success': True,
+        'valid': True,
         'message': message,
-        'discount_amount': discount_amount,
-        'coupon_code': coupon.code,
+        'discount_amount': float(discount_amount),
+        'code': coupon.code,
         'coupon_id': str(coupon.id)
     })
 
