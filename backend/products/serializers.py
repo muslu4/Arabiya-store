@@ -107,15 +107,17 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class BannerSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
+    image_url = serializers.URLField(allow_blank=True, required=False)  # Prefer external URL
     link = serializers.SerializerMethodField()
     product_id = serializers.SerializerMethodField()
 
     class Meta:
         model = Banner
-        fields = '__all__'
+        fields = ['id', 'title', 'description', 'image', 'image_url', 'product', 'link_url', 
+                  'is_active', 'display_order', 'link', 'product_id', 'created_at', 'updated_at']
 
     def get_image(self, obj):
-        # Use the get_image_url method from the model
+        # Prefer external URL (ImgBB) over local file
         image_url = obj.get_image_url()
         print(f"Banner image URL for {obj.title}: {image_url}")
         if image_url and image_url != "#":

@@ -79,7 +79,18 @@ class ProductViewAdmin(admin.ModelAdmin):
     readonly_fields = ('viewed_at',)
 
 
+class BannerAdminForm(forms.ModelForm):
+    """Custom form for Banner admin with ImgBB upload widget"""
+    class Meta:
+        model = Banner
+        fields = '__all__'
+        widgets = {
+            'image_url': ImgBBUploadWidget(attrs={'placeholder': 'رفع صورة الإعلان عبر ImgBB'}),
+        }
+
+
 class BannerAdmin(admin.ModelAdmin):
+    form = BannerAdminForm
     list_display = ('title', 'product', 'is_active', 'display_order', 'created_at')
     list_filter = ('is_active', 'created_at', 'product')
     search_fields = ('title', 'description', 'product__name')
@@ -91,7 +102,8 @@ class BannerAdmin(admin.ModelAdmin):
             'fields': ('title', 'description')
         }),
         ('الصور والروابط', {
-            'fields': ('image', 'image_url')
+            'fields': ('image_url',),
+            'description': '⚠️ استخدم الزر "رفع عبر ImgBB" لرفع صورة الإعلان. لا تستخدم الحقل الآخر (image).'
         }),
         ('ربط المنتج', {
             'fields': ('product', 'link_url'),
