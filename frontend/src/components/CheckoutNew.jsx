@@ -347,15 +347,15 @@ const Checkout = ({ cart, onCheckout, onClose, appliedCoupon, couponDiscount }) 
                                 {shippingCost === 0 ? 'مجاني' : formatCurrency(shippingCost)}
                               </span>
                             </div>
-                            {subtotal < getFreeShippingThreshold() && (
-                              <div className="text-xs text-gray-500 text-center py-1">
-                                أضف {formatCurrency(getFreeShippingThreshold() - subtotal)} للحصول على توصيل مجاني
-                              </div>
-                            )}
                             {couponDiscount > 0 && (
                               <div className="flex justify-between text-green-600 font-medium">
                                 <span>خصم الكوبون:</span>
                                 <span>-{formatCurrency(couponDiscount)}</span>
+                              </div>
+                            )}
+                            {subtotal < getFreeShippingThreshold() && (
+                              <div className="text-xs text-gray-500 text-center py-1">
+                                أضف {formatCurrency(getFreeShippingThreshold() - subtotal)} للحصول على توصيل مجاني
                               </div>
                             )}
                             <div className="flex justify-between font-bold text-lg border-t pt-2">
