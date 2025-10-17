@@ -8,8 +8,18 @@ from .models import Order, OrderItem, NewOrder, ProcessedOrder
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
-    readonly_fields = ('product_name', 'price', 'total_price')
-    fields = ('product', 'product_name', 'price', 'quantity', 'total_price')
+    readonly_fields = ('product_name', 'price', 'total_price', 'product_image_display')
+    fields = ('product_image_display', 'product', 'product_name', 'price', 'quantity', 'total_price')
+    
+    def product_image_display(self, obj):
+        """عرض صورة المنتج"""
+        if obj.product and obj.product.main_image:
+            return format_html(
+                '<img src="{}" width="80" height="80" style="border-radius: 4px; object-fit: cover;"/>',
+                obj.product.main_image
+            )
+        return '❌ لا توجد صورة'
+    product_image_display.short_description = '📸 صورة المنتج'
     
     def has_add_permission(self, request, obj=None):
         return False
