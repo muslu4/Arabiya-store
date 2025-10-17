@@ -35,7 +35,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         self.send_admin_notification(order)
         
         # Re-serialize the created order instance with the default serializer
-        response_serializer = OrderSerializer(order)
+        response_serializer = OrderSerializer(order, context={'request': request})
         headers = self.get_success_headers(serializer.data)
         return Response(response_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
@@ -54,7 +54,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         self.send_admin_notification(order)
         
         # Re-serialize the created order instance with the default serializer to include all fields
-        response_serializer = OrderSerializer(order)
+        response_serializer = OrderSerializer(order, context={'request': request})
         headers = self.get_success_headers(serializer.data)
         return Response(response_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
