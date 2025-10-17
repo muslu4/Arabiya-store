@@ -39,6 +39,10 @@ const AdminPanel = ({ user, setUser }) => {
     description: ''
   });
 
+  // Order Details Modal States
+  const [showOrderDetailsModal, setShowOrderDetailsModal] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
   useEffect(() => {
     if (activeTab === 'products') {
       fetchProducts();
@@ -352,6 +356,11 @@ const AdminPanel = ({ user, setUser }) => {
     setShowModal(true);
   };
 
+  const showOrderDetails = (order) => {
+    setSelectedOrder(order);
+    setShowOrderDetailsModal(true);
+  };
+
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -610,6 +619,9 @@ const AdminPanel = ({ user, setUser }) => {
                       <th className="px-3 md:px-6 py-3 text-right text-xs md:text-sm font-bold uppercase tracking-wider">
                         التاريخ
                       </th>
+                      <th className="px-3 md:px-6 py-3 text-right text-xs md:text-sm font-bold uppercase tracking-wider">
+                        التفاصيل
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -637,6 +649,14 @@ const AdminPanel = ({ user, setUser }) => {
                         </td>
                         <td className="px-3 md:px-6 py-3 whitespace-nowrap text-xs md:text-sm text-gray-700 font-medium">
                           {new Date(order.created_at).toLocaleDateString('ar-SA')}
+                        </td>
+                        <td className="px-3 md:px-6 py-3 whitespace-nowrap text-xs md:text-sm">
+                          <button 
+                            onClick={() => showOrderDetails(order)}
+                            className="text-primary-600 hover:text-primary-800 font-bold underline"
+                          >
+                            عرض
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -985,6 +1005,138 @@ const AdminPanel = ({ user, setUser }) => {
               )}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Order Details Modal */}
+      {showOrderDetailsModal && selectedOrder && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-10 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-2/3 shadow-lg rounded-md bg-white max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold">تفاصيل الطلب #{selectedOrder.id}</h3>
+              <button
+                onClick={() => setShowOrderDetailsModal(false)}
+                className="text-gray-400 hover:text-gray-600 text-2xl"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Order Info */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
+              <div>
+                <p className="text-sm text-gray-600">اسم العميل</p>
+                <p className="font-semibold text-gray-900">{selectedOrder.customer_name}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">رقم الهاتف</p>
+                <p className="font-semibold text-gray-900">{selectedOrder.customer_phone}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">المحافظة</p>
+                <p className="font-semibold text-gray-900">{selectedOrder.governorate}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">طريقة الدفع</p>
+                <p className="font-semibold text-gray-900">
+                  {selectedOrder.payment_method === 'cash_on_delivery' ? 'الدفع عند الاستلام' : 'تحويل بنكي'}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">الحالة</p>
+                <p className="font-semibold text-gray-900">
+                  {selectedOrder.status === 'pending' ? 'قيد الانتظار' :
+                   selectedOrder.status === 'confirmed' ? 'مؤكد' :
+                   selectedOrder.status === 'preparing' ? 'قيد التحضير' :
+                   selectedOrder.status === 'shipped' ? 'قيد الشحن' :
+                   selectedOrder.status === 'delivered' ? 'تم التسليم' : 'ملغي'}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">التاريخ</p>
+                <p className="font-semibold text-gray-900">{new Date(selectedOrder.created_at).toLocaleDateString('ar-SA')}</p>
+              </div>
+            </div>
+
+            {/* Order Items with Images */}
+            <div className="mb-6">
+              <h4 className="text-lg font-semibold text-gray-900 mb-4">المنتجات</h4>
+              {selectedOrder.items && selectedOrder.items.length > 0 ? (
+                <div className="space-y-4">
+                  {selectedOrder.items.map((item, index) => (
+                    <div key={index} className="flex gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                      {/* Product Image */}
+                      {item.product_image && (
+                        <div className="flex-shrink-0">
+                          <img
+                            src={item.product_image}
+                            alt={item.product_name}
+                            className="w-24 h-24 object-cover rounded-lg"
+                            onError={(e) => {
+                              e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96"%3E%3Crect fill="%23f3f4f6" width="96" height="96"/%3E%3Ctext fill="%239ca3af" font-family="sans-serif" font-size="12" dy="3.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3Eلا توجد صورة%3C/text%3E%3C/svg%3E';
+                            }}
+                          />
+                        </div>
+                      )}
+                      
+                      {/* Product Info */}
+                      <div className="flex-1">
+                        <p className="font-semibold text-gray-900 text-base">{item.product_name}</p>
+                        <div className="grid grid-cols-2 gap-4 mt-2 text-sm text-gray-600">
+                          <div>
+                            <p className="text-gray-500">السعر</p>
+                            <p className="font-semibold text-gray-900">{item.price} د.ع</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500">الكمية</p>
+                            <p className="font-semibold text-gray-900">{item.quantity}</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500">الإجمالي</p>
+                            <p className="font-semibold text-gray-900">{item.total_price} د.ع</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500 text-center py-4">لا توجد منتجات في هذا الطلب</p>
+              )}
+            </div>
+
+            {/* Order Summary */}
+            <div className="border-t pt-4 space-y-2">
+              <div className="flex justify-between text-gray-700">
+                <span>المجموع الفرعي:</span>
+                <span className="font-semibold">{selectedOrder.subtotal} د.ع</span>
+              </div>
+              {selectedOrder.coupon_discount > 0 && (
+                <div className="flex justify-between text-green-600">
+                  <span>خصم الكوبون:</span>
+                  <span className="font-semibold">-{selectedOrder.coupon_discount} د.ع</span>
+                </div>
+              )}
+              <div className="flex justify-between text-gray-700">
+                <span>رسوم التوصيل:</span>
+                <span className="font-semibold">{selectedOrder.delivery_fee} د.ع</span>
+              </div>
+              <div className="flex justify-between text-lg font-bold text-primary-600 bg-gray-50 p-2 rounded">
+                <span>الإجمالي:</span>
+                <span>{selectedOrder.total} د.ع</span>
+              </div>
+            </div>
+
+            {/* Close Button */}
+            <div className="mt-6 flex justify-end">
+              <button
+                onClick={() => setShowOrderDetailsModal(false)}
+                className="px-6 py-2 bg-gray-300 text-gray-900 rounded-lg hover:bg-gray-400 transition-colors font-semibold"
+              >
+                إغلاق
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

@@ -307,22 +307,29 @@ const ProductDetail = ({ user }) => {
               )}
             </div>
 
-            {/* Price */}
-            <div className="flex items-center space-x-4 space-x-reverse">
-              <span className="text-4xl font-bold text-primary-600">
-                {formatCurrency(finalPrice)}
-              </span>
-              {discountAmount > 0 && (
-                <span className="text-xl text-gray-500 line-through">
-                  {formatCurrency(priceNum)}
+            {/* Price and Stock */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4 space-x-reverse">
+                <span className="text-4xl font-bold text-primary-600">
+                  {formatCurrency(finalPrice)}
                 </span>
+                {discountAmount > 0 && (
+                  <span className="text-xl text-gray-500 line-through">
+                    {formatCurrency(priceNum)}
+                  </span>
+                )}
+              </div>
+              {stockCount <= 5 && stockCount > 0 && (
+                <div className="bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold">
+                  متبقي {stockCount}
+                </div>
               )}
             </div>
 
             {/* Description */}
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">وصف المنتج</h3>
-              <p className="text-gray-700 leading-relaxed">{product.description}</p>
+              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{product.description}</p>
             </div>
 
             {/* Features */}

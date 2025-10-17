@@ -3,12 +3,27 @@ from .models import Order, OrderItem
 from products.serializers import ProductListSerializer
 
 class OrderItemSerializer(serializers.ModelSerializer):
+    product_image = serializers.SerializerMethodField()
+    
     class Meta:
         model = OrderItem
-        fields = ['product', 'product_name', 'price', 'quantity', 'total_price']
+        fields = ['product', 'product_name', 'price', 'quantity', 'total_price', 'product_image']
+    
+    def get_product_image(self, obj):
+        """Get the main image URL for the product"""
+        if obj.product and hasattr(obj.product, 'main_image'):
+            # Try to get main_image_url first, then main_image
+            if hasattr(obj.product, 'main_image_url') and obj.product.main_image_url:
+                return obj.product.main_image_url
+            elif obj.product.main_image:
+                request = self.context.get('request')
+                if request:
+                    return request.build_absolute_uri(obj.product.main_image.url)
+                return obj.product.main_image.url if obj.product.main_image else None
+        return None
 
 class OrderSerializer(serializers.ModelSerializer):
-    items = OrderItemSerializer(many=True, read_only=True)
+    items = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
@@ -19,6 +34,11 @@ class OrderSerializer(serializers.ModelSerializer):
             'coupon_code', 'coupon_discount', 'total', 'created_at', 'updated_at', 'items'
         ]
         read_only_fields = ['id', 'status', 'created_at', 'updated_at']
+    
+    def get_items(self, obj):
+        """Return items with context"""
+        items = obj.items.all()
+        return OrderItemSerializer(items, many=True, context=self.context).data
 
 class CreateOrderSerializer(serializers.ModelSerializer):
     items = serializers.ListField(write_only=True)
