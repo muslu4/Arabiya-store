@@ -11,16 +11,27 @@ class OrderItemSerializer(serializers.ModelSerializer):
     
     def get_product_image(self, obj):
         """Get the main image URL for the product"""
-        if obj.product and hasattr(obj.product, 'main_image'):
-            # Try to get main_image_url first, then main_image
+        try:
+            if not obj.product:
+                return None
+            
+            # Try to get main_image_url first
             if hasattr(obj.product, 'main_image_url') and obj.product.main_image_url:
                 return obj.product.main_image_url
-            elif obj.product.main_image:
-                request = self.context.get('request')
-                if request:
-                    return request.build_absolute_uri(obj.product.main_image.url)
-                return obj.product.main_image.url if obj.product.main_image else None
-        return None
+            
+            # Then try main_image file field
+            if hasattr(obj.product, 'main_image') and obj.product.main_image:
+                try:
+                    request = self.context.get('request')
+                    if request:
+                        return request.build_absolute_uri(obj.product.main_image.url)
+                    return obj.product.main_image.url
+                except Exception:
+                    pass
+            
+            return None
+        except Exception:
+            return None
 
 class OrderSerializer(serializers.ModelSerializer):
     items = serializers.SerializerMethodField()
