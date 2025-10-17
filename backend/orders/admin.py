@@ -12,14 +12,17 @@ class OrderItemInline(admin.TabularInline):
     fields = ('product_image_display', 'product', 'product_name', 'price', 'quantity', 'total_price')
     
     def product_image_display(self, obj):
-        """عرض صورة المنتج"""
+        """عرض صورة المنتج مع إمكانية التكبير"""
         if obj.product and obj.product.main_image:
             return format_html(
-                '<img src="{}" width="80" height="80" style="border-radius: 4px; object-fit: cover;"/>',
+                '<a href="{}" target="_blank" style="cursor: zoom-in; text-decoration: none;" title="انقر لفتح الصورة بحجم كامل">'
+                '<img src="{}" width="80" height="80" style="border-radius: 4px; object-fit: cover; cursor: zoom-in; border: 2px solid #e9ecef; transition: all 0.3s;"/>'
+                '</a>',
+                obj.product.main_image,
                 obj.product.main_image
             )
         return '❌ لا توجد صورة'
-    product_image_display.short_description = '📸 صورة المنتج'
+    product_image_display.short_description = '📸 صورة المنتج (انقر للتكبير)'
     
     def has_add_permission(self, request, obj=None):
         return False
