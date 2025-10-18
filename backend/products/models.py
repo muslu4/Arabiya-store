@@ -98,6 +98,7 @@ class Product(models.Model):
     # Status
     is_active = models.BooleanField('نشط', default=True)
     is_featured = models.BooleanField('منتج مميز', default=False)
+    show_on_homepage = models.BooleanField('إظهار في الواجهة الرئيسية', default=True)
     display_order = models.PositiveIntegerField('ترتيب العرض', default=0, help_text='المنتجات ذات الترتيب الأقل تظهر أولاً')
     
     # Timestamps

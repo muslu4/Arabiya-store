@@ -24,6 +24,8 @@ const AdminPanel = ({ user, setUser }) => {
     stock: '',
     category: '',
     discount: '',
+    brand: '',
+    show_on_homepage: true,
     main_image: null,
     second_image: null,
     third_image: null,
@@ -224,6 +226,8 @@ const AdminPanel = ({ user, setUser }) => {
         stock: parseInt(productForm.stock),
         category: productForm.category,
         discount: parseFloat(productForm.discount) || 0,
+        brand: productForm.brand,
+        show_on_homepage: productForm.show_on_homepage,
         main_image_url: mainImageUrl,
         second_image_url: secondImageUrl,
         third_image_url: thirdImageUrl,
@@ -246,7 +250,16 @@ const AdminPanel = ({ user, setUser }) => {
         stock: '',
         category: '',
         discount: '',
-        image: null
+        brand: '',
+        show_on_homepage: true,
+        main_image: null,
+        second_image: null,
+        third_image: null,
+        fourth_image: null,
+        main_image_url: '',
+        second_image_url: '',
+        third_image_url: '',
+        fourth_image_url: ''
       });
     } catch (error) {
       console.error('Error saving product:', error);
@@ -312,6 +325,8 @@ const AdminPanel = ({ user, setUser }) => {
           stock: item.stock.toString(),
           category: item.category?.id || '',
           discount: item.discount?.toString() || '',
+          brand: item.brand || '',
+          show_on_homepage: item.show_on_homepage !== undefined ? item.show_on_homepage : true,
           main_image: null,
           second_image: null,
           third_image: null,
@@ -329,6 +344,8 @@ const AdminPanel = ({ user, setUser }) => {
           stock: '',
           category: '',
           discount: '',
+          brand: '',
+          show_on_homepage: true,
           main_image: null,
           second_image: null,
           third_image: null,
@@ -766,16 +783,45 @@ const AdminPanel = ({ user, setUser }) => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      الخصم (%)
+                      الخصم (د.ع)
                     </label>
                     <input
                       type="number"
+                      step="0.01"
                       min="0"
-                      max="100"
                       value={productForm.discount}
                       onChange={(e) => setProductForm({ ...productForm, discount: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
                     />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      العلامة التجارية (اختياري)
+                    </label>
+                    <input
+                      type="text"
+                      value={productForm.brand}
+                      onChange={(e) => setProductForm({ ...productForm, brand: e.target.value })}
+                      placeholder="مثال: Samsung, Apple, إلخ"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      إظهار في الواجهة الرئيسية
+                    </label>
+                    <select
+                      value={productForm.show_on_homepage ? 'true' : 'false'}
+                      onChange={(e) => setProductForm({ ...productForm, show_on_homepage: e.target.value === 'true' })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
+                    >
+                      <option value="true">نعم - إظهار في الواجهة الرئيسية</option>
+                      <option value="false">لا - إخفاء من الواجهة الرئيسية</option>
+                    </select>
                   </div>
                 </div>
 

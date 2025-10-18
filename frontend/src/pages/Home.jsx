@@ -490,9 +490,11 @@ const Home = ({ user, setUser }) => {
                       <h4 className="font-bold text-sm md:text-base text-gray-800 line-clamp-1 flex-1 pr-2">
                         {product.name}
                       </h4>
-                      <span className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full whitespace-nowrap">
-                        {product.brand || 'علامة تجارية'}
-                      </span>
+                      {product.brand && (
+                        <span className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full whitespace-nowrap">
+                          {product.brand}
+                        </span>
+                      )}
                     </div>
                     <p className="text-gray-600 text-xs mb-3 line-clamp-1 pr-2 hidden md:block">
                       {product.description || 'لا يوجد وصف متاح للمنتج'}

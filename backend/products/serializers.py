@@ -22,7 +22,7 @@ class ProductListSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['id', 'name', 'price', 'discount_amount', 'discount_percentage', 'discounted_price', 
                   'is_on_sale', 'stock_quantity', 'stock', 'category_name', 'main_image_url', 
-                  'image', 'is_featured', 'is_in_stock']
+                  'image', 'is_featured', 'show_on_homepage', 'brand', 'is_in_stock']
 
     def get_main_image_url(self, obj):
         if obj.main_image:
@@ -68,7 +68,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'main_image', 'image_2', 'image_3', 'image_4', 'main_image_url', 'image', 'all_images',
             'brand', 'model', 'color', 'size', 'weight',
             'slug', 'meta_description', 'tags',
-            'is_active', 'is_featured', 'display_order',
+            'is_active', 'is_featured', 'show_on_homepage', 'display_order',
             'created_at', 'updated_at'
         ]
 

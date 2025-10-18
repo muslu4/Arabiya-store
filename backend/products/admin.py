@@ -35,10 +35,10 @@ class ProductAdminForm(forms.ModelForm):
 
 class ProductAdmin(admin.ModelAdmin):
     form = ProductAdminForm
-    list_display = ('name', 'category', 'brand', 'price', 'stock_quantity', 'display_order', 'is_active', 'is_featured', 'created_at')
-    list_filter = ('category', 'brand', 'is_active', 'is_featured', 'created_at')
+    list_display = ('name', 'category', 'brand', 'price', 'stock_quantity', 'display_order', 'is_active', 'is_featured', 'show_on_homepage', 'created_at')
+    list_filter = ('category', 'brand', 'is_active', 'is_featured', 'show_on_homepage', 'created_at')
     search_fields = ('name', 'description', 'brand', 'model')
-    list_editable = ('price', 'stock_quantity', 'display_order', 'is_active', 'is_featured')
+    list_editable = ('price', 'stock_quantity', 'display_order', 'is_active', 'is_featured', 'show_on_homepage')
 
     fieldsets = (
         ('📦 معلومات أساسية', {
@@ -60,7 +60,7 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('slug', 'meta_description', 'tags')
         }),
         ('⚡ الحالة والمميزات', {
-            'fields': ('is_active', 'is_featured', 'display_order')
+            'fields': ('is_active', 'is_featured', 'show_on_homepage', 'display_order')
         }),
     )
 

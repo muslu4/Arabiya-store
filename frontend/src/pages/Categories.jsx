@@ -346,9 +346,11 @@ const Categories = ({ user }) => {
                         <h4 className="font-bold text-lg text-gray-800 line-clamp-2 flex-1 pr-3">
                           {product.name}
                         </h4>
-                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full whitespace-nowrap">
-                          {product.brand || 'علامة تجارية'}
-                        </span>
+                        {product.brand && (
+                          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full whitespace-nowrap">
+                            {product.brand}
+                          </span>
+                        )}
                       </div>
                       <p className="text-gray-600 text-sm mb-4 line-clamp-2 pr-2">
                         {product.description || 'لا يوجد وصف متاح للمنتج'}
