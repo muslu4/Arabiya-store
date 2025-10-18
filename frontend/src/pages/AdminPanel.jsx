@@ -64,7 +64,7 @@ const AdminPanel = ({ user, setUser }) => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const response = await api.get('/admin/products/');
+      const response = await api.get('/products/admin/products/');
       setProducts(response.data);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -75,7 +75,7 @@ const AdminPanel = ({ user, setUser }) => {
 
   const fetchCategories = async () => {
     try {
-      const response = await api.get('/admin/categories/');
+      const response = await api.get('/products/categories/');
       setCategories(response.data);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -85,7 +85,7 @@ const AdminPanel = ({ user, setUser }) => {
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const response = await api.get('/admin/orders/');
+      const response = await api.get('/orders/');
       setOrders(response.data);
     } catch (error) {
       console.error('Error fetching orders:', error);
@@ -98,7 +98,7 @@ const AdminPanel = ({ user, setUser }) => {
     setLoading(true);
     try {
       console.log('Fetching notifications...');
-      const response = await api.get('/api/notifications/?all=true');
+      const response = await api.get('/notifications/notifications/?all=true');
       console.log('Notifications response:', response.data);
       setNotifications(response.data);
     } catch (error) {
@@ -116,7 +116,7 @@ const AdminPanel = ({ user, setUser }) => {
   const fetchUnreadCount = async () => {
     try {
       console.log('Fetching unread count...');
-      const response = await api.get('/api/notifications/unread_count/?all=true');
+      const response = await api.get('/notifications/notifications/unread_count/?all=true');
       console.log('Unread count response:', response.data);
       setUnreadCount(response.data.unread_count);
     } catch (error) {
@@ -237,9 +237,9 @@ const AdminPanel = ({ user, setUser }) => {
       };
 
       if (editingItem) {
-        await api.put(`/admin/products/${editingItem.id}/`, productData);
+        await api.put(`/products/admin/products/${editingItem.id}/`, productData);
       } else {
-        await api.post('/admin/products/', productData);
+        await api.post('/products/admin/products/', productData);
       }
 
       fetchProducts();
@@ -277,9 +277,9 @@ const AdminPanel = ({ user, setUser }) => {
 
     try {
       if (editingItem) {
-        await api.put(`/admin/categories/${editingItem.id}/`, categoryForm);
+        await api.put(`/products/categories/${editingItem.id}/`, categoryForm);
       } else {
-        await api.post('/admin/categories/', categoryForm);
+        await api.post('/products/categories/', categoryForm);
       }
 
       fetchCategories();
@@ -333,7 +333,7 @@ const AdminPanel = ({ user, setUser }) => {
       setLoading(true);
       const updatePromises = Array.from(selectedProducts).map(productId => {
         const product = products.find(p => p.id === productId);
-        return api.put(`/admin/products/${productId}/`, {
+        return api.put(`/products/admin/products/${productId}/`, {
           ...product,
           show_on_homepage: homepageAction === 'show'
         });
@@ -356,11 +356,11 @@ const AdminPanel = ({ user, setUser }) => {
     if (!window.confirm('هل أنت متأكد من الحذف؟')) return;
 
     try {
-      await api.delete(`/admin/${type}/${id}/`);
-
       if (type === 'products') {
+        await api.delete(`/products/admin/products/${id}/`);
         fetchProducts();
       } else if (type === 'categories') {
+        await api.delete(`/products/categories/${id}/`);
         fetchCategories();
       }
     } catch (error) {
