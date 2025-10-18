@@ -65,7 +65,15 @@ const AdminPanel = ({ user, setUser }) => {
     setLoading(true);
     try {
       const response = await api.get('/products/admin/products/');
-      setProducts(response.data);
+      console.log('📦 Admin Products API Response:', response.data);
+      // Ensure each product has normalized image data
+      const normalizedProducts = response.data.map(product => ({
+        ...product,
+        stock: product.stock_quantity || product.stock || 0,
+        discount: product.discount_amount || 0,
+        image: product.image || product.main_image_url || product.main_image,
+      }));
+      setProducts(normalizedProducts);
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {
@@ -636,10 +644,15 @@ const AdminPanel = ({ user, setUser }) => {
                         <td className="px-3 md:px-6 py-4 whitespace-nowrap">
                           <img
                             className="h-16 w-16 md:h-20 md:w-20 rounded-lg object-cover border border-gray-200"
-                            src={product.image || product.main_image_url || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"%3E%3Crect fill="%23f3f4f6" width="80" height="80"/%3E%3Ctext fill="%239ca3af" font-family="sans-serif" font-size="10" dy="2.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3Eلا توجد صورة%3C/text%3E%3C/svg%3E'}
+                            src={product.image || product.main_image || product.main_image_url || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"%3E%3Crect fill="%23f3f4f6" width="80" height="80"/%3E%3Ctext fill="%239ca3af" font-family="sans-serif" font-size="10" dy="2.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3Eلا توجد صورة%3C/text%3E%3C/svg%3E'}
                             alt={product.name}
+                            title={product.name}
                             onError={(e) => {
+                              console.warn(`❌ Failed to load image for product: ${product.name}`, e.target.src);
                               e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"%3E%3Crect fill="%23f3f4f6" width="80" height="80"/%3E%3Ctext fill="%239ca3af" font-family="sans-serif" font-size="10" dy="2.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3Eلا توجد صورة%3C/text%3E%3C/svg%3E';
+                            }}
+                            onLoad={() => {
+                              console.log(`✅ Image loaded for product: ${product.name}`);
                             }}
                           />
                         </td>
