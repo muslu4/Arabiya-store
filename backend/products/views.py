@@ -233,10 +233,21 @@ def admin_products_list(request):
         return Response(serializer.data)
     
     elif request.method == 'POST':
+        print(f"📤 POST /admin/products/ - البيانات المستقبلة:")
+        print(f"   {request.data}")
+        
         serializer = ProductSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
-            serializer.save()
+            product = serializer.save()
+            print(f"✅ تم حفظ المنتج بنجاح:")
+            print(f"   ID: {product.id}")
+            print(f"   Name: {product.name}")
+            print(f"   main_image: {product.main_image}")
+            print(f"   image_2: {product.image_2}")
+            print(f"   image_3: {product.image_3}")
+            print(f"   image_4: {product.image_4}")
             return Response(serializer.data, status=201)
+        print(f"❌ خطأ في التحقق من البيانات: {serializer.errors}")
         return Response(serializer.errors, status=400)
 
 
@@ -259,10 +270,21 @@ def admin_product_detail(request, pk):
         return Response(serializer.data)
     
     elif request.method == 'PUT':
+        print(f"✏️ PUT /admin/products/{pk}/ - البيانات المستقبلة للتحديث:")
+        print(f"   {request.data}")
+        
         serializer = ProductSerializer(product, data=request.data, partial=True, context={'request': request})
         if serializer.is_valid():
-            serializer.save()
+            updated_product = serializer.save()
+            print(f"✅ تم تحديث المنتج بنجاح:")
+            print(f"   ID: {updated_product.id}")
+            print(f"   Name: {updated_product.name}")
+            print(f"   main_image: {updated_product.main_image}")
+            print(f"   image_2: {updated_product.image_2}")
+            print(f"   image_3: {updated_product.image_3}")
+            print(f"   image_4: {updated_product.image_4}")
             return Response(serializer.data)
+        print(f"❌ خطأ في التحقق من البيانات: {serializer.errors}")
         return Response(serializer.errors, status=400)
     
     elif request.method == 'DELETE':

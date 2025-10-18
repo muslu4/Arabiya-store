@@ -55,21 +55,37 @@ const Home = ({ user, setUser }) => {
   const fetchProducts = async () => {
     try {
       const response = await api.get(endpoints.products);
-      console.log('API Response:', response);
+      console.log('📡 API Response:', response);
       const data = response.data;
       const list = Array.isArray(data) ? data : (data?.results || []);
-      console.log('Products list:', list);
+      console.log(`📦 Products list (${list.length} منتجات):`, list);
+      
       // Normalize to match UI expectations
-      const normalized = list.map((p) => ({
-        ...p,
-        image: p.image || p.main_image_url || p.main_image || null,
-        stock: typeof p.stock_quantity === 'number' ? p.stock_quantity : (p.is_in_stock ? 1 : 0),
-        discount: typeof p.discount_percentage === 'number' ? p.discount_percentage : 0,
-      }));
-      console.log('Normalized products:', normalized);
+      const normalized = list.map((p) => {
+        const finalImage = p.image || p.main_image_url || p.main_image || null;
+        // Log image details for first 3 products
+        if (list.indexOf(p) < 3) {
+          console.log(`🖼️ منتج: ${p.name}`, {
+            'id': p.id,
+            'p.image': p.image ? '✅' : '❌',
+            'p.main_image_url': p.main_image_url ? '✅' : '❌',
+            'p.main_image': p.main_image ? '✅' : '❌',
+            'النهائي': finalImage ? '✅' : '❌',
+            'URL': finalImage
+          });
+        }
+        return {
+          ...p,
+          image: finalImage,
+          stock: typeof p.stock_quantity === 'number' ? p.stock_quantity : (p.is_in_stock ? 1 : 0),
+          discount: typeof p.discount_percentage === 'number' ? p.discount_percentage : 0,
+        };
+      });
+      
+      console.log('✅ منتجات معالجة:', normalized);
       setProducts(normalized);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error('❌ خطأ في جلب المنتجات:', error);
       setProducts([]);
     } finally {
       setLoading(false);
@@ -461,7 +477,14 @@ const Home = ({ user, setUser }) => {
                       src={product.image || '/placeholder-product.png'}
                       alt={product.name}
                       className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                      onLoad={(e) => {
+                        if (index < 3) {
+                          console.log(`✅ تم تحميل صورة: ${product.name}`);
+                        }
+                      }}
                       onError={(e) => {
+                        console.log(`❌ فشل تحميل صورة: ${product.name}`);
+                        console.log(`   URL كان: ${product.image || '/placeholder-product.png'}`);
                         e.target.onerror = null;
                         e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"%3E%3Crect fill="%23f3f4f6" width="400" height="400"/%3E%3Ctext fill="%239ca3af" font-family="sans-serif" font-size="24" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3Eلا توجد صورة%3C/text%3E%3C/svg%3E';
                       }}

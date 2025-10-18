@@ -2,6 +2,9 @@ from rest_framework import serializers
 from .models import Product, Category, Banner
 from .models_coupons import Coupon, CouponUsage
 from .serializers_coupons import CouponSerializer, CouponUsageSerializer
+import logging
+
+logger = logging.getLogger(__name__)
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,20 +20,27 @@ class ProductListSerializer(serializers.ModelSerializer):
     discounted_price = serializers.SerializerMethodField()
     is_on_sale = serializers.SerializerMethodField()
     stock = serializers.IntegerField(source='stock_quantity', read_only=True)
+    # إضافة الحقول الأصلية للصور
+    main_image = serializers.URLField(required=False, allow_blank=True)
+    image_2 = serializers.URLField(required=False, allow_blank=True)
+    image_3 = serializers.URLField(required=False, allow_blank=True)
+    image_4 = serializers.URLField(required=False, allow_blank=True)
 
     class Meta:
         model = Product
         fields = ['id', 'name', 'price', 'discount_amount', 'discount_percentage', 'discounted_price', 
-                  'is_on_sale', 'stock_quantity', 'stock', 'category_name', 'main_image_url', 
-                  'image', 'is_featured', 'show_on_homepage', 'brand', 'is_in_stock']
+                  'is_on_sale', 'stock_quantity', 'stock', 'category_name', 'main_image', 'image_2', 
+                  'image_3', 'image_4', 'main_image_url', 'image', 'is_featured', 'show_on_homepage', 
+                  'brand', 'is_in_stock']
 
     def get_main_image_url(self, obj):
+        """الصورة الرئيسية بوضوح"""
         if obj.main_image:
             return obj.main_image
         return None
 
     def get_image(self, obj):
-        # Return the first available image
+        """اختر أول صورة متاحة - هذا ما يستخدمه Frontend"""
         for img_field in [obj.main_image, obj.image_2, obj.image_3, obj.image_4]:
             if img_field:
                 return img_field
@@ -58,6 +68,11 @@ class ProductSerializer(serializers.ModelSerializer):
     discounted_price = serializers.SerializerMethodField()
     is_on_sale = serializers.SerializerMethodField()
     stock = serializers.IntegerField(source='stock_quantity', read_only=True)
+    # تصريح صريح عن حقول الصور كـ URLFields
+    main_image = serializers.URLField(required=False, allow_blank=True)
+    image_2 = serializers.URLField(required=False, allow_blank=True)
+    image_3 = serializers.URLField(required=False, allow_blank=True)
+    image_4 = serializers.URLField(required=False, allow_blank=True)
 
     class Meta:
         model = Product
@@ -73,20 +88,20 @@ class ProductSerializer(serializers.ModelSerializer):
         ]
 
     def get_main_image_url(self, obj):
+        """إرجاع الصورة الرئيسية"""
         if obj.main_image:
-            # main_image is already a URL field, not an ImageField
             return obj.main_image
         return None
 
     def get_image(self, obj):
-        # Return the first available image
+        """إرجاع أول صورة متاحة - يستخدمها Frontend لعرض الصورة"""
         for img_field in [obj.main_image, obj.image_2, obj.image_3, obj.image_4]:
             if img_field:
                 return img_field
         return None
     
     def get_all_images(self, obj):
-        # Return all product images as a list
+        """إرجاع كل الصور كقائمة"""
         images = []
         for img_field in [obj.main_image, obj.image_2, obj.image_3, obj.image_4]:
             if img_field:
@@ -104,6 +119,41 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_is_on_sale(self, obj):
         """Get is_on_sale from model property"""
         return obj.is_on_sale
+    
+    def to_representation(self, instance):
+        """تحسين تمثيل البيانات - تأكد من أن الصور موجودة"""
+        representation = super().to_representation(instance)
+        
+        # تسجيل للتحقق من البيانات
+        if instance.id <= 3:  # تسجيل أول 3 منتجات فقط
+            print(f"🖼️ Serializing Product: {instance.name} (ID: {instance.id})")
+            print(f"   main_image: {instance.main_image}")
+            print(f"   image_2: {instance.image_2}")
+            print(f"   image_3: {instance.image_3}")
+            print(f"   image_4: {instance.image_4}")
+            print(f"   Final image field: {representation.get('image')}")
+        
+        return representation
+    
+    def create(self, validated_data):
+        """إنشء منتج جديد مع ضمان حفظ الصور"""
+        print(f"📝 Creating new product with data:")
+        print(f"   main_image: {validated_data.get('main_image')}")
+        print(f"   image_2: {validated_data.get('image_2')}")
+        print(f"   image_3: {validated_data.get('image_3')}")
+        print(f"   image_4: {validated_data.get('image_4')}")
+        
+        return super().create(validated_data)
+    
+    def update(self, instance, validated_data):
+        """تحديث منتج مع ضمان حفظ الصور"""
+        print(f"📝 Updating product {instance.id} with data:")
+        print(f"   main_image: {validated_data.get('main_image')}")
+        print(f"   image_2: {validated_data.get('image_2')}")
+        print(f"   image_3: {validated_data.get('image_3')}")
+        print(f"   image_4: {validated_data.get('image_4')}")
+        
+        return super().update(instance, validated_data)
 
 class BannerSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
