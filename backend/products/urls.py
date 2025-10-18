@@ -28,5 +28,9 @@ urlpatterns = [
     path('admin/coupons/<uuid:pk>/', views_coupons.admin_coupon_detail, name='admin_coupon_detail'),
     path('admin/coupons/<uuid:pk>/stats/', views_coupons.coupon_usage_stats, name='coupon_usage_stats'),
     path('admin/coupons/usages/', views_coupons.all_coupon_usages, name='all_coupon_usages'),
+
+    # Admin Products Management
+    path('admin/products/', views.admin_products_list, name='admin_products_list'),
+    path('admin/products/<int:pk>/', views.admin_product_detail, name='admin_product_detail'),
 ]
 

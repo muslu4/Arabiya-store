@@ -216,3 +216,56 @@ def validate_coupon(request):
             'message': 'كوبون غير صالح'
         }, status=404)
 
+
+# ============ ADMIN ENDPOINTS ============
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAdminUser])
+def admin_products_list(request):
+    """
+    Admin endpoint for managing products
+    GET: List all products with images
+    POST: Create a new product
+    """
+    if request.method == 'GET':
+        products = Product.objects.all().order_by('-created_at')
+        serializer = ProductSerializer(products, many=True, context={'request': request})
+        return Response(serializer.data)
+    
+    elif request.method == 'POST':
+        serializer = ProductSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAdminUser])
+def admin_product_detail(request, pk):
+    """
+    Admin endpoint for managing a specific product
+    GET: Get product details
+    PUT: Update product
+    DELETE: Delete product
+    """
+    try:
+        product = Product.objects.get(pk=pk)
+    except Product.DoesNotExist:
+        return Response({'error': 'المنتج غير موجود'}, status=404)
+    
+    if request.method == 'GET':
+        serializer = ProductSerializer(product, context={'request': request})
+        return Response(serializer.data)
+    
+    elif request.method == 'PUT':
+        serializer = ProductSerializer(product, data=request.data, partial=True, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+    
+    elif request.method == 'DELETE':
+        product.delete()
+        return Response({'message': 'تم حذف المنتج بنجاح'}, status=204)
+
