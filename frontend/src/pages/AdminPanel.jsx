@@ -479,57 +479,63 @@ const AdminPanel = ({ user, setUser }) => {
             ) : (
               <div className="bg-white rounded-lg shadow overflow-hidden">
                 <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
+                  <thead className="bg-gray-900 text-white">
                     <tr>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 md:px-6 py-3 text-right text-xs md:text-sm font-medium uppercase tracking-wider">
+                        الصورة
+                      </th>
+                      <th className="px-3 md:px-6 py-3 text-right text-xs md:text-sm font-medium uppercase tracking-wider">
                         المنتج
                       </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 md:px-6 py-3 text-right text-xs md:text-sm font-medium uppercase tracking-wider">
                         القسم
                       </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 md:px-6 py-3 text-right text-xs md:text-sm font-medium uppercase tracking-wider">
                         السعر
                       </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 md:px-6 py-3 text-right text-xs md:text-sm font-medium uppercase tracking-wider">
                         المخزون
                       </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 md:px-6 py-3 text-right text-xs md:text-sm font-medium uppercase tracking-wider">
                         الإجراءات
                       </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {products.map((product) => (
-                      <tr key={product.id}>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <img
-                              className="h-12 w-12 rounded-lg object-cover"
-                              src={product.image || '/placeholder-product-thumb.png'}
-                              alt={product.name}
-                            />
-                            <div className="mr-4">
-                              <div className="text-sm font-medium text-gray-900">
-                                {product.name}
-                              </div>
-                              <div className="text-sm text-gray-500">
-                                {product.description?.substring(0, 50)}...
-                              </div>
+                      <tr key={product.id} className="hover:bg-gray-50">
+                        <td className="px-3 md:px-6 py-4 whitespace-nowrap">
+                          <img
+                            className="h-16 w-16 md:h-20 md:w-20 rounded-lg object-cover border border-gray-200"
+                            src={product.image || product.main_image_url || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"%3E%3Crect fill="%23f3f4f6" width="80" height="80"/%3E%3Ctext fill="%239ca3af" font-family="sans-serif" font-size="10" dy="2.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3Eلا توجد صورة%3C/text%3E%3C/svg%3E'}
+                            alt={product.name}
+                            onError={(e) => {
+                              e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"%3E%3Crect fill="%23f3f4f6" width="80" height="80"/%3E%3Ctext fill="%239ca3af" font-family="sans-serif" font-size="10" dy="2.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3Eلا توجد صورة%3C/text%3E%3C/svg%3E';
+                            }}
+                          />
+                        </td>
+                        <td className="px-3 md:px-6 py-4">
+                          <div>
+                            <div className="text-sm md:text-base font-medium text-gray-900">
+                              {product.name}
+                            </div>
+                            <div className="text-xs md:text-sm text-gray-500 line-clamp-2">
+                              {product.description?.substring(0, 60)}
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-3 md:px-6 py-4 whitespace-nowrap text-xs md:text-sm text-gray-900">
                           {product.category?.name || 'غير محدد'}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-3 md:px-6 py-4 whitespace-nowrap text-xs md:text-sm text-gray-900 font-bold">
                           {product.price} د.ع
                           {product.discount > 0 && (
-                            <span className="text-red-500 text-xs mr-2">
+                            <span className="text-red-500 text-xs mr-1">
                               (-{product.discount}%)
                             </span>
                           )}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-3 md:px-6 py-4 whitespace-nowrap">
                           <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${product.stock > 10
                               ? 'bg-green-100 text-green-800'
                               : product.stock > 0
@@ -539,10 +545,10 @@ const AdminPanel = ({ user, setUser }) => {
                             {product.stock} قطعة
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <td className="px-3 md:px-6 py-4 whitespace-nowrap text-xs md:text-sm font-medium space-x-2 space-x-reverse">
                           <button
                             onClick={() => openModal('product', product)}
-                            className="text-primary-600 hover:text-primary-900 ml-4"
+                            className="text-primary-600 hover:text-primary-900"
                           >
                             تعديل
                           </button>

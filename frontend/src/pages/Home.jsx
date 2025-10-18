@@ -190,7 +190,12 @@ const Home = ({ user, setUser }) => {
     const matchesSearch = searchTerm === '' || 
       (product.name && product.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase()));
-    return matchesCategory && matchesSearch;
+    
+    // If no category is selected (homepage), only show products with show_on_homepage = true
+    // If a category is selected, show all products in that category
+    const matchesHomepage = selectedCategory ? true : (product.show_on_homepage !== false);
+    
+    return matchesCategory && matchesSearch && matchesHomepage;
   });
 
   const getCartItemCount = () => {
