@@ -171,6 +171,7 @@ const AdminPanel = ({ user, setUser }) => {
       });
 
     try {
+      console.log('🖼️ بدء رفع الصورة...', file.name);
       const base64 = await toBase64(file);
       const formData = new FormData();
       // استخدام مفتاح API المقدم مباشرة
@@ -181,10 +182,23 @@ const AdminPanel = ({ user, setUser }) => {
         method: 'POST',
         body: formData,
       });
+      
+      if (!response.ok) {
+        console.error('❌ ImgBB API Error:', response.status, response.statusText);
+        throw new Error(`ImgBB API returned ${response.status}`);
+      }
+      
       const data = await response.json();
+      console.log('✅ نجح رفع الصورة:', data?.data?.url);
+      
+      if (data?.success === false) {
+        console.error('❌ ImgBB Error Response:', data?.error);
+        throw new Error(data?.error?.message || 'فشل رفع الصورة');
+      }
+      
       return data?.data?.url || null;
     } catch (error) {
-      console.error('Error uploading image to ImgBB:', error);
+      console.error('❌ خطأ في رفع الصورة لـ ImgBB:', error);
       return null;
     }
   };
@@ -200,12 +214,20 @@ const AdminPanel = ({ user, setUser }) => {
       let thirdImageUrl = productForm.third_image_url;
       let fourthImageUrl = productForm.fourth_image_url;
 
+      console.log('📸 بدء عملية رفع الصور...', {
+        mainImage: !!productForm.main_image,
+        secondImage: !!productForm.second_image,
+        thirdImage: !!productForm.third_image,
+        fourthImage: !!productForm.fourth_image
+      });
+
       if (productForm.main_image && typeof productForm.main_image !== 'string') {
         mainImageUrl = await handleImageUpload(productForm.main_image);
+        console.log('✅ الصورة الرئيسية:', mainImageUrl);
         if (!mainImageUrl) {
-          alert('فشل في رفع الصورة الرئيسية');
-          setLoading(false);
-          return;
+          console.warn('⚠️ فشل في رفع الصورة الرئيسية، سيتم المتابعة بدونها');
+          // نسمح بـ null أو استخدام placeholder - لا نرفض العملية كلياً
+          mainImageUrl = null;
         }
       }
 
@@ -236,11 +258,18 @@ const AdminPanel = ({ user, setUser }) => {
         image_4: fourthImageUrl
       };
 
+      console.log('📤 بيانات المنتج المرسلة للـ API:', productData);
+
+      let response;
       if (editingItem) {
-        await api.put(`/products/admin/products/${editingItem.id}/`, productData);
+        console.log('✏️ تعديل المنتج...');
+        response = await api.put(`/products/admin/products/${editingItem.id}/`, productData);
       } else {
-        await api.post('/products/admin/products/', productData);
+        console.log('➕ إضافة منتج جديد...');
+        response = await api.post('/products/admin/products/', productData);
       }
+      
+      console.log('✅ نجح! الـ API Response:', response.data);
 
       fetchProducts();
       setShowModal(false);
