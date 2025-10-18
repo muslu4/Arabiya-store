@@ -225,15 +225,15 @@ const AdminPanel = ({ user, setUser }) => {
         name: productForm.name,
         description: productForm.description,
         price: parseFloat(productForm.price),
-        stock: parseInt(productForm.stock),
+        stock_quantity: parseInt(productForm.stock),
         category: productForm.category,
-        discount: parseFloat(productForm.discount) || 0,
+        discount_amount: parseFloat(productForm.discount) || 0,
         brand: productForm.brand,
         show_on_homepage: productForm.show_on_homepage,
-        main_image_url: mainImageUrl,
-        second_image_url: secondImageUrl,
-        third_image_url: thirdImageUrl,
-        fourth_image_url: fourthImageUrl
+        main_image: mainImageUrl,
+        image_2: secondImageUrl,
+        image_3: thirdImageUrl,
+        image_4: fourthImageUrl
       };
 
       if (editingItem) {
@@ -388,10 +388,10 @@ const AdminPanel = ({ user, setUser }) => {
           second_image: null,
           third_image: null,
           fourth_image: null,
-          main_image_url: item.main_image_url || '',
-          second_image_url: item.second_image_url || '',
-          third_image_url: item.third_image_url || '',
-          fourth_image_url: item.fourth_image_url || ''
+          main_image_url: item.main_image || item.main_image_url || '',
+          second_image_url: item.image_2 || item.second_image_url || '',
+          third_image_url: item.image_3 || item.third_image_url || '',
+          fourth_image_url: item.image_4 || item.fourth_image_url || ''
         });
       } else {
         setProductForm({
