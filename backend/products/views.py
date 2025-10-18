@@ -229,7 +229,23 @@ def admin_products_list(request):
     """
     if request.method == 'GET':
         products = Product.objects.all().order_by('-created_at')
+        
+        # تسجيل بيانات الصور للتحقق
+        print("📦 Getting Admin Products List")
+        for idx, product in enumerate(products[:3]):  # أول 3 منتجات فقط
+            print(f"📸 Product {idx + 1}: {product.name} (ID: {product.id})")
+            print(f"   main_image: {product.main_image}")
+            print(f"   image_2: {product.image_2}")
+            print(f"   image_3: {product.image_3}")
+            print(f"   image_4: {product.image_4}")
+        
         serializer = ProductSerializer(products, many=True, context={'request': request})
+        print(f"✅ Serialized {len(serializer.data)} products")
+        
+        # تسجيل البيانات المسلسلة للمنتج الأول
+        if serializer.data:
+            print(f"📤 First product serialized data: {serializer.data[0]}")
+        
         return Response(serializer.data)
     
     elif request.method == 'POST':

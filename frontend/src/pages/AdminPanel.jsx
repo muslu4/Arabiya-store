@@ -65,17 +65,38 @@ const AdminPanel = ({ user, setUser }) => {
     setLoading(true);
     try {
       const response = await api.get('/products/admin/products/');
-      console.log('📦 Admin Products API Response:', response.data);
+      console.log('📦 Admin Products API Response (full):', response.data);
+      
       // Ensure each product has normalized image data
-      const normalizedProducts = response.data.map(product => ({
-        ...product,
-        stock: product.stock_quantity || product.stock || 0,
-        discount: product.discount_amount || 0,
-        image: product.image || product.main_image_url || product.main_image,
-      }));
+      const normalizedProducts = response.data.map((product, idx) => {
+        const normalized = {
+          ...product,
+          stock: product.stock_quantity || product.stock || 0,
+          discount: product.discount_amount || 0,
+          image: product.image || product.main_image_url || product.main_image,
+        };
+        
+        // تسجيل بيانات الصور للمنتجات الثلاثة الأولى فقط
+        if (idx < 3) {
+          console.log(`📸 Product ${idx + 1}: ${product.name}`, {
+            image: product.image,
+            main_image: product.main_image,
+            main_image_url: product.main_image_url,
+            image_2: product.image_2,
+            image_3: product.image_3,
+            image_4: product.image_4,
+            normalized_image: normalized.image
+          });
+        }
+        
+        return normalized;
+      });
+      
+      console.log(`✅ Normalized ${normalizedProducts.length} products`);
       setProducts(normalizedProducts);
     } catch (error) {
       console.error('Error fetching products:', error);
+      alert('خطأ في تحميل المنتجات');
     } finally {
       setLoading(false);
     }

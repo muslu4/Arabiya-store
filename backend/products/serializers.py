@@ -20,11 +20,6 @@ class ProductListSerializer(serializers.ModelSerializer):
     discounted_price = serializers.SerializerMethodField()
     is_on_sale = serializers.SerializerMethodField()
     stock = serializers.IntegerField(source='stock_quantity', read_only=True)
-    # إضافة الحقول الأصلية للصور
-    main_image = serializers.URLField(required=False, allow_blank=True)
-    image_2 = serializers.URLField(required=False, allow_blank=True)
-    image_3 = serializers.URLField(required=False, allow_blank=True)
-    image_4 = serializers.URLField(required=False, allow_blank=True)
 
     class Meta:
         model = Product
@@ -32,6 +27,7 @@ class ProductListSerializer(serializers.ModelSerializer):
                   'is_on_sale', 'stock_quantity', 'stock', 'category_name', 'main_image', 'image_2', 
                   'image_3', 'image_4', 'main_image_url', 'image', 'is_featured', 'show_on_homepage', 
                   'brand', 'is_in_stock']
+        read_only_fields = ['id', 'main_image_url', 'image', 'discount_percentage', 'discounted_price', 'is_on_sale', 'category_name', 'stock', 'is_in_stock']
 
     def get_main_image_url(self, obj):
         """الصورة الرئيسية بوضوح"""
@@ -68,11 +64,6 @@ class ProductSerializer(serializers.ModelSerializer):
     discounted_price = serializers.SerializerMethodField()
     is_on_sale = serializers.SerializerMethodField()
     stock = serializers.IntegerField(source='stock_quantity', read_only=True)
-    # تصريح صريح عن حقول الصور كـ URLFields
-    main_image = serializers.URLField(required=False, allow_blank=True)
-    image_2 = serializers.URLField(required=False, allow_blank=True)
-    image_3 = serializers.URLField(required=False, allow_blank=True)
-    image_4 = serializers.URLField(required=False, allow_blank=True)
 
     class Meta:
         model = Product
@@ -86,6 +77,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'is_active', 'is_featured', 'show_on_homepage', 'display_order',
             'created_at', 'updated_at'
         ]
+        read_only_fields = ['id', 'created_at', 'updated_at', 'main_image_url', 'image', 'all_images']
 
     def get_main_image_url(self, obj):
         """إرجاع الصورة الرئيسية"""
