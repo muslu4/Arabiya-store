@@ -14,6 +14,8 @@ const AdminPanel = ({ user, setUser }) => {
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState(''); // 'product', 'category'
   const [editingItem, setEditingItem] = useState(null);
+  const [selectedProducts, setSelectedProducts] = useState(new Set());
+  const [homepageAction, setHomepageAction] = useState('show'); // 'show' or 'hide'
   const navigate = useNavigate();
 
   // Form states
@@ -295,6 +297,61 @@ const AdminPanel = ({ user, setUser }) => {
     }
   };
 
+  // Handle product selection
+  const toggleProductSelection = (productId) => {
+    const newSelected = new Set(selectedProducts);
+    if (newSelected.has(productId)) {
+      newSelected.delete(productId);
+    } else {
+      newSelected.add(productId);
+    }
+    setSelectedProducts(newSelected);
+  };
+
+  // Toggle all products selection
+  const toggleAllProducts = () => {
+    if (selectedProducts.size === products.length) {
+      setSelectedProducts(new Set());
+    } else {
+      setSelectedProducts(new Set(products.map(p => p.id)));
+    }
+  };
+
+  // Execute homepage action (show/hide) for selected products
+  const handleExecuteHomepageAction = async () => {
+    if (selectedProducts.size === 0) {
+      alert('يرجى تحديد منتجات أولاً');
+      return;
+    }
+
+    const action = homepageAction === 'show' ? 'إظهار' : 'إخفاء';
+    if (!window.confirm(`هل تريد ${action} ${selectedProducts.size} منتج في الصفحة الرئيسية؟`)) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const updatePromises = Array.from(selectedProducts).map(productId => {
+        const product = products.find(p => p.id === productId);
+        return api.put(`/admin/products/${productId}/`, {
+          ...product,
+          show_on_homepage: homepageAction === 'show'
+        });
+      });
+
+      await Promise.all(updatePromises);
+      
+      setSelectedProducts(new Set());
+      fetchProducts();
+      alert(`تم ${action} المنتجات بنجاح`);
+    } catch (error) {
+      console.error('Error executing homepage action:', error);
+      alert('حدث خطأ في تنفيذ الإجراء');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDelete = async (type, id) => {
     if (!window.confirm('هل أنت متأكد من الحذف؟')) return;
 
@@ -477,13 +534,48 @@ const AdminPanel = ({ user, setUser }) => {
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
               </div>
             ) : (
-              <div className="bg-white rounded-lg shadow overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-900 text-white">
-                    <tr>
-                      <th className="px-3 md:px-6 py-3 text-right text-xs md:text-sm font-medium uppercase tracking-wider">
-                        الصورة
-                      </th>
+              <>
+                {/* Action buttons for selected items */}
+                {selectedProducts.size > 0 && (
+                  <div className="mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200 flex justify-between items-center">
+                    <span className="text-blue-900 font-semibold">
+                      تم تحديد {selectedProducts.size} منتج
+                    </span>
+                    <div className="space-x-2 space-x-reverse">
+                      <select
+                        value={homepageAction}
+                        onChange={(e) => setHomepageAction(e.target.value)}
+                        className="px-3 py-2 border border-blue-300 rounded-md text-sm"
+                      >
+                        <option value="show">إظهار في الصفحة الرئيسية</option>
+                        <option value="hide">إخفاء من الصفحة الرئيسية</option>
+                      </select>
+                      <button
+                        onClick={handleExecuteHomepageAction}
+                        disabled={loading}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+                      >
+                        ✓ نفذ
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                <div className="bg-white rounded-lg shadow overflow-hidden">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-900 text-white">
+                      <tr>
+                        <th className="px-3 md:px-6 py-3 text-center text-xs md:text-sm font-medium uppercase tracking-wider w-12">
+                          <input
+                            type="checkbox"
+                            checked={selectedProducts.size === products.length && products.length > 0}
+                            onChange={toggleAllProducts}
+                            className="w-4 h-4 cursor-pointer"
+                          />
+                        </th>
+                        <th className="px-3 md:px-6 py-3 text-right text-xs md:text-sm font-medium uppercase tracking-wider">
+                          الصورة
+                        </th>
                       <th className="px-3 md:px-6 py-3 text-right text-xs md:text-sm font-medium uppercase tracking-wider">
                         المنتج
                       </th>
@@ -504,6 +596,14 @@ const AdminPanel = ({ user, setUser }) => {
                   <tbody className="bg-white divide-y divide-gray-200">
                     {products.map((product) => (
                       <tr key={product.id} className="hover:bg-gray-50">
+                        <td className="px-3 md:px-6 py-4 whitespace-nowrap text-center">
+                          <input
+                            type="checkbox"
+                            checked={selectedProducts.has(product.id)}
+                            onChange={() => toggleProductSelection(product.id)}
+                            className="w-4 h-4 cursor-pointer"
+                          />
+                        </td>
                         <td className="px-3 md:px-6 py-4 whitespace-nowrap">
                           <img
                             className="h-16 w-16 md:h-20 md:w-20 rounded-lg object-cover border border-gray-200"
@@ -563,7 +663,8 @@ const AdminPanel = ({ user, setUser }) => {
                     ))}
                   </tbody>
                 </table>
-              </div>
+                </div>
+              </>
             )}
           </div>
         )}
