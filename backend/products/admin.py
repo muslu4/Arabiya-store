@@ -1,6 +1,7 @@
 
 from django.contrib import admin
 from django import forms
+from django.utils.html import mark_safe
 from .models import Category, Product, ProductReview, ProductView, Banner
 from .models_coupons import Coupon, CouponUsage
 from .widgets import ImgBBUploadWidget
@@ -35,10 +36,17 @@ class ProductAdminForm(forms.ModelForm):
 
 class ProductAdmin(admin.ModelAdmin):
     form = ProductAdminForm
-    list_display = ('name', 'category', 'brand', 'price', 'stock_quantity', 'display_order', 'is_active', 'is_featured', 'show_on_homepage', 'created_at')
+    list_display = ('product_image', 'name', 'category', 'brand', 'price', 'stock_quantity', 'display_order', 'is_active', 'is_featured', 'show_on_homepage', 'created_at')
     list_filter = ('category', 'brand', 'is_active', 'is_featured', 'show_on_homepage', 'created_at')
     search_fields = ('name', 'description', 'brand', 'model')
     list_editable = ('price', 'stock_quantity', 'display_order', 'is_active', 'is_featured', 'show_on_homepage')
+    
+    def product_image(self, obj):
+        """عرض صورة صغيرة من المنتج"""
+        if obj.main_image:
+            return mark_safe(f'<img src="{obj.main_image}" width="50" height="50" style="border-radius: 4px; object-fit: cover;" />')
+        return '❌ لا توجد صورة'
+    product_image.short_description = '🖼️ الصورة'
 
     fieldsets = (
         ('📦 معلومات أساسية', {
