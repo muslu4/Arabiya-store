@@ -343,7 +343,7 @@ const Categories = ({ user }) => {
                     {/* Product Info */}
                     <div className="p-5 bg-gradient-to-b from-white to-gray-50 border-t border-gray-100">
                       <div className="flex justify-between items-start mb-3">
-                        <h4 className="font-bold text-lg text-gray-800 line-clamp-2 flex-1 pr-3">
+                        <h4 className="font-bold text-lg text-gray-800 line-clamp-3 flex-1 pr-3">
                           {product.name}
                         </h4>
                         {product.brand && (
