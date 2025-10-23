@@ -1,25 +1,28 @@
-
 """
-إعدادات Firebase للتطبيق
+إعدادات Firebase للتطبيق باستخدام متغير البيئة
 """
 
 import os
-from django.conf import settings
+import json
 
-# مسار ملف بيانات اعتماد Firebase
-FIREBASE_CREDENTIALS_PATH = os.path.join(settings.BASE_DIR, 'firebase', 'ecomproject-a8173-38763797948f.json')
-
-# معرف مشروع Firebase
+# معرف مشروع Firebase (يمكن تركه ثابتًا)
 FIREBASE_PROJECT_ID = 'ecomproject-a8173'
 
 # تهيئة Firebase
 try:
     import firebase_admin
     from firebase_admin import credentials
-    from .firebase_utils import initialize_firebase
 
-    # تهيئة Firebase عند بدء تشغيل التطبيق
-    initialize_firebase()
+    # قراءة بيانات الاعتماد من متغير البيئة
+    firebase_credentials_json = os.environ.get("FIREBASE_CREDENTIALS_JSON")
+    if not firebase_credentials_json:
+        raise ValueError("متغير البيئة FIREBASE_CREDENTIALS_JSON غير معرف")
+
+    cred_dict = json.loads(firebase_credentials_json)
+    cred = credentials.Certificate(cred_dict)
+    firebase_admin.initialize_app(cred)
+
+    print("تم تهيئة Firebase بنجاح")
 except ImportError:
     print("لم يتم تثبيت مكتبة Firebase Admin")
 except Exception as e:
