@@ -293,11 +293,11 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8000',  # Backend API port
     'http://localhost:8080',  # Alternative port
     'http://127.0.0.1:8080',  # Alternative port
-    'https://ecom-parent-project-1.onrender.com',  # Production frontend
+    'https://arabiya-store-1.onrender.com',  # Production frontend
 ]
 
 # Render frontend URL
-RENDER_FRONTEND_URL = config('RENDER_FRONTEND_URL', default='https://ecom-parent-project-1.onrender.com')
+RENDER_FRONTEND_URL = config('RENDER_FRONTEND_URL', default='https://arabiya-store-1.onrender.com')
 if RENDER_FRONTEND_URL and RENDER_FRONTEND_URL not in CORS_ALLOWED_ORIGINS:
     CORS_ALLOWED_ORIGINS.append(RENDER_FRONTEND_URL)
 
