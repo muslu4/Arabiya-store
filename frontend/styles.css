@@ -7,7 +7,7 @@
 
 body {
     font-family: 'Cairo', sans-serif;
-    background-color: #f8f9fa;
+    background-color: #F5EFE1;
     color: #333;
     line-height: 1.6;
     padding-bottom: 80px;
@@ -22,7 +22,7 @@ body {
 
 /* Header */
 .header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #8B6F47 0%, #D4AF37 100%);
     color: white;
     padding: 15px 0;
     position: sticky;
@@ -104,7 +104,7 @@ body {
 }
 
 .search-btn {
-    background: #667eea;
+    background: #6B5D47;
     border: none;
     color: white;
     padding: 12px 20px;
@@ -113,7 +113,7 @@ body {
 }
 
 .search-btn:hover {
-    background: #5a6fd8;
+    background: #556B2F;
 }
 
 /* Hero Section */
@@ -190,12 +190,12 @@ body {
 .category-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
-    border-color: #667eea;
+    border-color: #8B6F47;
 }
 
 .category-icon {
     font-size: 2rem;
-    color: #667eea;
+    color: #8B6F47;
     margin-bottom: 10px;
 }
 
@@ -230,8 +230,8 @@ body {
 
 .view-all-btn {
     background: none;
-    border: 1px solid #667eea;
-    color: #667eea;
+    border: 1px solid #8B6F47;
+    color: #8B6F47;
     padding: 8px 16px;
     border-radius: 20px;
     cursor: pointer;
@@ -240,7 +240,7 @@ body {
 }
 
 .view-all-btn:hover {
-    background: #667eea;
+    background: #8B6F47;
     color: white;
 }
 
@@ -316,7 +316,7 @@ body {
 .current-price {
     font-size: 1.2rem;
     font-weight: bold;
-    color: #667eea;
+    color: #D4AF37;
 }
 
 .original-price {
@@ -331,7 +331,7 @@ body {
 }
 
 .btn-primary {
-    background: #667eea;
+    background: #6B5D47;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -344,14 +344,14 @@ body {
 }
 
 .btn-primary:hover {
-    background: #5a6fd8;
+    background: #556B2F;
     transform: translateY(-1px);
 }
 
 .btn-secondary {
     background: none;
-    border: 1px solid #667eea;
-    color: #667eea;
+    border: 1px solid #8B6F47;
+    color: #8B6F47;
     padding: 10px 15px;
     border-radius: 25px;
     cursor: pointer;
@@ -360,7 +360,7 @@ body {
 }
 
 .btn-secondary:hover {
-    background: #667eea;
+    background: #8B6F47;
     color: white;
 }
 
@@ -393,8 +393,8 @@ body {
 }
 
 .nav-item.active {
-    color: #667eea;
-    background: rgba(102, 126, 234, 0.1);
+    color: #8B6F47;
+    background: rgba(139, 111, 71, 0.1);
 }
 
 .nav-item i {

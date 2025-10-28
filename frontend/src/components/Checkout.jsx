@@ -379,7 +379,7 @@ const Checkout = ({ cart, onCheckout, onClose }) => {
                   <button
                     type="submit"
                     disabled={loading || cart.length === 0}
-                    className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg transition-all disabled:opacity-50"
+                    className="px-6 py-3 bg-gradient-to-r from-amber-800 to-green-700 text-white rounded-lg font-medium hover:shadow-lg transition-all disabled:opacity-50"
                   >
                     {loading ? (
                       <span className="flex items-center justify-center">
