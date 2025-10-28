@@ -10,8 +10,8 @@ from products.views_fixed import add_category_view, category_list_view, category
 from decimal import Decimal
 
 class MIMIAdminSite(AdminSite):
-    site_header = "MIMI STORE إدارة"
-    site_title = "MIMI STORE"
+    site_header = "العربية فون - إدارة"
+    site_title = "العربية فون"
     index_title = "لوحة التحكم الرئيسية"
 
     def get_urls(self):

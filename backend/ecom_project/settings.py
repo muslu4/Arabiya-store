@@ -397,9 +397,9 @@ os.makedirs(BASE_DIR / 'logs', exist_ok=True)
 # Jazzmin settings
 JAZZMIN_SETTINGS = {
     # Site branding
-    "site_title": "MIMI STORE - لوحة الإدارة",
-    "site_header": "🛍️ MIMI STORE",
-    "site_brand": "MIMI STORE",
+    "site_title": "العربية فون - لوحة الإدارة",
+    "site_header": "🛍️ العربية فون",
+    "site_brand": "العربية فون",
     "site_logo": None,
     "login_logo": None,
     "login_logo_dark": None,
@@ -407,8 +407,8 @@ JAZZMIN_SETTINGS = {
     "site_icon": None,
 
     # Welcome message
-    "welcome_sign": "مرحباً بك في لوحة تحكم متجر ميمي الاحترافية",
-    "copyright": "© 2024 MIMI STORE - جميع الحقوق محفوظة",
+    "welcome_sign": "مرحباً بك في لوحة تحكم متجر العربية فون الاحترافية",
+    "copyright": "© 2024 العربية فون - جميع الحقوق محفوظة",
 
     # Search model
     "search_model": ["users.User", "products.Product", "products.Coupon", "orders.Order"],

@@ -65,7 +65,7 @@ export const showNotification = (title, body) => {
         body: body,
         icon: '/logo192.png',
         badge: '/logo192.png',
-        tag: 'mimi-store-notification',
+        tag: 'arabiya-fone-notification',
         requireInteraction: true,
         dir: 'rtl',
         lang: 'ar'
