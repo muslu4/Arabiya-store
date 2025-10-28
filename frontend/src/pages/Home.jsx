@@ -251,7 +251,7 @@ const Home = ({ user, setUser }) => {
                 <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
               </div>
               <div>
-                <h1 className="text-lg md:text-2xl font-bold gradient-text">MIMI STORE</h1>
+                <h1 className="text-lg md:text-2xl font-bold gradient-text">العربية فون</h1>
               </div>
             </div>
 
@@ -380,7 +380,7 @@ const Home = ({ user, setUser }) => {
       <div className="relative w-full h-64 overflow-hidden rounded-xl mx-4 mt-6 shadow-xl bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative z-10 text-center p-6 text-white">
-          <h2 className="text-3xl md:text-4xl font-bold mb-3">مرحباً في MIMI STORE</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-3">مرحباً في العربية فون</h2>
           <p className="text-lg md:text-xl mb-4 max-w-2xl mx-auto">أفضل منتجات الإلكترونيات والهواتف الذكية في العراق</p>
           <div className="flex flex-wrap justify-center gap-4 mt-6">
             <Link to="/categories" className="bg-white text-indigo-600 px-6 py-2.5 rounded-lg font-medium hover:bg-indigo-50 transition-colors shadow-lg">
@@ -604,7 +604,7 @@ const Home = ({ user, setUser }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">MIMI STORE</h3>
+              <h3 className="text-xl font-bold mb-4">العربية فون</h3>
               <p className="text-gray-300">
                 متجرك الإلكتروني المفضل للحصول على أفضل المنتجات بأسعار مميزة
               </p>

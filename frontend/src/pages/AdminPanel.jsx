@@ -509,10 +509,10 @@ const AdminPanel = ({ user, setUser }) => {
             <div className="flex items-center space-x-4 space-x-reverse">
               <Link to="/" className="flex items-center space-x-2 space-x-reverse">
                 <div className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xl">
-                  M
+                  E
                 </div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
-                  MIMI STORE - لوحة الإدارة
+                  العربية فون - لوحة الإدارة
                 </h1>
               </Link>
             </div>

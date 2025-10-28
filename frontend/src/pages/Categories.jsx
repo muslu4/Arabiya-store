@@ -171,9 +171,9 @@ const Categories = ({ user }) => {
               </button>
               <Link to="/" className="flex items-center space-x-2 space-x-reverse">
                 <div className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold">
-                  M
+                  E
                 </div>
-                <span className="text-xl font-bold text-primary-600">MIMI STORE</span>
+                <span className="text-xl font-bold text-primary-600">العربية فون</span>
               </Link>
             </div>
 

@@ -140,10 +140,10 @@ const Login = ({ setUser }) => {
         {/* Header */}
         <div className="text-center">
           <div className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white w-20 h-20 rounded-full flex items-center justify-center font-bold text-3xl mx-auto mb-4">
-            M
+            E
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            MIMI STORE
+            العربية فون
           </h2>
           <p className="text-gray-600">
             {isLogin ? 'مرحباً بعودتك!' : 'إنشاء حساب جديد'}
@@ -338,7 +338,7 @@ const Login = ({ setUser }) => {
         {/* Features */}
         <div className="bg-white rounded-xl shadow-lg p-6">
           <h3 className="text-lg font-semibold text-gray-800 mb-4 text-center">
-            لماذا تختار MIMI STORE؟
+            لماذا تختار العربية فون؟
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="text-center">
