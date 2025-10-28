@@ -201,7 +201,7 @@ const Categories = ({ user }) => {
       </header>
 
       {/* Page Title */}
-      <div className="bg-gradient-to-r from-indigo-500 to-purple-500 py-12">
+      <div className="bg-gradient-to-r from-amber-800 to-amber-600 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">تصفح الفئات</h1>
           <p className="text-xl text-white opacity-90 max-w-2xl mx-auto">
@@ -236,8 +236,8 @@ const Categories = ({ user }) => {
                     onClick={() => setSelectedCategory(category.id)}
                   >
                     <div className="p-6 text-center">
-                      <div className="w-16 h-16 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg className="h-8 w-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-16 h-16 bg-gradient-to-r from-amber-100 to-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg className="h-8 w-8 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>
                       </div>
@@ -413,7 +413,7 @@ const Categories = ({ user }) => {
                             e.stopPropagation();
                             navigate(`/product/${product.id}`);
                           }}
-                          className="px-4 py-2.5 border border-indigo-500 text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors flex items-center"
+                          className="px-4 py-2.5 border border-amber-500 text-amber-700 rounded-lg hover:bg-amber-50 transition-colors flex items-center"
                         >
                           <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
