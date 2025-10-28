@@ -26,6 +26,17 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs['password'] != attrs['password_confirm']:
             raise serializers.ValidationError("كلمتا المرور غير متطابقتين")
+        
+        # Check if phone already exists
+        phone = attrs.get('phone')
+        if User.objects.filter(phone=phone).exists():
+            raise serializers.ValidationError({"phone": "رقم الهاتف مسجل بالفعل"})
+        
+        # Check if username already exists
+        username = attrs.get('username')
+        if User.objects.filter(username=username).exists():
+            raise serializers.ValidationError({"username": "اسم المستخدم موجود بالفعل"})
+        
         return attrs
 
     def create(self, validated_data):
