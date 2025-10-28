@@ -1,4 +1,4 @@
-# Create Desktop Shortcut for MIMI STORE
+# Create Desktop Shortcut for العربية فون
 # إنشاء اختصار على سطح المكتب
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -7,7 +7,7 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 Write-Host ""
 Write-Host "╔════════════════════════════════════════════════════════════╗" -ForegroundColor Magenta
 Write-Host "║                                                            ║" -ForegroundColor Magenta
-Write-Host "║         🔗 إنشاء اختصار MIMI STORE على سطح المكتب 🔗      ║" -ForegroundColor Magenta
+Write-Host "║         🔗 إنشاء اختصار العربية فون على سطح المكتب 🔗      ║" -ForegroundColor Magenta
 Write-Host "║                                                            ║" -ForegroundColor Magenta
 Write-Host "╚════════════════════════════════════════════════════════════╝" -ForegroundColor Magenta
 Write-Host ""
@@ -18,7 +18,7 @@ $startBatPath = Join-Path $scriptPath "START.bat"
 
 # Get desktop path
 $desktopPath = [Environment]::GetFolderPath("Desktop")
-$shortcutPath = Join-Path $desktopPath "MIMI STORE.lnk"
+$shortcutPath = Join-Path $desktopPath "العربية فون.lnk"
 
 # Check if START.bat exists
 if (-not (Test-Path $startBatPath)) {
@@ -40,7 +40,7 @@ try {
     $Shortcut = $WScriptShell.CreateShortcut($shortcutPath)
     $Shortcut.TargetPath = $startBatPath
     $Shortcut.WorkingDirectory = $scriptPath
-    $Shortcut.Description = "تشغيل MIMI STORE - متجر إلكتروني"
+    $Shortcut.Description = "تشغيل العربية فون - متجر إلكتروني"
     $Shortcut.IconLocation = "shell32.dll,43"  # Shopping cart icon
     $Shortcut.Save()
     

@@ -1,6 +1,6 @@
 @echo off
 chcp 65001 >nul
-echo 👤 إنشاء المستخدم الإداري لـ MIMI STORE...
+echo 👤 إنشاء المستخدم الإداري لـ العربية فون...
 
 REM Activate virtual environment
 call backend\env\Scripts\activate

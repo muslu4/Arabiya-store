@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Script to create sample data for MIMI STORE
+Script to create sample data for العربية فون
 """
 import os
 import sys
@@ -17,7 +17,7 @@ from users.models import User
 from decimal import Decimal
 
 def create_sample_data():
-    print("Creating sample data for MIMI STORE...")
+    print("Creating sample data for العربية فون...")
     
     # Create admin user first
     print("Creating admin user...")

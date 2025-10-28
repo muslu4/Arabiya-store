@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Script to create admin user for MIMI STORE
+Script to create admin user for العربية فون
 """
 import os
 import sys
@@ -13,7 +13,7 @@ django.setup()
 from users.models import User
 
 def create_admin_user():
-    print("Creating admin user for MIMI STORE...")
+    print("Creating admin user for العربية فون...")
     
     try:
         # Try to get existing admin user

@@ -9,7 +9,7 @@ from orders.models import Order, OrderItem
 from products.views_fixed import add_category_view, category_list_view, category_add_success_view
 from decimal import Decimal
 
-class MIMIAdminSite(AdminSite):
+class ArabiyaPhoneAdminSite(AdminSite):
     site_header = "العربية فون - إدارة"
     site_title = "العربية فون"
     index_title = "لوحة التحكم الرئيسية"
@@ -64,7 +64,7 @@ class MIMIAdminSite(AdminSite):
         return super().index(request, extra_context)
 
 # Create custom admin site instance
-admin_site = MIMIAdminSite(name='mimi_admin')
+admin_site = ArabiyaPhoneAdminSite(name='arabiyaphone_admin')
 
 # Import and register all admin classes
 from users.admin import UserAdmin
