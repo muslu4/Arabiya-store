@@ -204,7 +204,7 @@ const AdminPanel = ({ user, setUser }) => {
       const base64 = await toBase64(file);
       const formData = new FormData();
       // استخدام مفتاح API المقدم مباشرة
-      formData.append('key', 'a2cebbc3daff0b042082a5d5d7a3b80d');
+      formData.append('key', '164e5d92bb4e1c3ef336cadd5d6481c4');
       formData.append('image', base64);
 
       const response = await fetch('https://api.imgbb.com/1/upload', {

@@ -332,7 +332,7 @@ FIREBASE_CREDENTIALS_PATH = config('FIREBASE_CREDENTIALS_PATH', default=str(BASE
 FIREBASE_PROJECT_ID = config('FIREBASE_PROJECT_ID', default='ecomproject-a8173')
 
 # ImgBB Configuration
-IMGBB_API_KEY = config('IMGBB_API_KEY', default='a2cebbc3daff0b042082a5d5d7a3b80d')
+IMGBB_API_KEY = config('IMGBB_API_KEY', default='164e5d92bb4e1c3ef336cadd5d6481c4')
 
 # Security Settings
 if not DEBUG:
