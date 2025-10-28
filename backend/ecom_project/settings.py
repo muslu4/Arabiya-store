@@ -91,13 +91,24 @@ if config('DEBUG', default=False, cast=bool):
     }
 else:
     # بيئة الإنتاج: PostgreSQL
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=config('DATABASE_URL'),
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
-    }
+    # Try to get DATABASE_URL from environment, fallback to sqlite if not available
+    try:
+        db_url = config('DATABASE_URL')
+        DATABASES = {
+            'default': dj_database_url.config(
+                default=db_url,
+                conn_max_age=600,
+                conn_health_checks=True,
+            )
+        }
+    except:
+        # Fallback to SQLite if DATABASE_URL is not configured
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 
 # Custom User Model
 AUTH_USER_MODEL = 'users.User'
