@@ -243,6 +243,8 @@ Thumbs.db
 firebase-credentials.json
 firebase-debug.log
 .firebase/
+backend/firebase/*.json
+*.firebase.json
 
 # Media files (uploaded by users)
 media/
